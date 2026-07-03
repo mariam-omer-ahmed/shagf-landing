@@ -1,0 +1,81 @@
+/* Custom AOS animations (Shaghaf version) */
+
+@media screen {
+  html:not(.no-js) body [data-aos] {
+    opacity: 0;
+    transition-property: transform, opacity;
+    transition-duration: 0.6s;
+    transition-timing-function: ease;
+    will-change: transform, opacity;
+  }
+
+  /* FADE UP */
+  html:not(.no-js) body [data-aos="fade-up"] {
+    transform: translate3d(0, 12px, 0);
+  }
+
+  html:not(.no-js) body [data-aos="fade-up"].aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* FADE DOWN */
+  html:not(.no-js) body [data-aos="fade-down"] {
+    transform: translate3d(0, -12px, 0);
+  }
+
+  html:not(.no-js) body [data-aos="fade-down"].aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* FADE RIGHT */
+  html:not(.no-js) body [data-aos="fade-right"] {
+    transform: translate3d(-12px, 0, 0);
+  }
+
+  html:not(.no-js) body [data-aos="fade-right"].aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* FADE LEFT */
+  html:not(.no-js) body [data-aos="fade-left"] {
+    transform: translate3d(12px, 0, 0);
+  }
+
+  html:not(.no-js) body [data-aos="fade-left"].aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* ZOOM IN */
+  html:not(.no-js) body [data-aos="zoom-in"] {
+    transform: scale(0.92);
+  }
+
+  html:not(.no-js) body [data-aos="zoom-in"].aos-animate {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ZOOM IN UP */
+  html:not(.no-js) body [data-aos="zoom-in-up"] {
+    transform: translate3d(0, 12px, 0) scale(0.9);
+  }
+
+  html:not(.no-js) body [data-aos="zoom-in-up"].aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  /* ZOOM OUT */
+  html:not(.no-js) body [data-aos="zoom-out"] {
+    transform: scale(1.1);
+  }
+
+  html:not(.no-js) body [data-aos="zoom-out"].aos-animate {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
