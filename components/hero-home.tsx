@@ -1,21 +1,34 @@
 "use client";
-
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
     import Link from "next/link";
 
 const MotionLink = motion.create(Link);
-const container = {
-  hidden: { opacity: 0 },
+const container: Variants = {
+  hidden: {
+    opacity: 0,
+  },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
   },
 };
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+    },
+  },
 };
 
 export default function HeroHome() {
@@ -34,7 +47,7 @@ export default function HeroHome() {
             x: [0, 40, 0],
             y: [0, 30, 0],
           }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 14, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
         />
         <motion.div
           className="absolute right-[-200px] top-[100px] h-[600px] w-[600px] rounded-full bg-fuchsia-300/15 blur-[160px]"
@@ -42,14 +55,14 @@ export default function HeroHome() {
             x: [0, -30, 0],
             y: [0, 40, 0],
           }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 16, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
         />
         <motion.div
           className="absolute bottom-[-200px] left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-rose-200/25 blur-[160px]"
           animate={{
             scale: [1, 1.15, 1],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 10, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
         />
         {/* subtle grid texture */}
         <div
@@ -91,7 +104,7 @@ export default function HeroHome() {
               <motion.span
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                 className="absolute bottom-1 right-0 left-0 h-4 bg-pink-200/50 -z-0 origin-right"
                 style={{ transform: "skewX(-10deg)" }}
               />
@@ -144,7 +157,7 @@ export default function HeroHome() {
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-pink-300/40 to-fuchsia-300/30 blur-3xl rounded-[50px]"
               animate={{ opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 5, repeat: Infinity, ease: [0.42, 0, 0.58, 1]}}
             />
 
             <div className="relative rounded-[44px] overflow-hidden border border-pink-200 shadow-[0_40px_120px_rgba(0,0,0,0.25)] bg-black transition-transform duration-500 group-hover:scale-[1.01]">
@@ -189,13 +202,12 @@ export default function HeroHome() {
   }}
   whileTap={{ scale: 0.98 }}
   transition={{ duration: 0.2 }}
-  className="flex itemgit statuss-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg"
->
+className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg">
   ابدأ بالبوصلة
 
   <motion.span
     animate={{ x: [0, -4, 0] }}
-    transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+    transition={{ duration: 1.4, repeat: Infinity, ease: [0.25, 0.1, 0.25, 1] }}
   >
     <ArrowRight className="h-5 w-5" />
   </motion.span>
