@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
+    import Link from "next/link";
 
+const MotionLink = motion(Link);
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -196,14 +198,15 @@ export default function HeroHome() {
               </motion.a>
             </div>
 
-            <motion.a
-              href="/how-it-works"
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(253,242,248,1)" }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center rounded-2xl border border-[#E96B8A] px-6 py-4 text-[#E96B8A] font-semibold transition-colors"
-            >
-              كيف يعمل النظام؟
-            </motion.a>
+       
+<motion.a
+  href="/result"
+  whileHover={{ scale: 1.02, backgroundColor: "rgba(253,242,248,1)" }}
+  whileTap={{ scale: 0.98 }}
+  className="flex items-center justify-center rounded-2xl border border-[#E96B8A] px-6 py-4 font-semibold text-[#E96B8A] transition-colors"
+>
+  كيف يعمل النظام؟
+</motion.a>
           </motion.div>
 
         </div>
