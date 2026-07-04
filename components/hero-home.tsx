@@ -189,7 +189,7 @@ export default function HeroHome() {
   }}
   whileTap={{ scale: 0.98 }}
   transition={{ duration: 0.2 }}
-  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg"
+  className="flex itemgit statuss-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg"
 >
   ابدأ بالبوصلة
 
