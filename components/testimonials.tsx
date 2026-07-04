@@ -16,7 +16,6 @@ import TestimonialImg04 from "@/public/images/testimonial-04.jpg";
 
 type TestimonialType = {
   img: StaticImageData;
-  clientImg: StaticImageData;
   name: string;
   gender: "male" | "female";
   company: string;
@@ -26,7 +25,6 @@ type TestimonialType = {
 
 const testimonials: TestimonialType[] = [  {
     img: TestimonialImg01,
-    clientImg: ClientImg01,
     name: "عبدالله م.",
     gender: "male",
     company: "نظام شغف",
@@ -35,7 +33,6 @@ const testimonials: TestimonialType[] = [  {
   },
   {
     img: TestimonialImg02,
-    clientImg: ClientImg02,
     name: "سارة أ.",
     gender: "female",
     company: "نظام شغف",
@@ -44,7 +41,6 @@ const testimonials: TestimonialType[] = [  {
   },
   {
     img: TestimonialImg03,
-    clientImg: ClientImg03,
     name: "محمد ك.",
     gender: "male",
     company: "نظام شغف",
@@ -53,7 +49,6 @@ const testimonials: TestimonialType[] = [  {
   },
   {
     img: TestimonialImg04,
-    clientImg: ClientImg04,
     name: "نورة ف.",
     gender: "female",
     company: "نظام شغف",
@@ -105,7 +100,7 @@ export default function Testimonials() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setCategory(cat.id as any)}
+onClick={() => setCategory(cat.id)}
                 className={`rounded-full px-4 py-1 text-sm transition ${
                   category === cat.id
                     ? "bg-[#E96B8A] text-white"
