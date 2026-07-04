@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
     import Link from "next/link";
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -181,32 +181,40 @@ export default function HeroHome() {
               <p className="text-center text-xs font-semibold text-[#E96B8A]">
                 الخطوة الأولى داخل نظام شغف
               </p>
-              <motion.a
-                href="/bousola"
-                whileHover={{ scale: 1.04, boxShadow: "0 20px 40px rgba(233,107,138,0.35)" }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg"
-              >
-                ابدأ بالبوصلة
-                <motion.span
-                  animate={{ x: [0, -4, 0] }}
-                  transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </motion.span>
-              </motion.a>
+              <MotionLink
+  href="/bousola"
+  whileHover={{
+    scale: 1.04,
+    boxShadow: "0 20px 40px rgba(233,107,138,0.35)",
+  }}
+  whileTap={{ scale: 0.98 }}
+  transition={{ duration: 0.2 }}
+  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg"
+>
+  ابدأ بالبوصلة
+
+  <motion.span
+    animate={{ x: [0, -4, 0] }}
+    transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+  >
+    <ArrowRight className="h-5 w-5" />
+  </motion.span>
+</MotionLink>
             </div>
 
        
-<motion.a
+<MotionLink
   href="/result"
-  whileHover={{ scale: 1.02, backgroundColor: "rgba(253,242,248,1)" }}
+  whileHover={{
+    scale: 1.02,
+    backgroundColor: "rgba(253,242,248,1)",
+  }}
   whileTap={{ scale: 0.98 }}
   className="flex items-center justify-center rounded-2xl border border-[#E96B8A] px-6 py-4 font-semibold text-[#E96B8A] transition-colors"
 >
   كيف يعمل النظام؟
-</motion.a>
+</MotionLink>
+
           </motion.div>
 
         </div>
