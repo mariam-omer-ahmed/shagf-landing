@@ -12,13 +12,19 @@ import TestimonialImg03 from "@/public/images/testimonial-03.jpg";
 import TestimonialImg04 from "@/public/images/testimonial-04.jpg";
 
 /* Logos */
-import ClientImg01 from "@/public/images/client-logo-01.svg";
-import ClientImg02 from "@/public/images/client-logo-02.svg";
-import ClientImg03 from "@/public/images/client-logo-03.svg";
-import ClientImg04 from "@/public/images/client-logo-04.svg";
 
-const testimonials = [
-  {
+
+type TestimonialType = {
+  img: StaticImageData;
+  clientImg: StaticImageData;
+  name: string;
+  gender: "male" | "female";
+  company: string;
+  content: string;
+  categories: ("web" | "ecommerce" | "enterprise")[];
+};
+
+const testimonials: TestimonialType[] = [  {
     img: TestimonialImg01,
     clientImg: ClientImg01,
     name: "عبدالله م.",
@@ -68,12 +74,15 @@ export default function Testimonials() {
       ? testimonials
       : testimonials.filter((t) => t.categories.includes(category));
 
-  const categories = [
-    { id: "all", label: "الكل" },
-    { id: "web", label: "وضوح الاتجاه" },
-    { id: "ecommerce", label: "بداية التنفيذ" },
-    { id: "enterprise", label: "جاهزية مهنية" },
-  ];
+  const categories: {
+  id: "all" | "web" | "ecommerce" | "enterprise";
+  label: string;
+}[] = [
+  { id: "all", label: "الكل" },
+  { id: "web", label: "وضوح الاتجاه" },
+  { id: "ecommerce", label: "بداية التنفيذ" },
+  { id: "enterprise", label: "جاهزية مهنية" },
+];
 
   return (
     <section className="bg-[#FFF8FB]">
@@ -128,14 +137,7 @@ export default function Testimonials() {
 function Testimonial({
   testimonial,
 }: {
-  testimonial: {
-    img: StaticImageData;
-    clientImg: StaticImageData;
-    name: string;
-    gender: "male" | "female";
-    company: string;
-    content: string;
-  };
+  testimonial: TestimonialType;
 }) {
   return (
     <article className="rounded-2xl bg-white/80 border border-pink-100 p-5 shadow-sm transition hover:scale-[1.01]">
