@@ -30,87 +30,75 @@ export default function ResultPage() {
         >
           <Sparkles size={18} className="text-[#E96B8A]" />
           <span className="text-lg font-bold text-[#151827]">
-            نظام شغف لبناء الجاهزية المهنية
+            نظام شغف لبناء التحول المهني الحقيقي
           </span>
         </motion.div>
 
-        {/* HERO */}
+        {/* HERO (HIGH TICKET HOOK) */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-black leading-[1.6] text-[#0F172A] md:text-6xl"
         >
-          توقف عن التعلم العشوائي…
+          أنت لا تحتاج المزيد من التعلم…
           <br />
           <span className="text-[#E96B8A]">
-            وابدأ طريق واضح لأول فرصة حقيقية
+            أنت تحتاج إلى أول خطوة صحيحة في الطريق الصحيح
           </span>
         </motion.h1>
 
         <p className="mx-auto mt-8 max-w-3xl text-xl leading-[2] text-gray-700 font-medium">
-          نظام شغف لا يبيع كورسات. بل يبنيك من الصفر إلى جاهزية سوق العمل خطوة بخطوة.
+          أغلب الشباب لا يفشلون لأنهم لا يتعلمون…  
+          بل لأنهم يتعلمون بدون اتجاه واضح يؤدي إلى وظيفة أو دخل حقيقي.
         </p>
 
-        {/* ===== WHO IS IT FOR ===== */}
+        {/* PROBLEM */}
         <div className="mt-16 text-right bg-white p-10 rounded-[34px] border border-pink-200 shadow-[0_25px_70px_rgba(233,107,138,.12)]">
-          <h2 className="text-2xl font-black text-[#0F172A]">لمن هذا النظام؟</h2>
+          <h2 className="text-2xl font-black text-[#0F172A]">
+            لماذا أنت عالق الآن؟
+          </h2>
 
           <div className="mt-6 space-y-4 text-gray-800 leading-[2]">
-            <p>✔ خريج هندسة / طب / إدارة أو أي تخصص أخر ..يريد دخول سوق العمل بطريقة صحيحة</p>
-            <p>✔ شخص يريد دخل و عائد مادي من مهارات  السوشيال ميديا / التسويق / صناعة المحتوى</p>
-            <p>✔ شخص لديه مهارات لكن لا يعرف كيف يحولها لوظيفة أو دخل</p>
-            <p>✔ شخص ضائع بين كورسات كثيرة بدون نتائج</p>
+            <p>✔ تتنقل بين مجالات كثيرة بدون قرار نهائي</p>
+            <p>✔ تتعلم مهارات لا ترتبط بوظيفة واضحة</p>
+            <p>✔ تجمع معلومات أكثر مما تطبق</p>
+            <p>✔ لا تعرف أول خطوة تؤدي لنتيجة حقيقية</p>
           </div>
         </div>
 
-        {/* ===== PROBLEM ===== */}
+        {/* CORE SHIFT */}
         <div className="mt-16 text-right">
-          <h2 className="text-3xl font-black text-[#0F172A]">المشكلة الحقيقية</h2>
+          <h2 className="text-3xl font-black text-[#0F172A]">
+            المشكلة ليست في التعلم…
+          </h2>
 
           <p className="mt-4 text-lg text-gray-800 leading-[2] font-medium">
-            أنت لا تفتقد المهارات…  
-            أنت تفتقد النظام الذي يربط المهارات بهدف واحد واضح.
+            المشكلة أنك لا تمتلك نظام يحدد:
             <br /><br />
-            لذلك تتعلم عشوائيًا:
-            جرافيك → تسويق → AI → محتوى  
-            لكن بدون أن تقترب من أول وظيفة أو عميل.
+            <span className="text-[#E96B8A] font-black">
+              أين تبدأ → ماذا تفعل → وكيف تصل لأول فرصة
+            </span>
           </p>
         </div>
-
-        {/* ===== WHAT YOU LEARN ===== */}
+                {/* WHAT SYSTEM DOES */}
         <div className="mt-20 text-right">
           <h2 className="text-3xl font-black text-center text-[#0F172A]">
-            ماذا ستتعلم داخل نظام شغف؟
+            ماذا يفعل نظام شغف فعليًا؟
           </h2>
 
           <div className="mt-10 space-y-6">
-            <Step title="اتجاه مهني واضح" desc="نعرفك هل تكمل تخصصك أو تغير أو تدمج مهاراتك." />
-            <Step title="مهارات سوق العمل" desc="CV + LinkedIn + مقابلات + تقديم احترافي." />
-            <Step title="مهارات السوشيال ميديا" desc="كيف تبني حضور قوي وتعرض نفسك أو خدماتك." />
-            <Step title="التسويق الشخصي" desc="كيف تحصل على وظائف أو عملاء بدون انتظار." />
-            <Step title="تنفيذ حقيقي" desc="تحويل كل شيء لخطوات عملية قابلة للتطبيق." />
+            <Step title="تحديد الاتجاه" desc="نحدد لك المجال الصحيح بناءً على وضعك وليس رغبات عشوائية." />
+            <Step title="بناء خطة واضحة" desc="نرسم لك أول 30 يوم للوصول إلى بداية حقيقية." />
+            <Step title="الدخول للسوق" desc="CV + LinkedIn + طريقة الحصول على أول فرصة." />
+            <Step title="بناء جاهزية مهنية" desc="مهارات سوق العمل + عرض نفسك بشكل احترافي." />
+            <Step title="التحول المهني" desc="من شخص ضائع → إلى شخص لديه مسار واضح وفرص." />
           </div>
         </div>
 
-        {/* ===== SYSTEM ===== */}
-        <div className="mt-24 text-right">
-          <h2 className="text-3xl font-black text-center text-[#0F172A]">
-            كيف يعمل نظام شغف®؟
-          </h2>
-
-          <div className="mt-10 space-y-6">
-            <Step title="1. البوصلة" desc="تحديد اتجاهك المهني الصحيح." />
-            <Step title="2. الخطة" desc="خطة 30 يوم واضحة ماذا تفعل بالضبط." />
-            <Step title="3. بناء الجاهزية" desc="CV + LinkedIn + Portfolio." />
-            <Step title="4. المهارات حسب حالتك" desc="هندسة / تسويق / محتوى / سوشيال." />
-            <Step title="5. دخول السوق" desc="وظيفة أو عميل أو فرصة حقيقية." />
-          </div>
-        </div>
-
-        {/* ===== PACKAGES ===== */}
+        {/* PACKAGES (HIGH TICKET STRUCTURE) */}
         <div className="mt-24">
           <h2 className="text-3xl font-black text-center text-[#0F172A]">
-            الباقات
+            مستويات التحول داخل النظام
           </h2>
 
           <div className="mt-12 grid md:grid-cols-3 gap-6 text-right">
@@ -118,12 +106,12 @@ export default function ResultPage() {
             <PackageCard
               title="البوصلة"
               price="29 ريال"
-              desc="لمن يشعر بالضياع"
+              desc="من الضياع إلى وضوح الاتجاه"
               features={[
                 "تحليل وضعك الحالي",
-                "اختيار المسار المناسب",
-                "تحديد ماذا تتعلم",
-                "خطة 30 يوم"
+                "اختيار مسار واحد صحيح",
+                "تحديد أول خطوة",
+                "خطة 7–30 يوم"
               ]}
               result="وضوح كامل لأول مرة"
             />
@@ -132,31 +120,30 @@ export default function ResultPage() {
               title="الانطلاقة"
               price="149 ريال"
               highlight
-              desc="بناء جاهزيتك المهنية"
+              desc="من المعرفة إلى أول فرصة"
               features={[
                 "كل ما في البوصلة",
-                "مهارات سوق العمل",
-                "CV + LinkedIn",
-                "بناء Portfolio",
-                "خطة تنفيذ"
+                "CV احترافي",
+                "LinkedIn قوي",
+                "Portfolio بسيط",
+                "طريقة الحصول على أول وظيفة أو عميل"
               ]}
-              result="جاهز للتقديم على وظائف أو عملاء"
+              result="أول فرصة حقيقية"
             />
 
             <PackageCard
-              title="التمكين الكامل"
+              title="التمكين"
               price="299 ريال"
-              desc="نتائج + متابعة"
+              desc="من فرصة إلى سيطرة على الفرص"
               features={[
                 "كل ما في الانطلاقة",
-                "تدريب مقابلات",
                 "تسويق شخصي",
-                "مراجعة أسبوعية",
-                "دخول السوق فعليًا"
+                "بناء حضور مهني",
+                "استراتيجية فرص مستمرة",
+                "توجيه حسب تخصصك الحقيقي"
               ]}
-              result="أول وظيفة / عميل / فرصة"
+              result="فرص مستمرة بدل انتظار"
             />
-
           </div>
         </div>
 
@@ -164,29 +151,28 @@ export default function ResultPage() {
         <div className="mt-24 rounded-[40px] bg-white border border-pink-200 p-12 text-center shadow-[0_25px_70px_rgba(233,107,138,.15)]">
 
           <h3 className="text-2xl font-black text-[#0F172A]">
-            قرارك اليوم يحدد سنة كاملة قادمة
+            القرار ليس “هل ستتعلم”…
           </h3>
 
-          <p className="mt-4 text-gray-700 leading-[2] font-medium">
-            إما تستمر في التجربة العشوائية… أو تبدأ نظام واضح يبنيك خطوة خطوة.
-          </p>
+        <p className="mt-4 text-gray-700 leading-[2] font-medium">
+  القرار الحقيقي هو: هل ستستمر في الضياع… أم تبدأ نظام واضح يقودك لفرصة؟
+</p>
 
-          <Link
-            href="/pricing"
-            className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-10 py-5 text-white font-bold shadow-lg hover:bg-[#d95d7d]"
-          >
-            ابدأ نظام شغف الآن
-            <ArrowRight size={20} />
-          </Link>
+<Link
+  href="/shagf-quiz"
+  className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-10 py-5 text-white font-bold shadow-lg hover:bg-[#d95d7d]"
+>
+  ادخل الفلتر الذكي لمعرفة مسارك
+  <ArrowRight size={20} />
+</Link>
 
         </div>
-
       </div>
     </section>
   );
 }
 
-/* ===== COMPONENTS ===== */
+/* COMPONENTS */
 
 function Step({ title, desc }: any) {
   return (
@@ -205,13 +191,13 @@ function PackageCard({ title, price, desc, features, result, highlight }: any) {
     <div
       className={`p-8 rounded-[28px] border bg-white transition ${
         highlight
-          ? "border-[#E96B8A] shadow-[0_25px_70px_rgba(233,107,138,.25)] scale-[1.02]"
+          ? "border-[#E96B8A] shadow-[0_25px_70px_rgba(233,107,138,.25)] scale-[1.03]"
           : "border-pink-200"
       }`}
     >
-      <div className="text-xl font-black text-[#0F172A]">{title}</div>
+      <div className="text-xl font-black">{title}</div>
       <div className="text-3xl text-[#E96B8A] font-black mt-2">{price}</div>
-      <p className="text-gray-700 mt-2 font-medium">{desc}</p>
+      <p className="text-gray-700 mt-2">{desc}</p>
 
       <div className="mt-6 space-y-2 text-sm text-gray-800">
         {features.map((f: string, i: number) => (
@@ -222,7 +208,7 @@ function PackageCard({ title, price, desc, features, result, highlight }: any) {
         ))}
       </div>
 
-      <div className="mt-6 text-sm font-bold text-[#E96B8A]">
+      <div className="mt-6 font-bold text-[#E96B8A]">
         النتيجة: {result}
       </div>
     </div>

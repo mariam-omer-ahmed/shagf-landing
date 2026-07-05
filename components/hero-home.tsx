@@ -1,9 +1,17 @@
 "use client";
+
 import { motion, type Variants } from "framer-motion";
-import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
-    import Link from "next/link";
+import Link from "next/link";
+import {
+  ArrowRight,
+  PlayCircle,
+  Sparkles,
+  ShieldCheck,
+  TrendingUp,
+} from "lucide-react";
 
 const MotionLink = motion.create(Link);
+
 const container: Variants = {
   hidden: {
     opacity: 0,
@@ -11,8 +19,8 @@ const container: Variants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
+      staggerChildren: 0.12,
+      delayChildren: 0.15,
     },
   },
 };
@@ -20,13 +28,13 @@ const container: Variants = {
 const fadeUp: Variants = {
   hidden: {
     opacity: 0,
-    y: 24,
+    y: 30,
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.7,
     },
   },
 };
@@ -34,202 +42,428 @@ const fadeUp: Variants = {
 export default function HeroHome() {
   return (
     <section
-      className="relative overflow-hidden bg-gradient-to-b from-[#FFF8FB] via-[#FFF3F7] to-[#FFF8FB]"
+      className="relative overflow-hidden bg-[#FFF9FB]"
       style={{
-        fontFamily: "Cairo, IBM Plex Sans Arabic, Tajawal, sans-serif",
+        fontFamily:
+          "'Cairo','IBM Plex Sans Arabic','Tajawal',sans-serif",
       }}
     >
-      {/* Animated Background */}
+      {/* ================= Background ================= */}
+
       <div className="absolute inset-0 overflow-hidden">
+
+        {/* Aurora 1 */}
         <motion.div
-          className="absolute left-[-200px] top-[-200px] h-[700px] w-[700px] rounded-full bg-pink-300/25 blur-[160px]"
           animate={{
-            x: [0, 40, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 14, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
-        />
-        <motion.div
-          className="absolute right-[-200px] top-[100px] h-[600px] w-[600px] rounded-full bg-fuchsia-300/15 blur-[160px]"
-          animate={{
-            x: [0, -30, 0],
+            x: [0, 80, 0],
             y: [0, 40, 0],
           }}
-          transition={{ duration: 16, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
-        />
-        <motion.div
-          className="absolute bottom-[-200px] left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-rose-200/25 blur-[160px]"
-          animate={{
-            scale: [1, 1.15, 1],
+          transition={{
+            duration: 18,
+            repeat: Infinity,
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }}
+          className="absolute -left-44 -top-44 h-[750px] w-[750px] rounded-full bg-pink-300/30 blur-[180px]"
         />
-        {/* subtle grid texture */}
+
+        {/* Aurora 2 */}
+        <motion.div
+          animate={{
+            x: [0, -70, 0],
+            y: [0, 60, 0],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+          }}
+          className="absolute -right-44 top-10 h-[700px] w-[700px] rounded-full bg-fuchsia-300/20 blur-[170px]"
+        />
+
+        {/* Aurora 3 */}
+        <motion.div
+          animate={{
+            scale: [1, 1.18, 1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+          }}
+          className="absolute bottom-[-260px] left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-rose-200/30 blur-[180px]"
+        />
+
+        {/* Grid */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
+              "linear-gradient(#000 1px, transparent 1px),linear-gradient(90deg,#000 1px,transparent 1px)",
             backgroundSize: "48px 48px",
           }}
         />
+
+        {/* Noise */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,#000 1px,transparent 1px)",
+            backgroundSize: "18px 18px",
+          }}
+        />
+
       </div>
 
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-7xl px-6 pt-24 pb-28"
+        className="relative mx-auto max-w-7xl px-6 pt-24 pb-24"
       >
-        {/* Badge */}
-        <motion.div variants={fadeUp} className="flex justify-center">
-          <span className="flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-md px-6 py-2.5 text-sm font-semibold text-[#E96B8A] border border-pink-200 shadow-[0_8px_30px_rgba(233,107,138,0.15)]">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E96B8A] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#E96B8A]" />
-            </span>
-            نظام شغف® — من الضياع إلى أول فرصة حقيقية
-          </span>
-        </motion.div>
+                {/* Hero Content */}
+        <motion.div
+          variants={fadeUp}
+          className="relative mx-auto max-w-6xl text-center"
+        >
 
-        {/* Title */}
-        <motion.div variants={fadeUp} className="text-center mt-10">
-          <h1 className="text-5xl md:text-6xl xl:text-7xl font-black leading-[1.05] text-gray-900">
-            أنت لا تحتاج أن تتعلم أكثر
-            <br />
-            <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-l from-[#E96B8A] to-[#c94a70] bg-clip-text text-transparent">
-                أنت تحتاج أن تعرف اتجاهك أولًا
-              </span>
-              <motion.span
+          {/* Breaking Belief Badge */}
+          <div className="inline-flex items-center gap-3 rounded-full border border-red-200 bg-white/90 px-6 py-3 shadow-[0_15px_40px_rgba(0,0,0,.06)] backdrop-blur-xl">
+
+            <span className="relative flex h-3 w-3">
+
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-900 opacity-70" />
+
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-gray-900" />
+
+            </span>
+
+            <span className="font-bold text--600">
+هل هذا انت؟            </span>
+
+          </div>
+
+          {/* Main Heading */}
+          <h1 className="mx-auto mt-10 max-w-5xl text-5xl font-black leading-[1.08] text-gray-900 md:text-6xl xl:text-7xl">
+
+            <span className="block">
+أنت قد تكون تتعلم بشكل صحيح          </span>
+لكن لا تزال بلا وظيفة حتى الآن  
+            <span className="mt-4 block text-gray-900 line-through">
+         </span>
+            <span className="relative mt-8 inline-block">
+              <span className="relative z-10 bg-gradient-to-l from-[#E96B8A] via-[#D8587C] to-[#E96B8A] bg-clip-text text-transparent">
+
+                <br />
+                وليس السبب أنك لا تملك المهارات
+               <br />
+
+بل أنك لا تعرف كيف تتحول هذه المعرفة إلى فرصة عمل حقيقية              </span>
+
+              <motion.div
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-                className="absolute bottom-1 right-0 left-0 h-4 bg-pink-200/50 -z-0 origin-right"
-                style={{ transform: "skewX(-10deg)" }}
+                transition={{
+                  duration: .9,
+                  delay: .4,
+                }}
+                className="absolute bottom-2 left-0 right-0 -z-10 h-5 origin-right rounded-full bg-pink-200/50"
               />
             </span>
+
           </h1>
 
-          <p className="mt-8 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-9">
-            المشكلة ليست نقص مهارات… بل غياب نظام يحدد لك ماذا تتعلم، ولماذا، ومتى تتوقف عن التعلم وتبدأ.
-            <br /><br />
-            <span className="font-semibold text-gray-900">
-              نظام شغف يبدأ باتجاه واضح، ثم يقودك خطوة بخطوة حتى أول فرصة حقيقية.
+          {/* Description */}
+          <p className="mx-auto mt-12 max-w-4xl text-xl leading-10 text-gray-600">
+الكورسات وحدها لا تكفي لدخول سوق العمل
+            <span className="font-bold text-gray-900">
             </span>
+                        <br /><br />
+
+لأن المشكلة ليست نقص المهارات
+            <span className="font-bold text-[#E96B8A]">
+            </span>
+
+            <br /><br />
+
+            لذلك صممنا <span className="font-extrabold text-gray-900">نظام شغف</span>...
+
+            <span className="font-bold text-[#E96B8A]">
+            </span>
+
+ليحوّل ما تتعلمه إلى خطوات واضحة تقودك إلى أول فرصة عمل بشكل أسرع.
           </p>
-        </motion.div>
 
-        {/* MAIN GRID */}
-        <div className="mt-20 grid lg:grid-cols-12 gap-10 items-center">
+          {/* Mini Proof */}
+          <motion.div
+            variants={fadeUp}
+            className="mt-12 flex flex-wrap items-center justify-center gap-5"
+          >
 
-          {/* LEFT PROOF */}
-          <motion.div variants={fadeUp} className="space-y-6 lg:col-span-2">
-            <motion.div
-              whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(233,107,138,0.15)" }}
-              transition={{ duration: 0.25 }}
-              className="rounded-2xl bg-white/70 backdrop-blur-md border border-pink-100 p-5 shadow-sm cursor-default"
-            >
-              <p className="text-sm text-gray-500">قبل النظام</p>
-              <p className="font-semibold text-gray-900 mt-1">
-                كورسات + تشتت + بدون اتجاه
-              </p>
-            </motion.div>
+            <div className="flex items-center gap-2 rounded-full bg-white/80 px-5 py-3 shadow-md backdrop-blur-lg">
 
-            <motion.div
-              whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(233,107,138,0.15)" }}
-              transition={{ duration: 0.25 }}
-              className="rounded-2xl bg-white border border-pink-200 p-5 shadow-md cursor-default relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 h-16 w-16 bg-gradient-to-bl from-pink-200/40 to-transparent rounded-bl-full" />
-              <div className="flex items-center gap-1.5 relative">
-                <Sparkles className="h-3.5 w-3.5 text-[#E96B8A]" />
-                <p className="text-sm text-gray-500">بعد أول مرحلة</p>
-              </div>
-              <p className="font-semibold text-gray-900 mt-1 relative">
-                اتجاه واضح، وخطة تعرف بها ماذا تفعل غدًا
-              </p>
-            </motion.div>
+              <ShieldCheck className="h-5 w-5 text-[#E96B8A]" />
+
+              <span className="font-semibold text-gray-700">
+                لا نبيع كورسات... نزيل التشتت.
+              </span>
+
+            </div>
+
+            <div className="flex items-center gap-2 rounded-full bg-white/80 px-5 py-3 shadow-md backdrop-blur-lg">
+
+              <TrendingUp className="h-5 w-5 text-[#E96B8A]" />
+
+              <span className="font-semibold text-gray-700">
+                ابدأ بالطريق الصحيح قبل استثمار وقتك.
+              </span>
+
+            </div>
+
           </motion.div>
 
-          {/* VIDEO */}
-          <motion.div variants={fadeUp} className="lg:col-span-7 relative group">
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-pink-300/40 to-fuchsia-300/30 blur-3xl rounded-[50px]"
-              animate={{ opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 5, repeat: Infinity, ease: [0.42, 0, 0.58, 1]}}
-            />
+        </motion.div>
+                {/* ================= Showcase ================= */}
 
-            <div className="relative rounded-[44px] overflow-hidden border border-pink-200 shadow-[0_40px_120px_rgba(0,0,0,0.25)] bg-black transition-transform duration-500 group-hover:scale-[1.01]">
+        <motion.div
+          variants={fadeUp}
+          className="relative mt-24"
+        >
+
+          {/* Floating Card 1 */}
+          <motion.div
+            animate={{
+              y: [0, -12, 0],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+            }}
+            className="absolute left-0 top-10 z-20 hidden w-64 rounded-3xl border border-white/60 bg-white/70 p-6 shadow-[0_25px_70px_rgba(0,0,0,.08)] backdrop-blur-xl xl:block"
+          >
+
+            <div className="mb-4 inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600">
+              قبل نظام شغف
+            </div>
+
+            <div className="space-y-3 text-gray-700">
+
+              <p>❌ تبدأ كورسًا جديدًا كل شهر.</p>
+
+              <p>❌ تغيّر المجال مع كل نصيحة.</p>
+
+              <p>❌ تشعر أنك متأخر عن الجميع.</p>
+
+            </div>
+
+            <div className="mt-5 border-t pt-4">
+
+              <p className="text-lg font-black text-gray-900">
+                "هل أنا أضيع عمري؟"
+              </p>
+
+            </div>
+
+          </motion.div>
+
+          {/* Floating Card 2 */}
+          <motion.div
+            animate={{
+              y: [0, 14, 0],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+            }}
+            className="absolute right-0 top-16 z-20 hidden w-64 rounded-3xl border border-pink-200 bg-white/80 p-6 shadow-[0_25px_70px_rgba(233,107,138,.15)] backdrop-blur-xl xl:block"
+          >
+
+            <div className="mb-4 flex items-center gap-2">
+
+              <Sparkles className="h-4 w-4 text-[#E96B8A]" />
+
+              <span className="text-sm font-bold text-[#E96B8A]">
+                بعد أول خطوة
+              </span>
+
+            </div>
+
+             <div className="space-y-4 text-gray-900">
+              <div className="flex gap-2">
+
+                <span>✔</span>
+
+                <span> تتوقف عن الدوران بين المجالات</span>
+
+              </div>
+
+              <div className="flex gap-2">
+
+                <span>✔</span>
+
+                <span> تعرف أين تستثمر وقتك</span>
+
+              </div>
+
+              <div className="flex gap-2">
+
+                <span>✔</span>
+
+                <span>تتحرك بثقة نحو أول فرصة عمل حقيقية</span>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+          {/* Video */}
+          <div className="mx-auto max-w-5xl">
+
+            <motion.div
+              whileHover={{
+                scale: 1.01,
+              }}
+              transition={{
+                duration: .3,
+              }}
+              className="relative overflow-hidden rounded-[38px] border border-pink-200 bg-black shadow-[0_45px_120px_rgba(0,0,0,.22)]"
+            >
+
+              {/* Glow */}
+
+              <div className="absolute inset-0 bg-gradient-to-tr from-pink-300/20 via-transparent to-fuchsia-300/20 pointer-events-none" />
+
               <iframe
-                className="w-full aspect-video"
+                className="aspect-video w-full"
                 src="https://www.youtube.com/embed/2DEZIZC1B4s"
                 title="Shaghaf System"
                 allowFullScreen
               />
+
+            </motion.div>
+
+            <div className="mt-8 flex items-center justify-center gap-3 text-center text-gray-900">
+
+              <PlayCircle className="h-5 w-5 text-[#E96B8A]" />
+
+              <span className="font-medium">
+                شاهد كيف يتحول التشتت إلى خطة واضحة خلال دقائق.
+              </span>
+
             </div>
+
+          </div>
+
+          {/* CTA BOX */}
+
+          <motion.div
+            whileHover={{
+              y: -4,
+            }}
+            transition={{
+              duration: .25,
+            }}
+            className="mx-auto mt-14 max-w-2xl overflow-hidden rounded-[34px] border border-pink-200 bg-white shadow-[0_30px_90px_rgba(233,107,138,.15)]"
+          >
+
+            <div className="bg-gradient-to-r from-[#E96B8A] to-[#d8587c] p-[1px]">
+
+              <div className="rounded-[33px] bg-white px-10 py-10">
+
+                <div className="inline-flex rounded-full bg-pink-100 px-4 py-1 text-sm font-bold text-[#E96B8A]">
+
+                  الخطوة الأولى داخل نظام شغف
+
+                </div>
+
+                <h3 className="mt-6 text-4xl font-black leading-tight text-gray-900">
+
+لا تضيع سنة أخرى
+                  <br />
+
+و أنت تحاول تخمين الطريق
+                </h3>
+
+                <p className="mt-6 text-lg leading-9 text-gray-900">
+
+ابدأ أولًا بتحديد الاتجاه المناسب لك
+                  <br />
+
+                  ثم تعلّم فقط ما يقربك من أول فرصة حقيقية.
+
+                </p>
+
+                <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+
+                  <MotionLink
+                    href="/Bousola"
+                    whileHover={{
+                      scale: 1.03,
+                    }}
+                    whileTap={{
+                      scale: .98,
+                    }}
+                    className="flex flex-1 items-center justify-center gap-3 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d8587c] px-6 py-5 text-lg font-bold text-white shadow-xl"
+                  >
+
+ابدأ ببوصلة سوق العمل 
+                    <ArrowRight className="h-5 w-5" />
+
+                  </MotionLink>
+
+                  <MotionLink
+                    href="/result"
+                    whileHover={{
+                      scale: 1.02,
+                    }}
+                    className="flex flex-1 items-center justify-center rounded-2xl border-2 border-[#E96B8A] px-6 py-5 text-lg font-bold text-[#E96B8A]"
+                  >
+
+                    كيف يعمل النظام؟
+
+                  </MotionLink>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+        </motion.div>
+                {/* Scroll Indicator */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: [0.35, 1, 0.35],
+            y: [0, 8, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+          className="mt-20 flex flex-col items-center"
+        >
+
+          <div className="flex h-12 w-7 justify-center rounded-full border-2 border-pink-300">
 
             <motion.div
-              variants={fadeUp}
-              className="mt-5 flex justify-center items-center gap-2 text-sm text-gray-600"
-            >
-              <PlayCircle className="h-4 w-4 text-[#E96B8A]" />
-              شاهد كيف يتحول الضياع → إلى اتجاه واضح خلال نظام واحد
-            </motion.div>
-          </motion.div>
+              animate={{
+                y: [4, 22, 4],
+              }}
+              transition={{
+                duration: 1.6,
+                repeat: Infinity,
+              }}
+              className="mt-2 h-2.5 w-2.5 rounded-full bg-[#E96B8A]"
+            />
 
-          {/* RIGHT CTA */}
-          <motion.div variants={fadeUp} className="space-y-6 lg:col-span-3">
-            <div className="rounded-2xl bg-white border border-pink-200 p-6 shadow-md relative overflow-hidden">
-              <div className="absolute -top-6 -left-6 h-20 w-20 bg-pink-100/60 rounded-full blur-2xl" />
-              <p className="text-lg font-bold text-gray-900 relative">
-                لا تبدأ بمهارة
-              </p>
-              <p className="text-gray-600 mt-2 relative">
-                ابدأ باتجاه. هذا ما يفعله نظام شغف من أول خطوة.
-              </p>
-            </div>
+          </div>
 
-            <div className="space-y-2">
-              <p className="text-center text-xs font-semibold text-[#E96B8A]">
-                الخطوة الأولى داخل نظام شغف
-              </p>
-              <MotionLink
-  href="/bousola"
-  whileHover={{
-    scale: 1.04,
-    boxShadow: "0 20px 40px rgba(233,107,138,0.35)",
-  }}
-  whileTap={{ scale: 0.98 }}
-  transition={{ duration: 0.2 }}
-className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d85a7c] px-6 py-4 text-white font-bold text-lg shadow-lg">
-  ابدأ بالبوصلة
+        </motion.div>
 
-  <motion.span
-    animate={{ x: [0, -4, 0] }}
-    transition={{ duration: 1.4, repeat: Infinity, ease: [0.25, 0.1, 0.25, 1] }}
-  >
-    <ArrowRight className="h-5 w-5" />
-  </motion.span>
-</MotionLink>
-            </div>
-
-       
-<MotionLink
-  href="/result"
-  whileHover={{
-    scale: 1.02,
-    backgroundColor: "rgba(253,242,248,1)",
-  }}
-  whileTap={{ scale: 0.98 }}
-  className="flex items-center justify-center rounded-2xl border border-[#E96B8A] px-6 py-4 font-semibold text-[#E96B8A] transition-colors"
->
-  كيف يعمل النظام؟
-</MotionLink>
-
-          </motion.div>
-
-        </div>
       </motion.div>
     </section>
   );

@@ -16,7 +16,7 @@ const navItems = [
   },
   {
     title: "لماذا شغف؟",
-    href: "/features",
+    href: "/#features",
   },
   {
     title: "آراء المتدربين",
@@ -95,7 +95,7 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/pricing"
+               href="/shagf-quiz"
               className="
                 inline-flex
                 items-center

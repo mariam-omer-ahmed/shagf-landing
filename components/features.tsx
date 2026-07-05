@@ -2,50 +2,50 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, CircleAlert } from "lucide-react";
 
 const painPoints = [
   {
     number: "01",
     image: "/images/s1.jpg",
-    title: "كل أسبوع تبدأ مجالًا جديدًا",
+    title: "كل يوم تقتنع بمجال جديد",
     description:
-      "ثم تتوقف لأنك غير متأكد أن هذا هو الطريق الذي سيقودك إلى فرصة حقيقية.",
+      "مرة برمجة... مرة تصميم... مرة ذكاء اصطناعي. المشكلة ليست كثرة الخيارات... المشكلة أنك تخاف أن تختار الطريق الخطأ.",
   },
   {
     number: "02",
     image: "/images/s2.jpg",
-    title: "اشتريت أكثر من دورة",
+    title: "تتعلم كثيرًا... لكن حياتك لا تتحرك",
     description:
-      "لكن لا تعرف أي واحدة منها ستقربك فعلًا من أول وظيفة أو أول عميل.",
+      "كل دورة تمنحك شعورًا مؤقتًا أنك تقترب، لكن عندما تنتهي منها تعود لنفس السؤال: ماذا أفعل الآن؟",
   },
   {
     number: "03",
     image: "/images/s3.jpg",
-    title: "تملك مهارات جيدة",
+    title: "أصبحت تجمع المعلومات بدل اتخاذ القرار",
     description:
-      "لكن لا تملك Portfolio أو LinkedIn احترافي يعكس قيمتك الحقيقية.",
+      "فيديوهات... مقالات... كورسات... تعرف أكثر من أي وقت، لكنك لا تتحرك أكثر من أي وقت.",
   },
   {
     number: "04",
     image: "/images/s1.jpg",
-    title: "كلما سألت شخصًا",
+    title: "تؤجل البداية حتى تصبح جاهزًا",
     description:
-      "أعطاك نصيحة مختلفة، حتى أصبحت لا تعرف أي طريق يجب أن تسلكه.",
+      "تنتظر اللحظة التي تشعر فيها بالثقة الكاملة... لكنها لا تأتي أبدًا.",
   },
   {
     number: "05",
-    image: "/images/s1.jpg",
-    title: "مرت أشهر",
+    image: "/images/s2.jpg",
+    title: "كل نصيحة تزيد حيرتك",
     description:
-      "وما زلت تؤجل البداية لأن الصورة الكاملة ما زالت غير واضحة بالنسبة لك.",
+      "كل شخص يخبرك بطريق مختلف... حتى أصبحت لا تعرف هل المشكلة في السوق أم في قرارك.",
   },
   {
     number: "06",
-    image: "/images/s1.jpg",
-    title: "تشعر أنك متأخر",
+    image: "/images/s3.jpg",
+    title: "تشعر أن حياتك متوقفة",
     description:
-      "وترى الجميع يتقدم بينما أنت ما زلت تبحث عن أول خطوة صحيحة.",
+      "أسوأ شعور ليس أنك لا تعمل... بل أنك لا تعرف إن كنت تتحرك نحو مستقبلك... أم بعيدًا عنه.",
   },
 ];
 
@@ -74,9 +74,9 @@ const item = {
 
 export default function Features() {
   return (
-    <section
+    <section id="features"
       dir="rtl"
-      className="relative overflow-hidden bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF8FB] py-24"
+      className="relative overflow-hidden bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF8FB] py-32"
       style={{
         fontFamily:
           "'Cairo','IBM Plex Sans Arabic','Tajawal',sans-serif",
@@ -84,17 +84,17 @@ export default function Features() {
     >
       {/* Background */}
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
 
-        <div className="absolute left-1/2 top-[-220px] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-[#E96B8A]/10 blur-[150px]" />
+        <div className="absolute left-1/2 top-[-260px] h-[700px] w-[900px] -translate-x-1/2 rounded-full bg-[#E96B8A]/10 blur-[180px]" />
 
-        <div className="absolute -right-44 bottom-0 h-[450px] w-[450px] rounded-full bg-pink-200/20 blur-[150px]" />
+        <div className="absolute -left-44 top-1/3 h-[400px] w-[400px] rounded-full bg-pink-200/25 blur-[140px]" />
 
-        <div className="absolute -left-44 top-1/3 h-[380px] w-[380px] rounded-full bg-[#FFD6E3]/30 blur-[140px]" />
+        <div className="absolute -right-52 bottom-0 h-[500px] w-[500px] rounded-full bg-[#FFD6E3]/20 blur-[170px]" />
 
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
+      <div className="relative mx-auto max-w-7xl px-6">
 
         {/* Header */}
 
@@ -102,112 +102,115 @@ export default function Features() {
           initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-20 max-w-5xl text-center"
+          transition={{ duration: .7 }}
+          className="mx-auto max-w-5xl text-center"
         >
 
-          {/* Badge */}
+          <div className="inline-flex items-center gap-3 rounded-full border border-red-200 bg-white px-7 py-3 shadow-xl">
 
-          <div className="mb-8 inline-flex flex-row-reverse items-center gap-2 rounded-full border border-[#F3B6C8] bg-white px-6 py-3 shadow-lg shadow-pink-100">
+            <CircleAlert className="h-5 w-5 text-red-500" />
 
-            <Sparkles
-              size={18}
-              className="text-[#E96B8A]"
-            />
-
-            <span className="text-lg font-bold text-[#E96B8A]">
-              هل هذا أنت؟
+            <span className="font-bold text-red-500">
+              المشكلة ليست أنك لا تجتهد...
             </span>
 
           </div>
 
-          {/* Heading */}
+          <h2 className="mt-10 text-[44px] font-black leading-[1.45] text-[#151827] md:text-6xl">
 
-          <h2 className="text-[42px] font-black leading-[1.6] text-[#151827] md:text-6xl">
-
-            ربما ليست مشكلتك أنك لا تجتهد...
+            ربما المشكلة...
 
             <br />
 
-            بل أنك تتحرك
+            أنك تمضي سنوات
 
             <span className="text-[#E96B8A]">
-              {" "}دون اتجاه واضح.
+              {" "}تستعد للمستقبل...
             </span>
+
+            <br />
+
+            دون أن تبدأه.
 
           </h2>
 
-          <p className="mx-auto mt-8 max-w-3xl text-xl leading-[2] text-gray-600">
+          <p className="mx-auto mt-10 max-w-4xl text-[22px] leading-[2.1] text-gray-600">
 
-            قد تكون طالبًا، أو خريجًا، أو صاحب خبرة...
+            أغلب الناس لا يتأخرون لأنهم كسالى...
+
+            <br />
+
+            بل لأنهم يخافون أن يبدأوا في الطريق الخطأ.
 
             <br /><br />
 
-            لكن إذا كنت تبذل الكثير من الجهد دون أن تقترب من المكان الذي تستحقه،
-            فربما المشكلة ليست في قدراتك.
+            فيشاهدون المزيد من الفيديوهات...
+
+            ويشترون المزيد من الكورسات...
+
+            ويجمعون المزيد من المعلومات...
 
             <br /><br />
 
-            المشكلة أنك لم تمتلك بعد خارطة طريق واضحة،
-            تساعدك على اتخاذ القرار الصحيح في الوقت الصحيح.
+            <span className="font-black text-[#151827]">
+
+              بينما حياتهم المهنية...
+
+            </span>
+
+            <span className="font-black text-[#E96B8A]">
+              {" "}ما زالت في نفس المكان.
+            </span>
 
           </p>
 
-          {/* Divider */}
-
-          <div className="mx-auto mt-10 flex flex-row-reverse items-center justify-center gap-4">
-
-            <div className="h-[2px] w-20 rounded-full bg-[#E96B8A]" />
-
-            <div className="h-3 w-3 rounded-full bg-[#E96B8A]" />
-
-            <div className="h-[2px] w-20 rounded-full bg-[#E96B8A]" />
-
-          </div>
+          <div className="mx-auto mt-14 h-[2px] w-44 rounded-full bg-gradient-to-l from-transparent via-[#E96B8A] to-transparent" />
 
         </motion.div>
-
-                {/* Cards */}
+                {/* Pain Cards */}
 
         <motion.div
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-120px" }}
-          className="grid gap-8 md:grid-cols-2 xl:grid-cols-3"
+          className="mt-24 grid gap-8 md:grid-cols-2 xl:grid-cols-3"
         >
           {painPoints.map((card) => (
             <motion.article
               key={card.number}
               variants={item}
               whileHover={{
-                y: -10,
-                scale: 1.02,
+                y: -8,
+                scale: 1.015,
               }}
               transition={{ duration: 0.25 }}
-              className="group overflow-hidden rounded-[34px] border border-[#F5D7E1] bg-white shadow-[0_20px_60px_rgba(0,0,0,.06)] transition-all duration-300 hover:border-[#E96B8A]/40 hover:shadow-[0_35px_80px_rgba(233,107,138,.18)]"
+              className="group relative overflow-hidden rounded-[34px] border border-[#F3D6DF] bg-white shadow-[0_25px_70px_rgba(0,0,0,.05)] transition-all duration-500 hover:border-[#E96B8A]/40 hover:shadow-[0_40px_90px_rgba(233,107,138,.16)]"
             >
+              {/* Glow */}
+
+              <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#E96B8A]/10 blur-[80px] opacity-0 transition duration-500 group-hover:opacity-100" />
 
               {/* Image */}
 
-              <div className="relative overflow-hidden p-4 pb-0">
+              <div className="relative h-[260px] overflow-hidden">
 
-                <div className="relative h-[330px] overflow-hidden rounded-[24px]">
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  className="object-cover transition duration-700 group-hover:scale-105"
+                />
 
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    fill
-                    className="object-cover transition duration-700 group-hover:scale-105"
-                  />
+                {/* Overlay */}
 
-                  {/* Number */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
 
-                  <div className="absolute left-4 top-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E96B8A] text-xl font-black text-white shadow-lg">
+                {/* Number */}
 
-                    {card.number}
+                <div className="absolute left-5 top-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/90 text-xl font-black text-[#E96B8A] shadow-xl backdrop-blur-xl">
 
-                  </div>
+                  {card.number}
 
                 </div>
 
@@ -215,19 +218,23 @@ export default function Features() {
 
               {/* Content */}
 
-              <div className="px-8 pb-9 pt-8 text-center">
+              <div className="relative px-8 pb-9 pt-8">
 
-                <h3 className="text-[33px] font-black leading-[1.45] text-[#151827] transition-colors duration-300 group-hover:text-[#E96B8A]">
+                <div className="mb-4 inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-xs font-bold text-red-500">
+
+                  هذا ما يبقيك عالقًا
+
+                </div>
+
+                <h3 className="text-[31px] font-black leading-[1.45] text-[#151827] transition duration-300 group-hover:text-[#E96B8A]">
 
                   {card.title}
 
                 </h3>
 
-                {/* Accent */}
+                <div className="my-5 h-[3px] w-16 rounded-full bg-[#E96B8A] transition-all duration-500 group-hover:w-28" />
 
-                <div className="mx-auto my-5 h-1 w-16 rounded-full bg-[#E96B8A] transition-all duration-300 group-hover:w-28" />
-
-                <p className="text-[21px] leading-[2] text-gray-600">
+                <p className="text-[20px] leading-[2] text-gray-600">
 
                   {card.description}
 
@@ -238,235 +245,8 @@ export default function Features() {
             </motion.article>
           ))}
         </motion.div>
+                {/* FALSE BELIEF */}
 
-        {/* Transition Box */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: .6 }}
-          className="mx-auto mt-24 max-w-5xl"
-        >
-
-          <div className="relative overflow-hidden rounded-[34px] border border-[#F3C8D6] bg-gradient-to-br from-[#FFF4F8] via-[#FFF9FB] to-[#FFE8EF] px-8 py-12 shadow-[0_18px_55px_rgba(233,107,138,.08)]">
-
-            <div className="absolute -right-20 top-0 h-52 w-52 rounded-full bg-[#E96B8A]/10 blur-[100px]" />
-
-            <div className="absolute -left-20 bottom-0 h-52 w-52 rounded-full bg-pink-200/20 blur-[100px]" />
-
-            <h3 className="relative text-center text-4xl font-black leading-[1.7] text-[#151827]">
-
-              إذا وجدت نفسك في أكثر من نقطة...
-
-              <br />
-
-              <span className="text-[#E96B8A]">
-
-                فالمشكلة ليست في إجتهادك.
-
-              </span>
-
-            </h3>
-
-            <p className="relative mt-8 text-center text-2xl leading-[2] text-gray-700">
-
-              المشكلة أنك تحتاج إلى
-
-              <span className="font-black text-[#E96B8A]">
-
-                {" "}نظام واضح
-
-              </span>
-
-              <br />
-
-              يرشدك إلى الخطوة الصحيحة التالية...
-
-              <br />
-
-              وليس دورة جديدة كل أسبوع.
-
-            </p>
-
-          </div>
-
-        </motion.div>
-
-                {/* Solution Section */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mx-auto mt-28 max-w-6xl"
-        >
-
-          <div className="relative overflow-hidden rounded-[42px] bg-gradient-to-br from-[#E96B8A] via-[#DD5D7D] to-[#C84A69] px-8 py-14 text-white shadow-[0_35px_90px_rgba(233,107,138,.35)] md:px-14 md:py-16">
-
-            {/* Background Glow */}
-
-            <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-white/10 blur-[120px]" />
-
-            <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-white/10 blur-[140px]" />
-
-            {/* Badge */}
-
-            <div className="relative inline-flex items-center rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold backdrop-blur-md">
-
-              لهذا يبدأ نظام شغف بطريقة مختلفة
-
-            </div>
-
-            {/* Heading */}
-
-            <h2 className="relative mt-8 text-4xl font-black leading-[1.5] md:text-6xl">
-
-              نحن لا نبدأ بإعطائك
-
-              <br />
-
-              دورة تدريبية...
-
-            </h2>
-
-            <h3 className="relative mt-5 text-3xl font-black text-pink-100 md:text-4xl">
-
-              بل نبدأ بفهمك أنت.
-
-            </h3>
-
-            {/* Steps */}
-
-            <div className="relative mt-14 grid gap-7 md:grid-cols-2">
-
-              {/* Card 1 */}
-
-              <div className="rounded-[28px] border border-white/10 bg-white/10 p-8 backdrop-blur-xl transition duration-300 hover:bg-white/15">
-
-                <div className="mb-5 text-5xl font-black text-pink-100">
-                  01
-                </div>
-
-                <h4 className="mb-4 text-2xl font-black">
-
-                  نفهم وضعك الحالي
-
-                </h4>
-
-                <p className="leading-[2] text-pink-50">
-
-                  نتعرف على تخصصك، وخبراتك، وطموحاتك،
-                  ونحدد بدقة أين تقف اليوم،
-                  وما الذي يمنعك من الوصول للفرصة التي تستحقها.
-
-                </p>
-
-              </div>
-
-              {/* Card 2 */}
-
-              <div className="rounded-[28px] border border-white/10 bg-white/10 p-8 backdrop-blur-xl transition duration-300 hover:bg-white/15">
-
-                <div className="mb-5 text-5xl font-black text-pink-100">
-                  02
-                </div>
-
-                <h4 className="mb-4 text-2xl font-black">
-
-                  نبني لك خارطة طريق
-
-                </h4>
-
-                <p className="leading-[2] text-pink-50">
-
-                  لا نقدم خطة عامة للجميع،
-                  بل مسارًا واضحًا يناسب مرحلتك الحالية،
-                  ويقودك خطوة بخطوة نحو هدفك.
-
-                </p>
-
-              </div>
-
-              {/* Card 3 */}
-
-              <div className="rounded-[28px] border border-white/10 bg-white/10 p-8 backdrop-blur-xl transition duration-300 hover:bg-white/15">
-
-                <div className="mb-5 text-5xl font-black text-pink-100">
-                  03
-                </div>
-
-                <h4 className="mb-4 text-2xl font-black">
-
-                  نبني حضورك المهني
-
-                </h4>
-
-                <p className="leading-[2] text-pink-50">
-
-                  نحول خبراتك ومهاراتك
-                  إلى هوية احترافية قوية،
-                  عبر LinkedIn و Portfolio
-                  وسيرة ذاتية تعكس قيمتك الحقيقية.
-
-                </p>
-
-              </div>
-
-              {/* Card 4 */}
-
-              <div className="rounded-[28px] border border-white/10 bg-white/10 p-8 backdrop-blur-xl transition duration-300 hover:bg-white/15">
-
-                <div className="mb-5 text-5xl font-black text-pink-100">
-                  04
-                </div>
-
-                <h4 className="mb-4 text-2xl font-black">
-
-                  ثم نجهزك للفرص
-
-                </h4>
-
-                <p className="leading-[2] text-pink-50">
-
-                  سواء كانت وظيفة،
-                  أو عملًا حرًا،
-                  أو ترقية،
-                  أو مشروعًا خاصًا...
-                  ستكون جاهزًا عندما تصل الفرصة.
-
-                </p>
-
-              </div>
-
-            </div>
-
-            {/* Bottom Message */}
-
-            <div className="relative mt-14 rounded-[30px] border border-white/20 bg-white/10 p-8 text-center backdrop-blur-xl">
-
-              <p className="text-2xl font-black leading-[2]">
-
-                لسنا هنا لنخبرك ماذا تتعلم...
-
-                <br />
-
-                نحن هنا لنساعدك على بناء
-
-                <span className="text-yellow-200">
-
-                  {" "}مسارك المهني بالطريقة التي تناسبك.
-
-                </span>
-
-              </p>
-
-            </div>
-
-          </div>
-
-        </motion.div>
                 {/* Final CTA */}
 
         <motion.div
@@ -474,100 +254,133 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mx-auto mt-28 max-w-5xl text-center"
+          className="mx-auto mt-32 max-w-5xl text-center"
         >
 
-          <h2 className="text-4xl font-black leading-[1.7] text-[#151827] md:text-5xl">
+          <div className="mb-6 inline-flex items-center rounded-full border border-[#E96B8A]/20 bg-[#FFF3F7] px-6 py-3 text-sm font-bold text-[#E96B8A]">
 
-            مهما كان تخصصك...
+  القرار الذي ستتخذه خلال الدقائق القادمة...
+  قد يختصر عليك سنوات من الدوران.
 
-            <span className="text-[#E96B8A]">
+</div>
 
-              {" "}لسنا هنا لنبيعك دورة جديدة.
+<h2 className="text-4xl font-black leading-[1.6] text-[#151827] md:text-6xl">
 
-            </span>
+  قبل أن تشتري
 
-          </h2>
+  <span className="text-[#E96B8A]">
 
-          <p className="mx-auto mt-8 max-w-3xl text-xl leading-[2.1] text-gray-600">
+    {" "}أي كورس جديد...
 
-            نحن نساعدك على بناء مسار مهني واضح،
-            وتحديد أولوياتك،
-            ثم تنفيذ الخطوات الصحيحة حتى تصل إلى
-            الوظيفة أو العميل أو الفرصة التي تستحقها.
+  </span>
 
-          </p>
+  <br />
 
-          {/* CTA Card */}
+  تأكد أولًا...
 
-          <div className="relative mt-16 overflow-hidden rounded-[36px] border border-pink-100 bg-white p-10 shadow-[0_25px_70px_rgba(233,107,138,.10)]">
+  <br />
 
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FFF8FB] via-white to-[#FFF1F5]" />
+  أنك تسير في الاتجاه الصحيح.
 
-            <div className="relative">
+</h2>
 
-              <h3 className="text-3xl font-black leading-[1.7] text-[#151827]">
+<p className="mx-auto mt-10 max-w-3xl text-2xl leading-[2] text-gray-600">
 
-                ابدأ ببناء مسارك المهني
+  إذا كنت مخطئًا في اختيار الطريق...
 
-                <span className="text-[#E96B8A]">
+</p>
 
-                  {" "}بشكل صحيح.
+<div className="mx-auto mt-10 max-w-3xl space-y-8">
 
-                </span>
+  <p className="text-center text-[42px] font-black text-[#E96B8A]">
 
-              </h3>
+    فلن تنقذك 100 دورة.
 
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-[2] text-gray-600">
+  </p>
 
-                الخطوة الأولى ليست أن تتعلم أكثر...
+  <p className="text-center text-[42px] font-black text-[#E96B8A]">
 
-                <br />
+    ولا 100 شهادة.
 
-                بل أن تعرف
+  </p>
 
-                <span className="font-bold text-[#E96B8A]">
+  <p className="text-center text-[42px] font-black text-[#E96B8A]">
 
-                  {" "}ماذا تتعلم،
+    ولا 1000 ساعة تعلم.
 
-                </span>
+  </p>
 
-                ولماذا،
+</div>
 
-                ومتى.
+<div className="relative mt-16 overflow-hidden rounded-[38px] border border-pink-100 bg-white p-12 shadow-[0_30px_80px_rgba(233,107,138,.12)]">
 
-              </p>
+  <div className="absolute inset-0 bg-gradient-to-br from-[#FFF8FB] via-white to-[#FFF2F6]" />
 
-              <motion.a
-              href="https://forms.gle/PU3pBLc2oxFNPBtb8"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-               className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-10 py-5 text-xl font-bold text-white shadow-[0_20px_50px_rgba(233,107,138,.35)] transition hover:bg-[#d95d7d]"
-                  >
-                 ابدأ بتشخيص مسارك
+  <div className="relative">
 
-               <ArrowRight size={22} />
-               </motion.a>
+    <h3 className="text-[34px] font-black leading-[1.8] text-[#151827]">
 
-              <p className="mt-8 text-gray-500">
+      المشكلة ليست في كمية التعلم...
 
-                نساعدك على اتخاذ القرار الصحيح...
+      <br />
 
-                خطوة بخطوة حتى تصل إلى فرصك الحقيقية.
+      <span className="text-[#E96B8A]">
 
-              </p>
+        بل في اتجاه التعلم.
 
-            </div>
+      </span>
 
-          </div>
+    </h3>
 
+    <div className="mx-auto my-10 h-px w-48 bg-gradient-to-l from-transparent via-[#E96B8A]/40 to-transparent" />
+
+    <p className="mx-auto max-w-2xl text-xl leading-[2.1] text-gray-700">
+
+      لهذا السبب...
+
+      نحن لا نبدأ بإعطائك كورسًا.
+
+      <br /><br />
+
+      نبدأ أولًا بتحديد مكانك الحالي،
+
+      ثم نرسم لك أقصر طريق للوصول إلى هدفك.
+
+    </p>
+
+ <motion.a
+  href="/shagf-quiz"
+  whileHover={{
+    scale: 1.04,
+    boxShadow: "0 25px 60px rgba(233,107,138,.35)",
+  }}
+  whileTap={{ scale: 0.98 }}
+  className="mt-12 inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-14 py-6 text-2xl font-black text-white transition hover:bg-[#d95d7d]"
+>
+  اكتشف إن كنت على الطريق الصحيح
+
+  <ArrowRight size={24} />
+</motion.a>
+
+    <p className="mt-8 text-lg font-semibold leading-[2] text-gray-500">
+
+      قد تكون هذه هي الخطوة التي توفر عليك
+
+      <span className="font-black text-[#151827]">
+
+        {" "}سنوات من التجربة والخطأ.
+
+      </span>
+
+    </p>
+
+  </div>
+
+</div>
         </motion.div>
 
       </div>
 
     </section>
-
   );
 }
