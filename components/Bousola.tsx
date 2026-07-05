@@ -85,9 +85,6 @@ export default function Bousola() {
             ابدأ بتغيير اتجاهك قبل أن تضيع المزيد من الوقت
           </h2>
 
-          <p className="mt-6 text-3xl font-black text-[#E96B8A]">
-            29 ريال فقط
-          </p>
 
           <p className="mt-6 text-gray-600 text-lg leading-[2]">
             ليست دورة تعليمية...
@@ -106,8 +103,8 @@ export default function Bousola() {
           <div className="flex flex-col md:flex-row gap-5 justify-center items-center">
 
             {/* زر النظام الكامل */}
-            <Link
-              href="/"
+            <Link 
+                    href="/result"
               className="inline-flex items-center gap-3 rounded-2xl bg-black px-10 py-5 text-lg font-bold text-white shadow-xl hover:scale-[1.03] transition"
             >
               ابدأ النظام الكامل
@@ -115,14 +112,7 @@ export default function Bousola() {
             </Link>
 
             {/* زر البوصلة */}
-            <Link
-              href="https://forms.gle/5MU8qroNsHptR4536"
-              target="_blank"
-              className="inline-flex items-center gap-3 rounded-2xl bg-[#E96B8A] px-10 py-5 text-lg font-bold text-white shadow-xl hover:scale-[1.03] transition"
-            >
-              ابدأ البوصلة الآن
-              <ArrowRight />
-            </Link>
+           
 
           </div>
 

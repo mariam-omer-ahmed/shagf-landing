@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/public/images/logo.svg";
+import logo from "@/public/images/logo1.jpeg";
 
 export default function Logo() {
   return (
@@ -9,13 +9,10 @@ export default function Logo() {
       <Image
         src={logo}
         alt="Shaghaf Logo"
-        width={32}
-        height={32}
+        width={80}
+        height={80}
       />
 
-      <span className="text-sm font-semibold text-gray-100">
-        شغف
-      </span>
 
     </Link>
   );

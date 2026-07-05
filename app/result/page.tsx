@@ -105,7 +105,7 @@ export default function ResultPage() {
 
             <PackageCard
               title="البوصلة"
-              price="29 ريال"
+              price="9 دولار"
               desc="من الضياع إلى وضوح الاتجاه"
               features={[
                 "تحليل وضعك الحالي",
@@ -118,7 +118,7 @@ export default function ResultPage() {
 
             <PackageCard
               title="الانطلاقة"
-              price="149 ريال"
+              price="39 دولار"
               highlight
               desc="من المعرفة إلى أول فرصة"
               features={[
@@ -133,7 +133,7 @@ export default function ResultPage() {
 
             <PackageCard
               title="التمكين"
-              price="299 ريال"
+              price="99 دولار"
               desc="من فرصة إلى سيطرة على الفرص"
               features={[
                 "كل ما في الانطلاقة",

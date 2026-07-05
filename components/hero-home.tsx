@@ -333,11 +333,10 @@ export default function HeroHome() {
 
               <iframe
                 className="aspect-video w-full"
-                src="https://www.youtube.com/embed/2DEZIZC1B4s"
+  src="https://www.youtube.com/embed/3lFmhZ5wi2w"
                 title="Shaghaf System"
                 allowFullScreen
               />
-
             </motion.div>
 
             <div className="mt-8 flex items-center justify-center gap-3 text-center text-gray-900">
@@ -394,7 +393,7 @@ export default function HeroHome() {
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
 
                   <MotionLink
-                    href="/Bousola"
+                    href="/result"
                     whileHover={{
                       scale: 1.03,
                     }}
@@ -404,22 +403,11 @@ export default function HeroHome() {
                     className="flex flex-1 items-center justify-center gap-3 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d8587c] px-6 py-5 text-lg font-bold text-white shadow-xl"
                   >
 
-ابدأ ببوصلة سوق العمل 
-                    <ArrowRight className="h-5 w-5" />
+كيف أتحصل على أول فرصة عمل                     <ArrowRight className="h-5 w-5" />
 
                   </MotionLink>
 
-                  <MotionLink
-                    href="/result"
-                    whileHover={{
-                      scale: 1.02,
-                    }}
-                    className="flex flex-1 items-center justify-center rounded-2xl border-2 border-[#E96B8A] px-6 py-5 text-lg font-bold text-[#E96B8A]"
-                  >
-
-                    كيف يعمل النظام؟
-
-                  </MotionLink>
+                
 
                 </div>
 

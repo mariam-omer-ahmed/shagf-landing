@@ -7,42 +7,42 @@ import { Sparkles, ArrowRight, CircleAlert } from "lucide-react";
 const painPoints = [
   {
     number: "01",
-    image: "/images/s1.jpg",
+    image: "/images/f1.jpg",
     title: "كل يوم تقتنع بمجال جديد",
     description:
       "مرة برمجة... مرة تصميم... مرة ذكاء اصطناعي. المشكلة ليست كثرة الخيارات... المشكلة أنك تخاف أن تختار الطريق الخطأ.",
   },
   {
     number: "02",
-    image: "/images/s2.jpg",
+    image: "/images/f2.jpg",
     title: "تتعلم كثيرًا... لكن حياتك لا تتحرك",
     description:
       "كل دورة تمنحك شعورًا مؤقتًا أنك تقترب، لكن عندما تنتهي منها تعود لنفس السؤال: ماذا أفعل الآن؟",
   },
   {
     number: "03",
-    image: "/images/s3.jpg",
+    image: "/images/f3.jpg",
     title: "أصبحت تجمع المعلومات بدل اتخاذ القرار",
     description:
       "فيديوهات... مقالات... كورسات... تعرف أكثر من أي وقت، لكنك لا تتحرك أكثر من أي وقت.",
   },
   {
     number: "04",
-    image: "/images/s1.jpg",
+    image: "/images/f4.jpg",
     title: "تؤجل البداية حتى تصبح جاهزًا",
     description:
       "تنتظر اللحظة التي تشعر فيها بالثقة الكاملة... لكنها لا تأتي أبدًا.",
   },
   {
     number: "05",
-    image: "/images/s2.jpg",
+    image: "/images/f5.jpg",
     title: "كل نصيحة تزيد حيرتك",
     description:
       "كل شخص يخبرك بطريق مختلف... حتى أصبحت لا تعرف هل المشكلة في السوق أم في قرارك.",
   },
   {
     number: "06",
-    image: "/images/s3.jpg",
+    image: "/images/f5.jpg",
     title: "تشعر أن حياتك متوقفة",
     description:
       "أسوأ شعور ليس أنك لا تعمل... بل أنك لا تعرف إن كنت تتحرك نحو مستقبلك... أم بعيدًا عنه.",

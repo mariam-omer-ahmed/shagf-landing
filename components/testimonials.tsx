@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { User, UserRound, Sparkles, ArrowRight } from "lucide-react";
 
 import t1 from "@/public/images/testimonial-01.jpg";
-import t2 from "@/public/images/testimonial-02.jpg";
-import t3 from "@/public/images/testimonial-03.jpg";
-import t4 from "@/public/images/testimonial-04.jpg";
+import t2 from "@/public/images/P8.jpg";
+import t3 from "@/public/images/P7.jpg";
+import t4 from "@/public/images/P9.jpg";
 
 type T = {
   name: string;
@@ -31,7 +31,7 @@ const data: T[] = [
     img: t1,
   },
   {
-    name: "ملاك",
+    name: "فاطمة",
     gender: "female",
     before: "تتعلم تسويق بدون دخل",
     after: "أول عميلة بعقد شهري",
@@ -41,7 +41,7 @@ const data: T[] = [
     img: t2,
   },
   {
-    name: "سهى",
+    name: "ملاك",
     gender: "female",
     before: "تشتت بين مهارات كثيرة",
     after: "4 عملاء فريلانس",
@@ -160,11 +160,10 @@ export default function Testimonials() {
           </p>
 
           <a
-            href="/pricing"
+            href="/result"
             className="inline-flex items-center gap-2 bg-[#E96B8A] text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:bg-[#d85d7d] transition"
           >
-            ابدأ الآن
-            <ArrowRight size={18} />
+ابدأ في الحصول على فرص عمل أنت ايضاً            <ArrowRight size={18} />
           </a>
         </div>
 
