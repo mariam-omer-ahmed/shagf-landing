@@ -21,7 +21,6 @@ export default function ResultPage() {
       </div>
 
       <div className="relative mx-auto max-w-5xl px-5 text-center">
-
         {/* BADGE */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,20 +34,10 @@ export default function ResultPage() {
         </motion.div>
 
         {/* HERO (HIGH TICKET HOOK) */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-black leading-[1.6] text-[#0F172A] md:text-6xl"
-        >
-          أنت لا تحتاج المزيد من التعلم…
-          <br />
-          <span className="text-[#E96B8A]">
-            أنت تحتاج إلى أول خطوة صحيحة في الطريق الصحيح
-          </span>
-        </motion.h1>
+       
 
         <p className="mx-auto mt-8 max-w-3xl text-xl leading-[2] text-gray-700 font-medium">
-          أغلب الشباب لا يفشلون لأنهم لا يتعلمون…  
+          أغلب الشباب لا يفشلون لأنهم لا يتعلمون…
           بل لأنهم يتعلمون بدون اتجاه واضح يؤدي إلى وظيفة أو دخل حقيقي.
         </p>
 
@@ -74,98 +63,65 @@ export default function ResultPage() {
 
           <p className="mt-4 text-lg text-gray-800 leading-[2] font-medium">
             المشكلة أنك لا تمتلك نظام يحدد:
-            <br /><br />
+            <br />
+            <br />
             <span className="text-[#E96B8A] font-black">
               أين تبدأ → ماذا تفعل → وكيف تصل لأول فرصة
             </span>
           </p>
         </div>
-                {/* WHAT SYSTEM DOES */}
+
+        {/* WHAT SYSTEM DOES */}
         <div className="mt-20 text-right">
           <h2 className="text-3xl font-black text-center text-[#0F172A]">
             ماذا يفعل نظام شغف فعليًا؟
           </h2>
+<div className="mt-10 space-y-6">
+  <Step
+    title="كشف الاتجاه الحقيقي"
+    desc="نزيل الضباب عن خياراتك ونحدد المجال الذي يناسبك فعليًا بناءً على وضعك الحالي، لا على الرغبات العشوائية."
+  />
 
-          <div className="mt-10 space-y-6">
-            <Step title="تحديد الاتجاه" desc="نحدد لك المجال الصحيح بناءً على وضعك وليس رغبات عشوائية." />
-            <Step title="بناء خطة واضحة" desc="نرسم لك أول 30 يوم للوصول إلى بداية حقيقية." />
-            <Step title="الدخول للسوق" desc="CV + LinkedIn + طريقة الحصول على أول فرصة." />
-            <Step title="بناء جاهزية مهنية" desc="مهارات سوق العمل + عرض نفسك بشكل احترافي." />
-            <Step title="التحول المهني" desc="من شخص ضائع → إلى شخص لديه مسار واضح وفرص." />
-          </div>
+  <Step
+    title="بناء نقطة انطلاق واضحة"
+    desc="نحوّل الفوضى إلى خطة عملية لأول 30 يوم، بحيث تعرف بالضبط ماذا تفعل ومتى تبدأ."
+  />
+
+  <Step
+    title="تحويلك إلى مرشح حقيقي في السوق"
+    desc="نُعيد بناء سيرتك الذاتية وحضورك المهني بحيث تصبح مؤهلاً فعليًا للفرص، لا مجرد متعلم."
+  />
+
+  <Step
+    title="إثبات المهارة عمليًا"
+    desc="نساعدك على بناء مخرجات حقيقية (مشاريع/نماذج عمل) تُظهر قدرتك بدل أن تشرحها بالكلام."
+  />
+
+  <Step
+    title="الدخول في دائرة الفرص"
+    desc="تتحول من شخص يبحث عن فرصة إلى شخص يبدأ في تلقي الفرص عبر حضور مهني واضح ومقنع."
+  />
+</div>
         </div>
 
-        {/* PACKAGES (HIGH TICKET STRUCTURE) */}
-        <div className="mt-24">
-          <h2 className="text-3xl font-black text-center text-[#0F172A]">
-            مستويات التحول داخل النظام
-          </h2>
-
-          <div className="mt-12 grid md:grid-cols-3 gap-6 text-right">
-
-            <PackageCard
-              title="البوصلة"
-              price="9 دولار"
-              desc="من الضياع إلى وضوح الاتجاه"
-              features={[
-                "تحليل وضعك الحالي",
-                "اختيار مسار واحد صحيح",
-                "تحديد أول خطوة",
-                "خطة 7–30 يوم"
-              ]}
-              result="وضوح كامل لأول مرة"
-            />
-
-            <PackageCard
-              title="الانطلاقة"
-              price="39 دولار"
-              highlight
-              desc="من المعرفة إلى أول فرصة"
-              features={[
-                "كل ما في البوصلة",
-                "CV احترافي",
-                "LinkedIn قوي",
-                "Portfolio بسيط",
-                "طريقة الحصول على أول وظيفة أو عميل"
-              ]}
-              result="أول فرصة حقيقية"
-            />
-
-            <PackageCard
-              title="التمكين"
-              price="99 دولار"
-              desc="من فرصة إلى سيطرة على الفرص"
-              features={[
-                "كل ما في الانطلاقة",
-                "تسويق شخصي",
-                "بناء حضور مهني",
-                "استراتيجية فرص مستمرة",
-                "توجيه حسب تخصصك الحقيقي"
-              ]}
-              result="فرص مستمرة بدل انتظار"
-            />
-          </div>
-        </div>
-
+       
         {/* CTA */}
         <div className="mt-24 rounded-[40px] bg-white border border-pink-200 p-12 text-center shadow-[0_25px_70px_rgba(233,107,138,.15)]">
-
           <h3 className="text-2xl font-black text-[#0F172A]">
-            القرار ليس “هل ستتعلم”…
+            القرار ليس "هل ستتعلم"…
           </h3>
 
-        <p className="mt-4 text-gray-700 leading-[2] font-medium">
-  القرار الحقيقي هو: هل ستستمر في الضياع… أم تبدأ نظام واضح يقودك لفرصة؟
-</p>
+          <p className="mt-4 text-gray-700 leading-[2] font-medium">
+            القرار الحقيقي هو: هل ستستمر في الضياع… أم تبدأ نظام واضح يقودك لفرصة؟
+          </p>
 
-<Link
-  href="/shagf-quiz"
-  className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-10 py-5 text-white font-bold shadow-lg hover:bg-[#d95d7d]"
->
-  ادخل الفلتر الذكي لمعرفة مسارك
-  <ArrowRight size={20} />
-</Link>
-
+          <Link
+            href="/shagf-quiz"
+            className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-10 py-5 text-white font-bold shadow-lg hover:bg-[#d95d7d]"
+          >
+            ادخل الفلتر الذكي لمعرفة مسارك
+            <ArrowRight size={20} />
+          </Link>
         </div>
       </div>
     </section>
@@ -186,29 +142,60 @@ function Step({ title, desc }: any) {
   );
 }
 
-function PackageCard({ title, price, desc, features, result, highlight }: any) {
+function PackageCard({
+  title,
+  price,
+  forWho,
+  desc,
+  outcomes,
+  result,
+  highlight,
+}: {
+  title: string;
+  price: string;
+  forWho: string;
+  desc: string;
+  outcomes: string[];
+  result: string;
+  highlight?: boolean;
+}) {
   return (
     <div
-      className={`p-8 rounded-[28px] border bg-white transition ${
+      className={`flex flex-col p-8 rounded-[28px] border bg-white transition ${
         highlight
-          ? "border-[#E96B8A] shadow-[0_25px_70px_rgba(233,107,138,.25)] scale-[1.03]"
+          ? "border-[#E96B8A] shadow-[0_25px_70px_rgba(233,107,138,.25)] md:scale-[1.03]"
           : "border-pink-200"
       }`}
     >
-      <div className="text-xl font-black">{title}</div>
-      <div className="text-3xl text-[#E96B8A] font-black mt-2">{price}</div>
-      <p className="text-gray-700 mt-2">{desc}</p>
+      {highlight && (
+        <span className="mb-4 inline-flex w-fit items-center rounded-full bg-[#E96B8A] px-4 py-1 text-xs font-black text-white">
+          الأكثر اختيارًا
+        </span>
+      )}
 
-      <div className="mt-6 space-y-2 text-sm text-gray-800">
-        {features.map((f: string, i: number) => (
+      <div className="text-xl font-black text-[#0F172A]">{title}</div>
+      <div className="text-3xl text-[#E96B8A] font-black mt-2">{price}</div>
+
+      {/* WHO THIS IS FOR — the identity qualifier */}
+      <p className="mt-4 text-[15px] font-bold leading-[1.9] text-[#0F172A]">
+        {forWho}
+      </p>
+
+      <p className="mt-3 text-sm text-gray-600 leading-[1.9]">{desc}</p>
+
+      <div className="mt-6 h-px w-full bg-pink-100" />
+
+      {/* OUTCOMES, NOT FEATURES */}
+      <div className="mt-6 space-y-3 text-sm text-gray-800 flex-1">
+        {outcomes.map((o, i) => (
           <div key={i} className="flex gap-2">
-            <CheckCircle size={16} className="text-[#E96B8A]" />
-            <span>{f}</span>
+            <CheckCircle size={16} className="text-[#E96B8A] mt-0.5 shrink-0" />
+            <span className="leading-[1.8]">{o}</span>
           </div>
         ))}
       </div>
 
-      <div className="mt-6 font-bold text-[#E96B8A]">
+      <div className="mt-6 pt-4 border-t border-pink-100 font-bold text-[#E96B8A] text-sm leading-[1.8]">
         النتيجة: {result}
       </div>
     </div>

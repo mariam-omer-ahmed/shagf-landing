@@ -91,23 +91,41 @@ export default function ShagfQuiz() {
   };
 
   const calculatePackage = () => {
-    let score = 0;
+  let clarity = 0;
+  let execution = 0;
+  let readiness = 0;
 
-    if (form.goal === "job") score += 2;
-    if (form.goal === "income") score += 1;
+  // 1. Clarity (وضوح الهدف)
+  if (form.goal === "career_change") clarity += 3;
+  if (form.goal === "income") clarity += 2;
+  if (form.goal === "job") clarity += 1;
 
-    if (form.current_status === "employee") score += 2;
-    if (form.current_status === "student") score += 1;
+  if (form.current_status === "lost") clarity += 0;
+  if (form.current_status === "student") clarity += 1;
+  if (form.current_status === "graduate") clarity += 2;
+  if (form.current_status === "employee") clarity += 3;
 
-    if (form.skills.length > 20) score += 1;
+  // 2. Execution (التجربة الفعلية)
+  if (form.interviews_count === "0") execution += 0;
+  if (form.interviews_count === "1-3") execution += 2;
+  if (form.interviews_count === "4+") execution += 3;
 
-    if (form.interviews_count === "1-3") score += 1;
-    if (form.interviews_count === "4+") score += 2;
+  if (form.skills.trim().length > 10) execution += 1;
+  if (form.skills.trim().length > 60) execution += 2;
 
-    if (score <= 3) return "bousola";
-    if (score <= 6) return "intilaqah";
-    return "tamkeen";
-  };
+  // 3. Readiness (جاهزية السوق)
+  if (form.skills.includes("project") || form.skills.includes("مشروع"))
+    readiness += 2;
+
+  if (form.email && form.whatsapp) readiness += 1;
+
+  // 🔥 القرار النهائي (منطقي أكثر)
+  const total = clarity + execution + readiness;
+
+  if (total <= 4) return "bousola";
+  if (total <= 8) return "intilaqah";
+  return "tamkeen";
+};
 
   const validateStep = (): boolean => {
     const newErrors: Record<string, string> = {};

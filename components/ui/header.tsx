@@ -95,7 +95,7 @@ export default function Header() {
             </Link>
 
             <Link
-               href="/shagf-quiz"
+            href="/result"
               className="
                 inline-flex
                 items-center

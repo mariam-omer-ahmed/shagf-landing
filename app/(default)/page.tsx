@@ -4,11 +4,10 @@ export const metadata = {
 };
 
 import PageIllustration from "@/components/page-illustration";
-import Hero from "@/components/hero-home";
-import Features from "@/components/features";
+import Hero from "@/components/Hero-home/Hero";
 import Testimonials from "@/components/testimonials";
-import Cta from "@/components/cta";
-import Bousola from "@/components/Bousola";
+import Features from "@/components/features";
+
 
 export default function Home() {
   return (
@@ -17,8 +16,6 @@ export default function Home() {
       <Hero />
       <Features />
       <Testimonials />
-      <Cta />
-      <Bousola></Bousola>
     </>
   );
 }
