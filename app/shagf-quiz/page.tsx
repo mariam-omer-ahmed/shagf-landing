@@ -12,6 +12,7 @@ import {
   trackQuestion,
   trackAnswer,
   trackDropOff,
+  getSessionId,
 } from "./analytics";
 
 /* ==============================================================
@@ -19,7 +20,6 @@ import {
 ============================================================== */
 
 type FormData = {
-  // scored inputs
   current_status: string;
   goal: string;
   readiness: string;
@@ -27,7 +27,6 @@ type FormData = {
   interviews_count: string;
   skills: string;
 
-  // contact — collected LAST, right before the result is revealed
   full_name: string;
   whatsapp: string;
   email: string;
@@ -127,7 +126,6 @@ export default function ShagfQuizV2() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState<FormData>(initialForm);
 
-  const sessionIdRef = useRef<string>("");
   const stepEnteredAtRef = useRef<number>(Date.now());
   const completedRef = useRef(false);
   const furthestStepRef = useRef(1);
@@ -136,20 +134,14 @@ export default function ShagfQuizV2() {
 
   /* ===========================
       Session + analytics
-      FIX: sessionIdRef was declared but never assigned, so it stayed
-      "" for the whole session. That empty string was being written to
-      a `session_id` column — if that column is type `uuid`, Postgres
-      rejects "" with "invalid input syntax for type uuid", which is a
-      very likely cause of the insert failing every single time.
+      Session id comes from getSessionId() (lib/analytics.ts), persisted
+      in localStorage — the same id follows the visitor across the whole
+      funnel (Hero -> Quiz -> Result -> Application). No local session
+      ref needed here anymore.
   =========================== */
 
   useEffect(() => {
-    sessionIdRef.current =
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
-    trackAssessmentStart(sessionIdRef.current);
+    trackAssessmentStart();
   }, []);
 
   useEffect(() => {
@@ -159,14 +151,14 @@ export default function ShagfQuizV2() {
 
     furthestStepRef.current = Math.max(furthestStepRef.current, step);
 
-    trackQuestion(step, sessionIdRef.current, currentKey, msSinceLastStep);
+    trackQuestion(step, currentKey, msSinceLastStep);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   useEffect(() => {
     const reportDropOff = () => {
       if (completedRef.current) return;
-      trackDropOff(furthestStepRef.current, sessionIdRef.current, TOTAL_STEPS);
+      trackDropOff(furthestStepRef.current, TOTAL_STEPS);
     };
 
     const handleVisibility = () => {
@@ -202,7 +194,7 @@ export default function ShagfQuizV2() {
   };
 
   const handleSelect = (field: keyof FormData, value: string) => {
-    trackAnswer(field, value, sessionIdRef.current);
+    trackAnswer(field, value);
 
     setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -340,11 +332,6 @@ export default function ShagfQuizV2() {
 
   /* ===========================
       Submit
-      FIX: removed the duplicate completedRef/trackAssessmentCompleted/
-      router.push block that used to run unconditionally AFTER the
-      try/catch — it was firing even when the insert failed, which is
-      why the page looked like it "worked" even on error. Now
-      navigation only happens inside the success path.
   =========================== */
 
   const handleSubmit = async () => {
@@ -357,18 +344,16 @@ export default function ShagfQuizV2() {
     const payload = {
       ...form,
       selected_package,
-      session_id: sessionIdRef.current,
+      session_id: getSessionId(),
     };
 
     try {
-      const { error } = await supabase
-        .from("shaghaf_leads")
-        .insert(payload);
+      const { error } = await supabase.from("shaghaf_leads").insert(payload);
 
       if (error) throw error;
 
       completedRef.current = true;
-      trackAssessmentCompleted(selected_package, sessionIdRef.current);
+      trackAssessmentCompleted(selected_package);
 
       router.push(`/thank-you?package=${selected_package}`);
     } catch (err: any) {
