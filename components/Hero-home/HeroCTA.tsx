@@ -1,5 +1,4 @@
 "use client";
-
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
@@ -106,10 +105,17 @@ export default function HeroCTA() {
 
           </div>
 
-          {/* CTA */}
+          {/* CTA
+              FIX 1: was linking to "/result" — skipped the quiz
+              entirely. Now points to "/shagf-quiz".
+              FIX 2: removed the trackEvent("assessment_start") call
+              here — ShagfQuizV2.tsx already fires that event on mount
+              when the quiz page loads, so tracking it here too was
+              double-counting every visitor who clicked. Navigation
+              itself + the quiz page's own tracking is enough. */}
 
           <Link
-            href="/result"
+            href="/shagf-quiz"
             className="mt-12 flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-l from-[#E96B8A] to-[#d8587c] px-8 py-6 text-xl font-black text-white shadow-xl transition hover:scale-[1.02]"
           >
             اكتشف الطريق المناسب لك

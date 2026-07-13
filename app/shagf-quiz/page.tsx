@@ -1,75 +1,197 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft, Loader2, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Check, Sparkles } from "lucide-react";
+
+import { supabase } from "@/lib/supabase";
+import {
+  trackAssessmentStart,
+  trackAssessmentCompleted,
+  trackQuestion,
+  trackAnswer,
+  trackDropOff,
+} from "./analytics";
+
+/* ==============================================================
+   Types
+============================================================== */
 
 type FormData = {
+  // scored inputs
+  current_status: string;
+  goal: string;
+  readiness: string;
+  age_range: string;
+  interviews_count: string;
+  skills: string;
+
+  // contact — collected LAST, right before the result is revealed
   full_name: string;
   whatsapp: string;
   email: string;
-
   country: string;
   city: string;
-
-  goal: string;
-  current_status: string;
-
-  skills: string;
-  interviews_count: string;
 
   source: string;
 };
 
-const TOTAL_STEPS = 4;
+type Option = {
+  value: string;
+  label: string;
+  hint?: string;
+};
+
+/* ==============================================================
+   Step map
+============================================================== */
+
+const STEPS = [
+  "current_status",
+  "goal",
+  "readiness",
+  "age_range",
+  "interviews_count",
+  "skills",
+  "contact",
+] as const;
+
+type StepKey = (typeof STEPS)[number];
+
+const TOTAL_STEPS = STEPS.length;
 
 const initialForm: FormData = {
+  current_status: "",
+  goal: "",
+  readiness: "",
+  age_range: "",
+  interviews_count: "",
+  skills: "",
+
   full_name: "",
   whatsapp: "",
   email: "",
   country: "",
   city: "",
-  goal: "",
-  current_status: "",
-  skills: "",
-  interviews_count: "",
+
   source: "landing_page",
 };
 
-const STATUS_OPTIONS = [
-  { value: "student", label: "طالب", hint: "لسه في مرحلة البناء" },
-  { value: "graduate", label: "خريج", hint: "خرجت... والطريق مو واضح بعد" },
-  { value: "employee", label: "موظف", hint: "شغّال، بس حاسس إنك تقدر أكثر" },
-  { value: "lost", label: "ضائع", hint: "تدور بين خيارات كثيرة" },
+/* ==============================================================
+   Options
+============================================================== */
+
+const STATUS_OPTIONS: Option[] = [
+  { value: "student", label: "طالب", hint: "ما زلت تبني مستقبلك المهني" },
+  { value: "graduate", label: "خريج", hint: "تبحث عن أول فرصة حقيقية" },
+  { value: "employee", label: "موظف", hint: "تريد تطوير مسارك أو دخلك" },
+  { value: "lost", label: "لا أعرف من أين أبدأ", hint: "أشعر بالتشتت بين المسارات" },
 ];
 
-const GOAL_OPTIONS = [
-  { value: "job", label: "وظيفة", hint: "توقف الخوف من المستقبل" },
-  { value: "income", label: "دخل", hint: "تحس إن وضعك المالي تحت سيطرتك" },
-  { value: "career_change", label: "تغيير مسار", hint: "قبل ما تضيّع وقت إضافي في طريق غلط" },
+const GOAL_OPTIONS: Option[] = [
+  { value: "job", label: "الحصول على وظيفة", hint: "أريد دخول سوق العمل" },
+  { value: "income", label: "زيادة الدخل", hint: "أريد مصدر دخل أفضل" },
+  { value: "career_change", label: "تغيير المسار", hint: "أشعر أنني في الطريق الخطأ" },
 ];
 
-const INTERVIEWS_OPTIONS = [
-  { value: "0", label: "لسه ما قدّمت على شي" },
-  { value: "1-3", label: "قدّمت 1-3 مرات" },
-  { value: "4+", label: "قدّمت 4 مرات أو أكثر" },
+const READINESS_OPTIONS: Option[] = [
+  { value: "ready_now", label: "جاهز أبدأ الآن", hint: "أريد خطة عملية أطبقها فورًا" },
+  { value: "considering", label: "أفكر بجدية", hint: "أحتاج أعرف أكثر قبل ما أقرر" },
+  { value: "exploring", label: "أستكشف فقط", hint: "لسه في مرحلة جمع المعلومات" },
 ];
 
-export default function ShagfQuiz() {
+const AGE_OPTIONS: Option[] = [
+  { value: "18-22", label: "18 - 22" },
+  { value: "23-27", label: "23 - 27" },
+  { value: "28-35", label: "28 - 35" },
+  { value: "36+", label: "36 فأكثر" },
+];
+
+const INTERVIEWS_OPTIONS: Option[] = [
+  { value: "0", label: "لم أقدم على أي وظيفة" },
+  { value: "1-3", label: "قدمت من مرة إلى ثلاث مرات" },
+  { value: "4+", label: "قدمت أكثر من أربع مرات" },
+];
+
+/* ==============================================================
+   Component
+============================================================== */
+
+export default function ShagfQuizV2() {
   const router = useRouter();
+
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState<FormData>(initialForm);
 
+  const sessionIdRef = useRef<string>("");
+  const stepEnteredAtRef = useRef<number>(Date.now());
+  const completedRef = useRef(false);
+  const furthestStepRef = useRef(1);
+
+  const currentKey: StepKey = STEPS[step - 1];
+
+  /* ===========================
+      Session + analytics
+      FIX: sessionIdRef was declared but never assigned, so it stayed
+      "" for the whole session. That empty string was being written to
+      a `session_id` column — if that column is type `uuid`, Postgres
+      rejects "" with "invalid input syntax for type uuid", which is a
+      very likely cause of the insert failing every single time.
+  =========================== */
+
+  useEffect(() => {
+    sessionIdRef.current =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+    trackAssessmentStart(sessionIdRef.current);
+  }, []);
+
+  useEffect(() => {
+    const now = Date.now();
+    const msSinceLastStep = now - stepEnteredAtRef.current;
+    stepEnteredAtRef.current = now;
+
+    furthestStepRef.current = Math.max(furthestStepRef.current, step);
+
+    trackQuestion(step, sessionIdRef.current, currentKey, msSinceLastStep);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  useEffect(() => {
+    const reportDropOff = () => {
+      if (completedRef.current) return;
+      trackDropOff(furthestStepRef.current, sessionIdRef.current, TOTAL_STEPS);
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "hidden") reportDropOff();
+    };
+
+    window.addEventListener("beforeunload", reportDropOff);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      window.removeEventListener("beforeunload", reportDropOff);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
+
+  /* ===========================
+      Helpers
+  =========================== */
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+
     if (errors[name]) {
       setErrors((prev) => {
         const next = { ...prev };
@@ -79,144 +201,213 @@ export default function ShagfQuiz() {
     }
   };
 
-  const handleSelect = (name: keyof FormData, value: string) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
+  const handleSelect = (field: keyof FormData, value: string) => {
+    trackAnswer(field, value, sessionIdRef.current);
+
+    setForm((prev) => ({ ...prev, [field]: value }));
+
+    if (errors[field]) {
       setErrors((prev) => {
         const next = { ...prev };
-        delete next[name];
+        delete next[field];
         return next;
       });
     }
   };
 
-  const calculatePackage = () => {
-  let clarity = 0;
-  let execution = 0;
-  let readiness = 0;
+  /* ===========================
+      Package Engine (v2)
+  =========================== */
 
-  // 1. Clarity (وضوح الهدف)
-  if (form.goal === "career_change") clarity += 3;
-  if (form.goal === "income") clarity += 2;
-  if (form.goal === "job") clarity += 1;
+  const STATUS_WEIGHTS: Record<string, number> = {
+    lost: 1,
+    student: 2,
+    graduate: 4,
+    employee: 5,
+  };
 
-  if (form.current_status === "lost") clarity += 0;
-  if (form.current_status === "student") clarity += 1;
-  if (form.current_status === "graduate") clarity += 2;
-  if (form.current_status === "employee") clarity += 3;
+  const GOAL_WEIGHTS: Record<string, number> = {
+    job: 3,
+    income: 4,
+    career_change: 5,
+  };
 
-  // 2. Execution (التجربة الفعلية)
-  if (form.interviews_count === "0") execution += 0;
-  if (form.interviews_count === "1-3") execution += 2;
-  if (form.interviews_count === "4+") execution += 3;
+  const READINESS_WEIGHTS: Record<string, number> = {
+    exploring: 1,
+    considering: 3,
+    ready_now: 6,
+  };
 
-  if (form.skills.trim().length > 10) execution += 1;
-  if (form.skills.trim().length > 60) execution += 2;
+  const INTERVIEWS_WEIGHTS: Record<string, number> = {
+    "0": 1,
+    "1-3": 3,
+    "4+": 5,
+  };
 
-  // 3. Readiness (جاهزية السوق)
-  if (form.skills.includes("project") || form.skills.includes("مشروع"))
-    readiness += 2;
+  const calculatePackage = (): string => {
+    let score = 0;
 
-  if (form.email && form.whatsapp) readiness += 1;
+    score += STATUS_WEIGHTS[form.current_status] ?? 0;
+    score += GOAL_WEIGHTS[form.goal] ?? 0;
+    score += READINESS_WEIGHTS[form.readiness] ?? 0;
+    score += INTERVIEWS_WEIGHTS[form.interviews_count] ?? 0;
 
-  // 🔥 القرار النهائي (منطقي أكثر)
-  const total = clarity + execution + readiness;
+    const length = form.skills.trim().length;
+    if (length > 20) score += 2;
+    if (length > 60) score += 2;
+    if (length > 120) score += 2;
 
-  if (total <= 4) return "bousola";
-  if (total <= 8) return "intilaqah";
-  return "tamkeen";
-};
+    if (score <= 9) return "bousola";
+    if (score <= 18) return "intilaqah";
+    return "tamkeen";
+  };
+
+  /* ===========================
+      Validation
+  =========================== */
 
   const validateStep = (): boolean => {
-    const newErrors: Record<string, string> = {};
+    const nextErrors: Record<string, string> = {};
 
-    if (step === 1) {
-      if (!form.full_name.trim()) newErrors.full_name = "الاسم مطلوب";
-      if (!form.whatsapp.trim()) newErrors.whatsapp = "رقم الواتساب مطلوب";
-      else if (!/^\+?\d{8,15}$/.test(form.whatsapp.replace(/\s/g, "")))
-        newErrors.whatsapp = "تأكد من صيغة الرقم";
-      if (!form.email.trim()) newErrors.email = "البريد الإلكتروني مطلوب";
-      else if (!/^\S+@\S+\.\S+$/.test(form.email))
-        newErrors.email = "صيغة البريد غير صحيحة";
+    switch (currentKey) {
+      case "current_status":
+        if (!form.current_status) nextErrors.current_status = "اختر إجابة";
+        break;
+
+      case "goal":
+        if (!form.goal) nextErrors.goal = "اختر إجابة";
+        break;
+
+      case "readiness":
+        if (!form.readiness) nextErrors.readiness = "اختر إجابة";
+        break;
+
+      case "age_range":
+        if (!form.age_range) nextErrors.age_range = "اختر إجابة";
+        break;
+
+      case "interviews_count":
+        if (!form.interviews_count) nextErrors.interviews_count = "اختر إجابة";
+        break;
+
+      case "skills":
+        if (!form.skills.trim()) nextErrors.skills = "اكتب مهاراتك";
+        break;
+
+      case "contact":
+        if (!form.full_name.trim()) nextErrors.full_name = "الاسم مطلوب";
+
+        if (!form.whatsapp.trim()) {
+          nextErrors.whatsapp = "رقم الواتساب مطلوب";
+        } else if (!/^\+?\d{8,15}$/.test(form.whatsapp.replace(/\s/g, ""))) {
+          nextErrors.whatsapp = "رقم غير صحيح";
+        }
+
+        if (!form.email.trim()) {
+          nextErrors.email = "البريد الإلكتروني مطلوب";
+        } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+          nextErrors.email = "البريد غير صحيح";
+        }
+        break;
     }
 
-    if (step === 2) {
-      if (!form.current_status) newErrors.current_status = "اختر وضعك الحالي";
-    }
-
-    if (step === 3) {
-      if (!form.goal) newErrors.goal = "اختر ما تريده فعلًا";
-    }
-
-    if (step === 4) {
-      if (!form.skills.trim()) newErrors.skills = "أخبرنا عن مهاراتك الحالية";
-      if (!form.interviews_count) newErrors.interviews_count = "اختر إجابة";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
+
+  /* ===========================
+      Navigation
+  =========================== */
 
   const goNext = () => {
     if (!validateStep()) return;
+
     setDirection(1);
-    if (step < TOTAL_STEPS) setStep((s) => s + 1);
-    else handleSubmit();
+
+    if (step < TOTAL_STEPS) {
+      setStep((prev) => prev + 1);
+      return;
+    }
+
+    handleSubmit();
   };
 
   const goBack = () => {
     setDirection(-1);
     setErrors({});
-    setStep((s) => Math.max(1, s - 1));
+    setStep((prev) => Math.max(prev - 1, 1));
   };
 
-  // ---- نسخة تشخيصية: كل خطوة مطبوعة في الـ Console ----
+  /* ===========================
+      Submit
+      FIX: removed the duplicate completedRef/trackAssessmentCompleted/
+      router.push block that used to run unconditionally AFTER the
+      try/catch — it was firing even when the insert failed, which is
+      why the page looked like it "worked" even on error. Now
+      navigation only happens inside the success path.
+  =========================== */
+
   const handleSubmit = async () => {
     if (!validateStep()) return;
+
     setLoading(true);
 
     const selected_package = calculatePackage();
-    console.log("[shaghaf] سيتم الحفظ بالباقة:", selected_package);
 
-    const { error } = await supabase.from("shaghaf_leads").insert([
-      {
-        ...form,
-        selected_package,
-      },
-    ]);
-
-    setLoading(false);
-
-    if (error) {
-      console.error("[shaghaf] فشل الحفظ:", error);
-      alert("حدث خطأ في الإرسال، حاول مرة أخرى");
-      return;
-    }
-
-    console.log("[shaghaf] تم الحفظ بنجاح، جاري التحويل الآن...");
+    const payload = {
+      ...form,
+      selected_package,
+      session_id: sessionIdRef.current,
+    };
 
     try {
+      const { error } = await supabase
+        .from("shaghaf_leads")
+        .insert(payload);
+
+      if (error) throw error;
+
+      completedRef.current = true;
+      trackAssessmentCompleted(selected_package, sessionIdRef.current);
+
       router.push(`/thank-you?package=${selected_package}`);
-      console.log("[shaghaf] تم استدعاء router.push بدون استثناء");
-    } catch (navError) {
-      console.error("[shaghaf] فشل التحويل نفسه:", navError);
+    } catch (err: any) {
+      console.error("Supabase insert failed (raw):", err);
+      console.error("Supabase insert failed (json):", JSON.stringify(err));
+
+      alert(
+        `حدث خطأ أثناء الإرسال\n\n${err?.message ?? "بدون رسالة"}\nCode: ${
+          err?.code ?? "-"
+        }\nDetails: ${err?.details ?? "-"}\nHint: ${
+          err?.hint ?? "-"
+        }\n\nRaw: ${JSON.stringify(err)}`
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+  /* ===========================
+      Animations
+  =========================== */
+
   const variants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
+    enter: (dir: number) => ({ x: dir > 0 ? 70 : -70, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
+    exit: (dir: number) => ({ x: dir > 0 ? -70 : 70, opacity: 0 }),
   };
 
   const inputClass = (field: string) =>
-    `w-full border p-3 rounded-xl outline-none transition-all bg-white text-gray-900 placeholder-gray-400
-     focus:ring-2 focus:ring-[#E96B8A] focus:border-[#E96B8A]
+    `w-full rounded-2xl border bg-white p-4 text-gray-900 outline-none transition
+     placeholder:text-gray-400
+     focus:border-[#E96B8A]
+     focus:ring-2
+     focus:ring-[#E96B8A]
      ${errors[field] ? "border-red-400" : "border-gray-200"}`;
 
   const ErrorText = ({ field }: { field: string }) =>
     errors[field] ? (
-      <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
+      <p className="mt-1 text-sm text-red-500">{errors[field]}</p>
     ) : null;
 
   const OptionCard = ({
@@ -233,278 +424,347 @@ export default function ShagfQuiz() {
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-right p-4 rounded-xl border transition-all flex items-center justify-between gap-3
-        ${
-          selected
-            ? "border-[#E96B8A] bg-[#FFF0F4] ring-2 ring-[#E96B8A]"
-            : "border-gray-200 bg-white hover:border-[#E96B8A]/60"
-        }`}
+      className={`flex w-full items-center justify-between rounded-2xl border p-5 text-right transition
+      ${
+        selected
+          ? "border-[#E96B8A] bg-[#FFF2F6] ring-2 ring-[#E96B8A]"
+          : "border-gray-200 bg-white hover:border-pink-300"
+      }`}
     >
       <div>
-        <p className="font-bold text-gray-900">{label}</p>
-        {hint && <p className="text-sm text-gray-500 mt-0.5">{hint}</p>}
+        <div className="font-bold text-gray-900">{label}</div>
+        {hint && <div className="mt-1 text-sm text-gray-500">{hint}</div>}
       </div>
+
       <div
-        className={`w-6 h-6 shrink-0 rounded-full border flex items-center justify-center
-          ${selected ? "bg-[#E96B8A] border-[#E96B8A]" : "border-gray-300"}`}
+        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border
+        ${selected ? "border-[#E96B8A] bg-[#E96B8A]" : "border-gray-300"}`}
       >
         {selected && <Check size={14} className="text-white" />}
       </div>
     </button>
   );
 
+  const selectAndAdvance = (field: keyof FormData, value: string) => {
+    handleSelect(field, value);
+    window.setTimeout(() => {
+      setDirection(1);
+      setStep((prev) => Math.min(prev + 1, TOTAL_STEPS));
+    }, 280);
+  };
+
+  /* ===========================
+      Step content
+  =========================== */
+
+  const renderStep = () => {
+    switch (currentKey) {
+      case "current_status":
+        return (
+          <div className="space-y-6">
+            <StepHeading
+              title="أين تقف اليوم؟"
+              subtitle="نريد معرفة نقطة البداية حتى لا نعطيك خطة لا تناسبك."
+            />
+            <div className="space-y-4">
+              {STATUS_OPTIONS.map((item) => (
+                <OptionCard
+                  key={item.value}
+                  selected={form.current_status === item.value}
+                  label={item.label}
+                  hint={item.hint}
+                  onClick={() => selectAndAdvance("current_status", item.value)}
+                />
+              ))}
+            </div>
+            <ErrorText field="current_status" />
+          </div>
+        );
+
+      case "goal":
+        return (
+          <div className="space-y-6">
+            <StepHeading
+              title="ما الذي تريد الوصول إليه؟"
+              subtitle="اختر النتيجة التي تبحث عنها، وليس الوسيلة."
+            />
+            <div className="space-y-4">
+              {GOAL_OPTIONS.map((item) => (
+                <OptionCard
+                  key={item.value}
+                  selected={form.goal === item.value}
+                  label={item.label}
+                  hint={item.hint}
+                  onClick={() => selectAndAdvance("goal", item.value)}
+                />
+              ))}
+            </div>
+            <ErrorText field="goal" />
+          </div>
+        );
+
+      case "readiness":
+        return (
+          <div className="space-y-6">
+            <StepHeading
+              title="متى تريد أن تبدأ فعليًا؟"
+              subtitle="هذا يساعدنا نحدد حجم الخطة المناسبة لك."
+            />
+            <div className="space-y-4">
+              {READINESS_OPTIONS.map((item) => (
+                <OptionCard
+                  key={item.value}
+                  selected={form.readiness === item.value}
+                  label={item.label}
+                  hint={item.hint}
+                  onClick={() => selectAndAdvance("readiness", item.value)}
+                />
+              ))}
+            </div>
+            <ErrorText field="readiness" />
+          </div>
+        );
+
+      case "age_range":
+        return (
+          <div className="space-y-6">
+            <StepHeading title="ما فئتك العمرية؟" />
+            <div className="grid grid-cols-2 gap-4">
+              {AGE_OPTIONS.map((item) => (
+                <OptionCard
+                  key={item.value}
+                  selected={form.age_range === item.value}
+                  label={item.label}
+                  onClick={() => selectAndAdvance("age_range", item.value)}
+                />
+              ))}
+            </div>
+            <ErrorText field="age_range" />
+          </div>
+        );
+
+      case "interviews_count":
+        return (
+          <div className="space-y-6">
+            <StepHeading title="كم مرة قدمت على وظائف؟" />
+            <div className="space-y-3">
+              {INTERVIEWS_OPTIONS.map((item) => (
+                <OptionCard
+                  key={item.value}
+                  selected={form.interviews_count === item.value}
+                  label={item.label}
+                  onClick={() => selectAndAdvance("interviews_count", item.value)}
+                />
+              ))}
+            </div>
+            <ErrorText field="interviews_count" />
+          </div>
+        );
+
+      case "skills":
+        return (
+          <div className="space-y-6">
+            <StepHeading
+              title="أخبرنا عن مهاراتك"
+              subtitle="اكتب باختصار المهارات أو الخبرات التي تمتلكها حالياً."
+            />
+            <div>
+              <textarea
+                name="skills"
+                rows={5}
+                value={form.skills}
+                onChange={handleChange}
+                placeholder="مثال: تصميم جرافيك، تواصل مع العملاء، Excel..."
+                className={inputClass("skills")}
+              />
+              <ErrorText field="skills" />
+            </div>
+          </div>
+        );
+
+      case "contact":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 rounded-2xl bg-[#FFF1F5] px-4 py-3 text-sm font-bold text-[#E96B8A]">
+              <Sparkles size={18} />
+              نتيجتك جاهزة — أدخل بياناتك لتصلك الآن
+            </div>
+
+            <StepHeading
+              title="آخر خطوة"
+              subtitle="بناءً على إجاباتك حددنا المسار الأنسب لك من بين 3 مسارات مختلفة."
+            />
+
+            <div>
+              <input
+                name="full_name"
+                value={form.full_name}
+                onChange={handleChange}
+                placeholder="الاسم الكامل"
+                className={inputClass("full_name")}
+              />
+              <ErrorText field="full_name" />
+            </div>
+
+            <div>
+              <input
+                name="whatsapp"
+                value={form.whatsapp}
+                onChange={handleChange}
+                placeholder="رقم الواتساب"
+                className={inputClass("whatsapp")}
+              />
+              <ErrorText field="whatsapp" />
+            </div>
+
+            <div>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="البريد الإلكتروني"
+                className={inputClass("email")}
+              />
+              <ErrorText field="email" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                name="country"
+                value={form.country}
+                onChange={handleChange}
+                placeholder="الدولة"
+                className={inputClass("country")}
+              />
+              <input
+                name="city"
+                value={form.city}
+                onChange={handleChange}
+                placeholder="المدينة"
+                className={inputClass("city")}
+              />
+            </div>
+          </div>
+        );
+    }
+  };
+
+  const isSelectOnlyStep = currentKey !== "skills" && currentKey !== "contact";
+
+  /* ===========================
+      Render
+  =========================== */
+
   return (
     <section
-      className="min-h-screen bg-gradient-to-b from-[#FFF8FB] to-[#FCEFF4] px-6 py-16 text-gray-900"
       dir="rtl"
+      className="min-h-screen bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF4F8] px-6 py-16"
     >
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-black text-center text-gray-900">
-          توقف عن العيش في وضع الاستعداد
-        </h1>
-        <p className="text-center text-gray-600 mt-2">
-          3 دقائق تفصلك عن معرفة الخطوة التالية اللي تحتاجها فعلًا — بدون تخمين
-        </p>
-
-        <div className="mt-8 mb-2 flex justify-between text-sm text-gray-500">
-          <span>الخطوة {step} من {TOTAL_STEPS}</span>
-          <span>{Math.round((step / TOTAL_STEPS) * 100)}%</span>
-        </div>
-        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-[#E96B8A]"
-            initial={false}
-            animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-          />
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#FFF1F5] px-5 py-2 text-sm font-bold text-[#E96B8A]">
+            تقييم مجاني
+          </div>
+          <h1 className="mt-6 text-4xl font-black leading-tight text-gray-900">
+            اكتشف الطريق المناسب لك
+          </h1>
+          <p className="mt-4 text-lg leading-8 text-gray-600">
+            أجب عن عدة أسئلة بسيطة وسنحدد لك المسار الأنسب بناءً على وضعك
+            الحالي وليس بالتخمين.
+          </p>
         </div>
 
-        <div className="mt-8 bg-white/70 backdrop-blur rounded-2xl p-6 shadow-sm min-h-[360px] overflow-hidden relative">
+        <div className="mt-12">
+          <div className="mb-3 flex justify-between text-sm font-semibold text-gray-500">
+            <span>
+              سؤال {step} من {TOTAL_STEPS}
+            </span>
+            <span>{Math.round((step / TOTAL_STEPS) * 100)}%</span>
+          </div>
+          <div className="h-3 overflow-hidden rounded-full bg-gray-200">
+            <motion.div
+              initial={false}
+              animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+              transition={{ duration: 0.35 }}
+              className="h-full rounded-full bg-[#E96B8A]"
+            />
+          </div>
+        </div>
+
+        <div className="mt-10 overflow-hidden rounded-[30px] bg-white p-8 shadow-[0_30px_80px_rgba(0,0,0,.08)]">
           <AnimatePresence mode="wait" custom={direction}>
-            {step === 1 && (
-              <motion.div
-                key="step1"
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.25 }}
-                className="space-y-4"
-              >
-                <div>
-                  <h2 className="font-black text-lg text-gray-900">خلّينا نتعرف عليك</h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    بياناتك تُستخدم فقط لإرسال نتيجتك، ما فيه رسائل عشوائية
-                  </p>
-                </div>
-
-                <div>
-                  <input
-                    name="full_name"
-                    placeholder="الاسم الكامل"
-                    value={form.full_name}
-                    onChange={handleChange}
-                    className={inputClass("full_name")}
-                  />
-                  <ErrorText field="full_name" />
-                </div>
-
-                <div>
-                  <input
-                    name="whatsapp"
-                    placeholder="رقم الواتساب (مع رمز الدولة)"
-                    value={form.whatsapp}
-                    onChange={handleChange}
-                    className={inputClass("whatsapp")}
-                  />
-                  <ErrorText field="whatsapp" />
-                </div>
-
-                <div>
-                  <input
-                    name="email"
-                    type="email"
-                    placeholder="البريد الإلكتروني"
-                    value={form.email}
-                    onChange={handleChange}
-                    className={inputClass("email")}
-                  />
-                  <ErrorText field="email" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <input
-                    name="country"
-                    placeholder="الدولة"
-                    value={form.country}
-                    onChange={handleChange}
-                    className={inputClass("country")}
-                  />
-                  <input
-                    name="city"
-                    placeholder="المدينة"
-                    value={form.city}
-                    onChange={handleChange}
-                    className={inputClass("city")}
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {step === 2 && (
-              <motion.div
-                key="step2"
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.25 }}
-                className="space-y-4"
-              >
-                <div>
-                  <h2 className="font-black text-lg text-gray-900">وين أنت الآن فعلًا؟</h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    ما فيه إجابة خاطئة، فقط نريد نفهم نقطة انطلاقك الحقيقية
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {STATUS_OPTIONS.map((opt) => (
-                    <OptionCard
-                      key={opt.value}
-                      selected={form.current_status === opt.value}
-                      label={opt.label}
-                      hint={opt.hint}
-                      onClick={() => handleSelect("current_status", opt.value)}
-                    />
-                  ))}
-                </div>
-                <ErrorText field="current_status" />
-              </motion.div>
-            )}
-
-            {step === 3 && (
-              <motion.div
-                key="step3"
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.25 }}
-                className="space-y-4"
-              >
-                <div>
-                  <h2 className="font-black text-lg text-gray-900">ما الذي تريده فعلًا؟</h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    ليس الوسيلة... بل الشعور الذي تريد الوصول له
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {GOAL_OPTIONS.map((opt) => (
-                    <OptionCard
-                      key={opt.value}
-                      selected={form.goal === opt.value}
-                      label={opt.label}
-                      hint={opt.hint}
-                      onClick={() => handleSelect("goal", opt.value)}
-                    />
-                  ))}
-                </div>
-                <ErrorText field="goal" />
-              </motion.div>
-            )}
-
-            {step === 4 && (
-              <motion.div
-                key="step4"
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.25 }}
-                className="space-y-4"
-              >
-                <div>
-                  <h2 className="font-black text-lg text-gray-900">آخر خطوة</h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    هذا يساعدنا نحدد بالضبط من أين تبدأ، لا من الصفر إذا ما تحتاج
-                  </p>
-                </div>
-
-                <div>
-                  <textarea
-                    name="skills"
-                    placeholder="اكتب المهارات أو الخبرات اللي عندك حاليًا، حتى لو بسيطة"
-                    value={form.skills}
-                    onChange={handleChange}
-                    rows={4}
-                    className={inputClass("skills")}
-                  />
-                  <ErrorText field="skills" />
-                </div>
-
-                <div>
-                  <p className="text-sm font-bold text-gray-700 mb-2">
-                    كم مرة قدّمت على وظائف أو فرص حتى الآن؟
-                  </p>
-                  <div className="space-y-3">
-                    {INTERVIEWS_OPTIONS.map((opt) => (
-                      <OptionCard
-                        key={opt.value}
-                        selected={form.interviews_count === opt.value}
-                        label={opt.label}
-                        onClick={() => handleSelect("interviews_count", opt.value)}
-                      />
-                    ))}
-                  </div>
-                  <ErrorText field="interviews_count" />
-                </div>
-              </motion.div>
-            )}
+            <motion.div
+              key={currentKey}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25 }}
+            >
+              {renderStep()}
+            </motion.div>
           </AnimatePresence>
         </div>
 
-        <div className="mt-6 flex gap-3">
+        <div className="mt-8 flex gap-4">
           {step > 1 && (
             <button
+              type="button"
               onClick={goBack}
               disabled={loading}
-              className="flex-1 border border-[#E96B8A] text-[#E96B8A] p-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#FFF0F4] transition-colors disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[#E96B8A] py-4 font-bold text-[#E96B8A] transition hover:bg-[#FFF2F6] disabled:opacity-50"
             >
               <ArrowLeft size={18} />
-              رجوع
+              السابق
             </button>
           )}
 
-          <button
-            onClick={goNext}
-            disabled={loading}
-            className="flex-1 bg-[#E96B8A] text-white p-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#d85a79] transition-colors disabled:opacity-60"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                جاري تحليل إجاباتك...
-              </>
-            ) : step === TOTAL_STEPS ? (
-              <>
-                اكتشف خطوتك التالية
-                <ArrowRight size={18} />
-              </>
-            ) : (
-              <>
-                التالي
-                <ArrowRight size={18} />
-              </>
-            )}
-          </button>
+          {(!isSelectOnlyStep || !form[currentKey as keyof FormData]) && (
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={loading}
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#E96B8A] py-4 font-bold text-white shadow-lg transition hover:bg-[#d85b7d] disabled:opacity-60"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  جاري التحليل...
+                </>
+              ) : step === TOTAL_STEPS ? (
+                <>
+                  اكتشف نتيجتك
+                  <ArrowRight size={18} />
+                </>
+              ) : (
+                <>
+                  التالي
+                  <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          )}
         </div>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          يستغرق أقل من 3 دقائق • وستحصل على توصية تناسب وضعك الحالي
+        </p>
       </div>
     </section>
+  );
+}
+
+/* ==============================================================
+   Small presentational helper
+============================================================== */
+
+function StepHeading({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div>
+      <h2 className="text-2xl font-black text-gray-900">{title}</h2>
+      {subtitle && <p className="mt-2 text-gray-500">{subtitle}</p>}
+    </div>
   );
 }

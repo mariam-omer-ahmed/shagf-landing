@@ -1,5 +1,6 @@
 "use client";
-
+import { useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 import { motion } from "framer-motion";
 import { CheckCircle2, ArrowDown } from "lucide-react";
 import Link from "next/link"; 
@@ -35,6 +36,14 @@ export default function HeroResult({ packageName }: Props) {
 
   const current =
     packageData[safeKey] ?? packageData.intilaqah;
+
+   useEffect(() => {
+  trackEvent({
+    event: "result_view",
+    page: "/thank-you",
+    package_id: packageName,
+  });
+}, [packageName]);
 
   return (
     <section className="relative overflow-hidden py-20">
@@ -92,11 +101,16 @@ export default function HeroResult({ packageName }: Props) {
           <p className="mt-6 text-lg leading-9 text-gray-700">
             {current.reason}
           </p>
-     <div className="mt-8 flex justify-center">
+    <div className="mt-8 flex justify-center">
   <Link
     href="#packages"
-    scroll
-    className="inline-flex items-center gap-3 rounded-full bg-[#0F172A] px-8 py-4 text-white font-bold transition-all duration-300 hover:bg-black hover:scale-105"
+    onClick={() => {
+      trackEvent({
+        event: "packages_section_click",
+        page: "/result",
+      });
+    }}
+    className="inline-flex items-center gap-3 rounded-full bg-[#0F172A] px-8 py-4 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-black"
   >
     عرض جميع الباقات والأسعار
   </Link>
