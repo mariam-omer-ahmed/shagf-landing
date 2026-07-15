@@ -20,6 +20,7 @@ import {
 ============================================================== */
 
 type FormData = {
+  // scored inputs
   current_status: string;
   goal: string;
   readiness: string;
@@ -27,6 +28,7 @@ type FormData = {
   interviews_count: string;
   skills: string;
 
+  // contact — collected LAST, right before the result is revealed
   full_name: string;
   whatsapp: string;
   email: string;
@@ -134,10 +136,10 @@ export default function ShagfQuizV2() {
 
   /* ===========================
       Session + analytics
-      Session id comes from getSessionId() (lib/analytics.ts), persisted
-      in localStorage — the same id follows the visitor across the whole
-      funnel (Hero -> Quiz -> Result -> Application). No local session
-      ref needed here anymore.
+      Session id now comes from getSessionId() (lib/analytics.ts),
+      persisted in localStorage — the same id follows the visitor
+      across the whole funnel (Hero -> Quiz -> Result -> Application),
+      instead of a fresh id being generated per page.
   =========================== */
 
   useEffect(() => {
@@ -332,6 +334,11 @@ export default function ShagfQuizV2() {
 
   /* ===========================
       Submit
+      FIX: removed the duplicate completedRef/trackAssessmentCompleted/
+      router.push block that used to run unconditionally AFTER the
+      try/catch — it was firing even when the insert failed, which is
+      why the page looked like it "worked" even on error. Now
+      navigation only happens inside the success path.
   =========================== */
 
   const handleSubmit = async () => {
@@ -348,7 +355,9 @@ export default function ShagfQuizV2() {
     };
 
     try {
-      const { error } = await supabase.from("shaghaf_leads").insert(payload);
+      const { error } = await supabase
+        .from("shaghaf_leads")
+        .insert(payload);
 
       if (error) throw error;
 

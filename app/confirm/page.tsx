@@ -16,6 +16,7 @@ const packages: Record<string, { title: string; price: string }> = {
   tamkeen: { title: "باقة التمكين", price: "99 دولار" },
 };
 
+
 const WHATSAPP_NUMBER = "249963370737";
 const WHATSAPP_DISPLAY = "+249 96 337 0737";
 const GOOGLE_FORM_URL = "https://forms.gle/pMMeBLad7aMJSx5z7";
