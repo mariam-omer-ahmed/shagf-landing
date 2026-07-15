@@ -1,5 +1,10 @@
 import { supabase } from "./supabase";
 
+export const ROLES = {
+  ADMIN: "admin",
+  CLIENT: "client",
+} as const;
+
 export async function getUserRole(userId: string) {
   const { data, error } = await supabase
     .from("profiles")
@@ -14,10 +19,12 @@ export async function getUserRole(userId: string) {
 
 export async function isAdmin(userId: string) {
   const role = await getUserRole(userId);
-  return role === "admin";
+
+  return role === ROLES.ADMIN;
 }
 
 export async function isClient(userId: string) {
   const role = await getUserRole(userId);
-  return role === "client";
+
+  return role === ROLES.CLIENT;
 }
