@@ -34,7 +34,6 @@ export default function ResultPage() {
         </motion.div>
 
         {/* HERO (HIGH TICKET HOOK) */}
-       
 
         <p className="mx-auto mt-8 max-w-3xl text-xl leading-[2] text-gray-700 font-medium">
           أغلب الشباب لا يفشلون لأنهم لا يتعلمون…
@@ -76,87 +75,30 @@ export default function ResultPage() {
           <h2 className="text-3xl font-black text-center text-[#0F172A]">
             ماذا يفعل نظام شغف فعليًا؟
           </h2>
-<div className="mt-10 space-y-6">
-  <Step
-    title="كشف الاتجاه الحقيقي"
-    desc="نزيل الضباب عن خياراتك ونحدد المجال الذي يناسبك فعليًا بناءً على وضعك الحالي، لا على الرغبات العشوائية."
-  />
-
-  <Step
-    title="بناء نقطة انطلاق واضحة"
-    desc="نحوّل الفوضى إلى خطة عملية لأول 30 يوم، بحيث تعرف بالضبط ماذا تفعل ومتى تبدأ."
-  />
-
-  <Step
-    title="تحويلك إلى مرشح حقيقي في السوق"
-    desc="نُعيد بناء سيرتك الذاتية وحضورك المهني بحيث تصبح مؤهلاً فعليًا للفرص، لا مجرد متعلم."
-  />
-
-  <Step
-    title="إثبات المهارة عمليًا"
-    desc="نساعدك على بناء مخرجات حقيقية (مشاريع/نماذج عمل) تُظهر قدرتك بدل أن تشرحها بالكلام."
-  />
-
-  <Step
-    title="الدخول في دائرة الفرص"
-    desc="تتحول من شخص يبحث عن فرصة إلى شخص يبدأ في تلقي الفرص عبر حضور مهني واضح ومقنع."
-  />
-</div>
-        </div>
-
-        {/* PACKAGES — IDENTITY-BASED, OUTCOME-DRIVEN */}
-        <div className="mt-24">
-          <h2 className="text-3xl font-black text-center text-[#0F172A]">
-            أي مرحلة تشبهك الآن؟
-          </h2>
-          <p className="mt-4 text-center text-gray-600 max-w-2xl mx-auto">
-            كل مرحلة مبنية لشخص مختلف. اختر الوصف الذي يشبه وضعك الحقيقي الآن،
-            لا الذي "يبدو أفضل".
-          </p>
-
-          <div className="mt-12 grid md:grid-cols-3 gap-6 text-right items-stretch">
-            <PackageCard
-              title="البوصلة"
-              price="9 دولار"
-              forWho="إذا كنت لا تعرف من أين تبدأ أصلًا..."
-              desc="هذه أول خطوة، لا آخر خطوة. الهدف الوحيد: تخرج منها وأنت متأكد بدل حائر."
-              outcomes={[
-                "تعرف بالضبط المجال المناسب لوضعك، لا لرغبتك العشوائية",
-                "تعرف أول مهارة واحدة تستحق وقتك الآن",
-                "تعرف ما الذي يجب أن تتجاهله فورًا",
-                "تمتلك خطة أول 30 يوم مرتبة بالترتيب",
-              ]}
-              result="تخرج بوضوح كامل لأول مرة في حياتك المهنية"
+          <div className="mt-10 space-y-6">
+            <Step
+              title="كشف الاتجاه الحقيقي"
+              desc="نزيل الضباب عن خياراتك ونحدد المجال الذي يناسبك فعليًا بناءً على وضعك الحالي، لا على الرغبات العشوائية."
             />
 
-          < PackageCard
-  title="الانطلاقة"
-  price="39 دولار"
-  highlight
-  forWho="إذا كنت في بداية الطريق أو تعرف مجالك لكن لا تملك مهارة واضحة بعد..."
-  desc="المشكلة ليست أنك لا تتعلم، بل أنك لا تعرف كيف تبني مهارة قابلة للعرض أو تتحول إلى فرصة حقيقية."
-  outcomes={[
-    "تبني مهارة أساسية من الصفر أو تطور مهارتك الحالية بشكل صحيح",
-    "تصبح سيرتك الذاتية قادرة على المنافسة بدل أن تُرفض قبل قراءتها",
-    "يتحول لينكدإن إلى صفحة تجذب الفرص بدل حساب مهمل",
-    "تمتلك مشروعًا عمليًا يثبت مهارتك بدل الاكتفاء بالكلام",
-    "تملك طريقة واضحة للوصول إلى أول وظيفة أو أول عميل فعلي",
-  ]}
-  result="تحصل على أول فرصة حقيقية مبنية على مهارة واضحة"
-/>
+            <Step
+              title="بناء نقطة انطلاق واضحة"
+              desc="نحوّل الفوضى إلى خطة عملية لأول 30 يوم، بحيث تعرف بالضبط ماذا تفعل ومتى تبدأ."
+            />
 
-            <PackageCard
-              title="التمكين"
-              price="99 دولار"
-              forWho="إذا كنت بدأت فعلًا... وتريد تكون من الأفضل في مجالك"
-              desc="ما عندك مشكلة توصل لفرصة، مشكلتك إنك تبي فرص مستمرة بدل ما تنتظرها."
-              outcomes={[
-                "تبني حضور مهني يخليك أنت اللي يُختار، لا اللي يبحث",
-                "ترفع دخلك بدل ما تبقى عند نفس السقف",
-                "تفتح فرص أفضل بدل ما تكرر نفس التجربة",
-                "تمتلك استراتيجية نمو طويلة مبنية على تخصصك الحقيقي",
-              ]}
-              result="تتحول من شخص يلاحق الفرص إلى شخص الفرص تلاحقه"
+            <Step
+              title="تحويلك إلى مرشح حقيقي في السوق"
+              desc="نُعيد بناء سيرتك الذاتية وحضورك المهني بحيث تصبح مؤهلاً فعليًا للفرص، لا مجرد متعلم."
+            />
+
+            <Step
+              title="إثبات المهارة عمليًا"
+              desc="نساعدك على بناء مخرجات حقيقية (مشاريع/نماذج عمل) تُظهر قدرتك بدل أن تشرحها بالكلام."
+            />
+
+            <Step
+              title="الدخول في دائرة الفرص"
+              desc="تتحول من شخص يبحث عن فرصة إلى شخص يبدأ في تلقي الفرص عبر حضور مهني واضح ومقنع."
             />
           </div>
         </div>
@@ -193,66 +135,6 @@ function Step({ title, desc }: any) {
       <div>
         <div className="font-black text-[#0F172A]">{title}</div>
         <div className="text-gray-700">{desc}</div>
-      </div>
-    </div>
-  );
-}
-
-function PackageCard({
-  title,
-  price,
-  forWho,
-  desc,
-  outcomes,
-  result,
-  highlight,
-}: {
-  title: string;
-  price: string;
-  forWho: string;
-  desc: string;
-  outcomes: string[];
-  result: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`flex flex-col p-8 rounded-[28px] border bg-white transition ${
-        highlight
-          ? "border-[#E96B8A] shadow-[0_25px_70px_rgba(233,107,138,.25)] md:scale-[1.03]"
-          : "border-pink-200"
-      }`}
-    >
-      {highlight && (
-        <span className="mb-4 inline-flex w-fit items-center rounded-full bg-[#E96B8A] px-4 py-1 text-xs font-black text-white">
-          الأكثر اختيارًا
-        </span>
-      )}
-
-      <div className="text-xl font-black text-[#0F172A]">{title}</div>
-      <div className="text-3xl text-[#E96B8A] font-black mt-2">{price}</div>
-
-      {/* WHO THIS IS FOR — the identity qualifier */}
-      <p className="mt-4 text-[15px] font-bold leading-[1.9] text-[#0F172A]">
-        {forWho}
-      </p>
-
-      <p className="mt-3 text-sm text-gray-600 leading-[1.9]">{desc}</p>
-
-      <div className="mt-6 h-px w-full bg-pink-100" />
-
-      {/* OUTCOMES, NOT FEATURES */}
-      <div className="mt-6 space-y-3 text-sm text-gray-800 flex-1">
-        {outcomes.map((o, i) => (
-          <div key={i} className="flex gap-2">
-            <CheckCircle size={16} className="text-[#E96B8A] mt-0.5 shrink-0" />
-            <span className="leading-[1.8]">{o}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 pt-4 border-t border-pink-100 font-bold text-[#E96B8A] text-sm leading-[1.8]">
-        النتيجة: {result}
       </div>
     </div>
   );
