@@ -314,7 +314,7 @@ const [userPackage, setUserPackage] =
               </div>
 
               <button
-                onClick={() => router.push("/client/path")}
+                onClick={() => router.push("/confirm")}
                 className="rounded-xl bg-[#E96B8A] px-6 py-4 font-bold text-white transition hover:bg-[#d95d7d]"
               >
                 متابعة المسار
