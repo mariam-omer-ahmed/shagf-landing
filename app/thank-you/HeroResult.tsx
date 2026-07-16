@@ -101,19 +101,34 @@ export default function HeroResult({ packageName }: Props) {
           <p className="mt-6 text-lg leading-9 text-gray-700">
             {current.reason}
           </p>
-    <div className="mt-8 flex justify-center">
+   <div className="mt-8 flex flex-col items-center gap-4">
+
+  <Link
+    href="/client"
+    onClick={() => {
+      trackEvent({
+        event: "free_resources_click",
+        page: "/thank-you",
+      });
+    }}
+    className="inline-flex items-center gap-3 rounded-full bg-[#E96B8A] px-8 py-4 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-[#d85b7d]"
+  >
+    ابدأ بالمصادر المجانية
+  </Link>
+
   <Link
     href="#packages"
     onClick={() => {
       trackEvent({
         event: "packages_section_click",
-        page: "/result",
+        page: "/thank-you",
       });
     }}
     className="inline-flex items-center gap-3 rounded-full bg-[#0F172A] px-8 py-4 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-black"
   >
     عرض جميع الباقات والأسعار
   </Link>
+
 </div>
         </motion.div>
 

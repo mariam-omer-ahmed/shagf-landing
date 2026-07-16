@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getDashboardStats } from "@/lib/queries/dashboard";
+import { getHotLeads } from "@/lib/queries/hotLeads";
 import Link from "next/link";
 import {
   Users,
@@ -14,13 +15,16 @@ import {
 export default function AdminDashboard() {
 
 
-  const [stats,setStats] = useState({
+const [stats,setStats] = useState<any>({
     leads:0,
     resources:0,
-    users:0
-  });
+    users:0,
+    todayLeads:0,
+    stages:{},
+    packages:{}
+});
 
-
+const [hotLeads,setHotLeads] = useState<any[]>([]);
 
   useEffect(()=>{
 
@@ -31,51 +35,26 @@ export default function AdminDashboard() {
 
 
 
-  async function loadStats(){
+async function loadStats(){
 
+  try{
 
-    const { count: usersCount } =
-      await supabase
-      .from("profiles")
-      .select("id",{
-        count:"exact",
-        head:true
-      });
+    const data = await getDashboardStats();
 
+    const hot = await getHotLeads();
 
+    setStats(data);
 
-    const { count: leadsCount } =
-      await supabase
-      .from("shaghaf_leads")
-      .select("id",{
-        count:"exact",
-        head:true
-      });
-
-
-
-    const { count: resourcesCount } =
-      await supabase
-      .from("free_resources")
-      .select("id",{
-        count:"exact",
-        head:true
-      });
-
-
-
-    setStats({
-
-      users: usersCount || 0,
-
-      leads: leadsCount || 0,
-
-      resources: resourcesCount || 0
-
-    });
-
+    setHotLeads(hot);
 
   }
+  catch(error){
+
+    console.log(error);
+
+  }
+
+}
 
 
 
@@ -131,7 +110,7 @@ export default function AdminDashboard() {
         mt-10
         grid
         gap-6
-        md:grid-cols-3
+        md:grid-cols-4
         "
       >
 
@@ -150,7 +129,11 @@ export default function AdminDashboard() {
           value={stats.leads}
         />
 
-
+         <Card
+          icon={<ClipboardList/>}
+          title="عملاء اليوم"
+          value={stats.todayLeads}
+         />
 
         <Card
           icon={<BookOpen/>}
@@ -325,7 +308,271 @@ export default function AdminDashboard() {
 
       </section>
 
+<section
+className="
+mt-10
+grid
+gap-6
+md:grid-cols-2
+"
+>
 
+
+<div
+className="
+bg-white
+rounded-3xl
+p-8
+shadow-sm
+"
+>
+
+<h2
+className="
+text-2xl
+font-black
+"
+>
+
+رحلة العملاء
+
+</h2>
+
+
+<div
+className="
+mt-5
+space-y-3
+"
+>
+
+{
+Object.entries(stats.stages)
+.map(
+([key,value]:any)=>(
+
+<div
+key={key}
+className="
+flex
+justify-between
+font-bold
+"
+>
+
+<span>
+{key}
+</span>
+
+
+<span>
+{value}
+</span>
+
+
+</div>
+
+)
+)
+
+}
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div
+className="
+bg-white
+rounded-3xl
+p-8
+shadow-sm
+"
+>
+
+
+<h2
+className="
+text-2xl
+font-black
+"
+>
+
+الباقات المطلوبة
+
+</h2>
+
+
+
+<div
+className="
+mt-5
+space-y-3
+"
+>
+
+
+{
+Object.entries(stats.packages)
+.map(
+([key,value]:any)=>(
+
+
+<div
+key={key}
+className="
+flex
+justify-between
+font-bold
+"
+>
+
+<span>
+{key}
+</span>
+
+
+<span>
+{value}
+</span>
+
+
+</div>
+
+
+)
+)
+
+}
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+   <section
+className="
+mt-10
+bg-white
+rounded-3xl
+p-8
+shadow-sm
+"
+>
+
+<h2
+className="
+text-2xl
+font-black
+mb-6
+"
+>
+🔥 فرص تحتاج متابعة
+</h2>
+
+{
+hotLeads.length === 0 ? (
+
+<p className="text-gray-500">
+لا توجد بيانات حالياً
+</p>
+
+) : (
+
+<div className="space-y-4">
+
+{
+hotLeads.map((lead)=>(
+
+<div
+key={lead.id}
+className="
+flex
+items-center
+justify-between
+border-b
+pb-4
+"
+>
+
+<div>
+
+<p className="font-bold text-black">
+{lead.full_name}
+</p>
+
+<p className="text-sm text-gray-500">
+{lead.selected_package || "بدون باقة"}
+</p>
+
+</div>
+
+<div
+className="
+flex
+items-center
+gap-3
+"
+>
+
+<span
+className="
+rounded-xl
+bg-[#FFF4F8]
+px-4
+py-2
+font-black
+text-[#E96B8A]
+"
+>
+
+{lead.lead_score || 0}
+
+</span>
+
+<Link
+href={`/admin/leads/${lead.id}`}
+className="
+rounded-xl
+bg-[#E96B8A]
+px-4
+py-2
+font-bold
+text-white
+"
+>
+
+عرض
+
+</Link>
+
+</div>
+
+</div>
+
+))
+}
+
+</div>
+
+)
+
+}
+
+</section>
 
 
     </main>

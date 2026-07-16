@@ -44,55 +44,61 @@ async function handleSubmit(e: React.FormEvent) {
     setLoading(false);
 
     if (
-  signUpError.message
-    .toLowerCase()
-    .includes("already registered")
-) {
-    localStorage.setItem("lastEmail", email);
+      signUpError.message
+        .toLowerCase()
+        .includes("already registered")
+    ) {
+      localStorage.setItem("lastEmail", email);
 
-  setError("لديك حساب بالفعل، سيتم تحويلك إلى صفحة تسجيل الدخول...");
+      setError(
+        "لديك حساب بالفعل، سيتم تحويلك إلى صفحة تسجيل الدخول..."
+      );
 
-  setTimeout(() => {
-    router.push("/login");
-  }, 2000);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
 
-  return;
-}
-     setError("حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.");
-  return;
+      return;
+    }
+
+    setError("حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.");
+    return;
   }
 
   const user = data.user;
 
   if (user) {
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .insert({
-      id: user.id,
-      email: user.email,
-      full_name: fullName,
-      role: "customer",
-    });
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        id: user.id,
+        email: user.email,
+        full_name: fullName,
+        role: "customer",
+      });
 
-  if (profileError) {
+    if (profileError) {
+      setLoading(false);
+      setError("حدث خطأ أثناء إنشاء الحساب");
+      return;
+    }
+
+    await supabase
+      .from("shaghaf_leads")
+      .update({
+        user_id: user.id,
+      })
+      .eq("email", email)
+      .is("user_id", null);
+
     setLoading(false);
-    setError("حدث خطأ أثناء إنشاء الحساب");
+
+    router.push("/client");
+
     return;
   }
 
-  // ربط التقييم بالحساب
-  await supabase
-    .from("shaghaf_leads")
-    .update({
-      user_id: user.id,
-    })
-    .eq("email", email)
-    .is("user_id", null);
-}
-
   setLoading(false);
-
-  router.push("/dashboard");
 }
 
   return (

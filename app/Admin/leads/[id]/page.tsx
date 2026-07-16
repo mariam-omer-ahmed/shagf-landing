@@ -26,6 +26,10 @@ type Lead = {
   current_status: string;
   user_id: string;
   created_at: string;
+
+  lead_stage?: string;
+  lead_score?: number;
+  phone?: string;
 };
 
 
@@ -45,19 +49,21 @@ export default function LeadDetailsPage() {
   const [loading, setLoading] =
     useState(true);
 
+const [notes, setNotes] = useState<any[]>([]);
+const [newNote, setNewNote] = useState("");
 
 
 
+ useEffect(() => {
 
-  useEffect(() => {
+  if(params.id){
 
-    if(params.id){
+    loadLead();
+    loadNotes();
 
-      loadLead();
+  }
 
-    }
-
-  }, [params.id]);
+}, [params.id]);
 
 
 
@@ -98,6 +104,98 @@ export default function LeadDetailsPage() {
 
   }
 
+
+async function loadNotes(){
+
+  const { data } = await supabase
+    .from("lead_notes")
+    .select("*")
+    .eq("lead_id", params.id)
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
+
+  setNotes(data || []);
+
+}
+
+async function updateStage(
+  stage:string
+){
+
+  await supabase
+    .from("shaghaf_leads")
+    .update({
+      lead_stage:stage
+    })
+    .eq(
+      "id",
+      params.id
+    );
+
+  setLead((prev:any)=>({
+
+    ...prev,
+
+    lead_stage:stage
+
+  }));
+
+
+  await supabase
+    .from("lead_activities")
+    .insert({
+
+      lead_id:params.id,
+
+      activity_type:"stage_changed",
+
+      description:`تم تغيير المرحلة إلى ${stage}`
+
+    });
+
+}
+
+async function addNote(){
+
+  if(!newNote.trim()) return;
+
+  const user =
+    await supabase.auth.getUser();
+
+  await supabase
+    .from("lead_notes")
+    .insert({
+
+      lead_id:params.id,
+
+      note:newNote,
+
+      created_by:
+      user.data.user?.id
+
+    });
+
+  await supabase
+    .from("lead_activities")
+    .insert({
+
+      lead_id:params.id,
+
+      activity_type:"note_added",
+
+      description:newNote
+
+    });
+
+  setNewNote("");
+
+  loadNotes();
+
+}
 
 
 
@@ -359,6 +457,117 @@ export default function LeadDetailsPage() {
       </section>
 
 
+<section
+className="
+mt-8
+rounded-3xl
+bg-white
+p-8
+shadow-sm
+"
+>
+
+<h2
+className="
+text-2xl
+font-black
+"
+>
+
+Lead Score
+
+</h2>
+
+<div
+className="
+mt-5
+rounded-2xl
+bg-[#FFF4F8]
+p-5
+font-black
+text-4xl
+text-[#E96B8A]
+"
+>
+
+{lead.lead_score || 0}
+
+</div>
+
+</section>
+
+
+<section
+className="
+mt-8
+rounded-3xl
+bg-white
+p-8
+shadow-sm
+"
+>
+
+<h2
+className="
+text-2xl
+font-black
+"
+>
+
+مرحلة العميل
+
+</h2>
+
+<select
+
+value={
+lead.lead_stage || "new"
+}
+
+onChange={(e)=>
+updateStage(
+e.target.value
+)
+}
+
+className="
+mt-5
+w-full
+rounded-xl
+border
+p-4
+font-bold
+"
+>
+
+<option value="new">
+جديد
+</option>
+
+<option value="assessment_done">
+تم التقييم
+</option>
+
+<option value="contacted">
+تم التواصل
+</option>
+
+<option value="offer_sent">
+تم إرسال العرض
+</option>
+
+<option value="paid">
+مدفوع
+</option>
+
+<option value="inactive">
+غير نشط
+</option>
+
+</select>
+
+</section>
+
 
 
 
@@ -413,6 +622,121 @@ export default function LeadDetailsPage() {
 
 
 
+<section
+className="
+mt-8
+rounded-3xl
+bg-white
+p-8
+shadow-sm
+"
+>
+
+<h2
+className="
+text-2xl
+font-black
+"
+>
+
+ملاحظات الفريق
+
+</h2>
+
+<div
+className="
+mt-5
+flex
+gap-3
+"
+>
+
+<input
+
+value={newNote}
+
+onChange={(e)=>
+setNewNote(
+e.target.value
+)
+}
+
+placeholder="أضف ملاحظة..."
+
+className="
+flex-1
+rounded-xl
+border
+p-4
+"
+/>
+
+<button
+
+onClick={addNote}
+
+className="
+rounded-xl
+bg-[#E96B8A]
+px-6
+font-bold
+text-white
+"
+>
+
+حفظ
+
+</button>
+
+</div>
+
+<div
+className="
+mt-6
+space-y-3
+"
+>
+
+{
+notes.map((note)=>(
+
+<div
+key={note.id}
+className="
+rounded-xl
+bg-[#FFF4F8]
+p-4
+"
+>
+
+<p className="font-medium">
+{note.note}
+</p>
+
+<p
+className="
+mt-2
+text-sm
+text-gray-500
+"
+>
+
+{
+new Date(
+note.created_at
+).toLocaleDateString("ar-SA")
+}
+
+</p>
+
+</div>
+
+))
+}
+
+</div>
+
+</section>
 
 
 

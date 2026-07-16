@@ -342,45 +342,65 @@ export default function ShagfQuizV2() {
   =========================== */
 
   const handleSubmit = async () => {
-    if (!validateStep()) return;
+  if (!validateStep()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    const selected_package = calculatePackage();
+  const selected_package = calculatePackage();
 
-    const payload = {
-      ...form,
-      selected_package,
-      session_id: getSessionId(),
-    };
-
-    try {
-      const { error } = await supabase
-        .from("shaghaf_leads")
-        .insert(payload);
-
-      if (error) throw error;
-
-      completedRef.current = true;
-      trackAssessmentCompleted(selected_package);
-
-      router.push(`/thank-you?package=${selected_package}`);
-    } catch (err: any) {
-      console.error("Supabase insert failed (raw):", err);
-      console.error("Supabase insert failed (json):", JSON.stringify(err));
-
-      alert(
-        `حدث خطأ أثناء الإرسال\n\n${err?.message ?? "بدون رسالة"}\nCode: ${
-          err?.code ?? "-"
-        }\nDetails: ${err?.details ?? "-"}\nHint: ${
-          err?.hint ?? "-"
-        }\n\nRaw: ${JSON.stringify(err)}`
-      );
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    ...form,
+    selected_package,
+    session_id: getSessionId(),
   };
 
+  try {
+    // حفظ الـ Lead
+    const { error } = await supabase
+      .from("shaghaf_leads")
+      .insert(payload);
+
+    if (error) throw error;
+
+    // Analytics
+    completedRef.current = true;
+    trackAssessmentCompleted(selected_package);
+
+    // حفظ الباقة مؤقتاً لاستخدامها بعد التسجيل
+    localStorage.setItem("selected_package", selected_package);
+
+    // التحقق هل المستخدم مسجل دخول
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // إذا لم يكن لديه حساب
+    if (!user) {
+      router.push(
+        `/register?package=${selected_package}&email=${encodeURIComponent(
+          form.email
+        )}&name=${encodeURIComponent(form.full_name)}`
+      );
+      return;
+    }
+
+    // إذا كان مسجل دخول بالفعل
+    router.push(`/thank-you?package=${selected_package}`);
+  } catch (err: any) {
+    console.error("Supabase insert failed (raw):", err);
+    console.error("Supabase insert failed (json):", JSON.stringify(err));
+
+    alert(
+      `حدث خطأ أثناء الإرسال\n\n${err?.message ?? "بدون رسالة"}\nCode: ${
+        err?.code ?? "-"
+      }\nDetails: ${err?.details ?? "-"}\nHint: ${
+        err?.hint ?? "-"
+      }\n\nRaw: ${JSON.stringify(err)}`
+    );
+  } finally {
+    setLoading(false);
+  }
+};
   /* ===========================
       Animations
   =========================== */

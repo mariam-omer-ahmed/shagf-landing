@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getLeads } from "@/lib/queries/leads";
 import Link from "next/link";
 import {
   Search,
@@ -59,38 +59,39 @@ loadLeads();
 
 
 
-
 async function loadLeads(){
 
+console.log("START LOADING LEADS");
 
-const {
- data,
- error
-}=await supabase
-.from("shaghaf_leads")
-.select("*")
-.order(
-"created_at",
-{
- ascending:false
+
+try {
+
+const data = await getLeads();
+
+
+console.log("LEADS DATA:", data);
+
+
+setLeads(data);
+
+
 }
+catch(error){
+
+console.log(
+"LOAD LEADS ERROR:",
+error
 );
 
 
-
-if(error){
-
-console.log(error);
-
-return;
-
 }
+finally {
 
-
-setLeads(data || []);
+console.log("FINISHED");
 
 setLoading(false);
 
+}
 
 }
 

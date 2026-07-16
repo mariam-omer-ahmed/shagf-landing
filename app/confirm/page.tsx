@@ -2,42 +2,72 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import Link from "next/link";
 import {
   CheckCircle2,
   MessageCircle,
-  FileText,
+  Clock3,
+  ShieldCheck,
   ArrowLeft,
 } from "lucide-react";
 
-const packages: Record<string, { title: string; price: string }> = {
-  bousola: { title: "باقة البوصلة", price: "9 دولار" },
-  intilaqah: { title: "باقة الانطلاقة", price: "39 دولار" },
-  tamkeen: { title: "باقة التمكين", price: "99 دولار" },
+const packages: Record<
+  string,
+  {
+    title: string;
+    price: string;
+  }
+> = {
+  bousola: {
+    title: "باقة البوصلة",
+    price: "9 دولار",
+  },
+
+  intilaqah: {
+    title: "باقة الانطلاقة",
+    price: "39 دولار",
+  },
+
+  tamkeen: {
+    title: "باقة التمكين",
+    price: "99 دولار",
+  },
 };
 
-
 const WHATSAPP_NUMBER = "249963370737";
-const WHATSAPP_DISPLAY = "+249 96 337 0737";
-const GOOGLE_FORM_URL = "https://forms.gle/pMMeBLad7aMJSx5z7";
 
 export default function ConfirmPage() {
   return (
     <Suspense fallback={null}>
-      <ConfirmPageContent />
+      <ConfirmContent />
     </Suspense>
   );
 }
 
-function ConfirmPageContent() {
+function ConfirmContent() {
   const searchParams = useSearchParams();
 
-  const packageId = searchParams.get("package") ?? "intilaqah";
-  const pkg = packages[packageId] ?? packages.intilaqah;
+  const packageId =
+    searchParams.get("package") ?? "intilaqah";
 
-  const name = searchParams.get("name") ?? "عزيزي العميل";
+  const pkg =
+    packages[packageId] ??
+    packages.intilaqah;
 
-  const whatsappMessage = `مرحبًا، أنا ${name}، مهتم بـ ${pkg.title} (${pkg.price}) في نظام شغف.`;
+  const name =
+    searchParams.get("name") ??
+    "عزيزي العميل";
+
+  const whatsappMessage = `
+مرحبًا،
+
+أنا ${name}
+
+أرغب في تأكيد انضمامي إلى ${pkg.title}
+
+السعر: ${pkg.price}
+
+وأريد معرفة الخطوة التالية.
+`;
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     whatsappMessage
@@ -46,96 +76,192 @@ function ConfirmPageContent() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF8FB] px-4 py-16"
-      style={{
-        fontFamily: "'Cairo','IBM Plex Sans Arabic','Tajawal',sans-serif",
-      }}
+      className="min-h-screen bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF8FB]"
     >
-      <div className="mx-auto max-w-xl text-center">
+      <section className="py-20 px-6">
 
-        {/* BADGE */}
-        <div className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-pink-200 bg-white px-5 py-2 text-sm font-bold text-[#E96B8A] shadow-sm">
-          <CheckCircle2 size={16} />
-          تم استلام بياناتك بنجاح
-        </div>
+        <div className="mx-auto max-w-4xl">
 
-        {/* TITLE */}
-        <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-[1.4]">
-          خطوتان أخيرتان فقط
-          <br />
-          <span className="text-[#E96B8A]">
-            لتأكيد تسجيلك في النظام
-          </span>
-        </h1>
+          <div className="text-center">
 
-        <p className="mt-4 text-gray-600 leading-7">
-          اخترت <span className="font-bold text-gray-900">{pkg.title}</span>{" "}
-          ({pkg.price}). أكمل الخطوات التالية لتفعيل طلبك.
-        </p>
+            <div className="inline-flex items-center gap-3 rounded-full bg-green-50 px-6 py-3 text-green-700 font-bold">
 
-        {/* STEP 1 */}
-        <div className="mt-10 rounded-[28px] border border-pink-100 bg-white p-8 text-right shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+              <CheckCircle2 size={20} />
 
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E9F9EE] text-green-600 font-black">
-              1
+              تم حجز مكانك مبدئيًا
+
             </div>
-            <h2 className="text-xl font-black text-gray-900">
-              تواصل معنا عبر واتساب
-            </h2>
+
+            <h1 className="mt-8 text-5xl font-black leading-tight text-gray-900">
+
+              أحسنت.
+
+              <br />
+
+              لقد أنهيت أصعب خطوة.
+
+            </h1>
+
+            <p className="mt-8 text-xl leading-10 text-gray-600">
+
+              أغلب الناس يصلون لهذه المرحلة...
+
+              ثم يغلقون الصفحة...
+
+              ويعودون لنفس الدائرة مرة أخرى.
+
+              <br /><br />
+
+              أما أنت فقد اتخذت خطوة فعلية نحو تغيير وضعك الحالي.
+
+            </p>
+
           </div>
 
-          <p className="mt-4 text-gray-600 leading-7">
-            تواصل معنا لتأكيد الطلب واستكمال التفاصيل.
-          </p>
+          <div className="mt-16 rounded-[34px] border border-pink-100 bg-white p-10 shadow-xl">
 
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-green-500 py-4 font-bold text-white shadow-lg transition hover:bg-green-600"
-          >
-            <MessageCircle size={20} />
-            راسلنا على {WHATSAPP_DISPLAY}
-          </a>
-        </div>
+            <h2 className="text-3xl font-black text-[#E96B8A]">
 
-        {/* STEP 2 */}
-        <div className="mt-6 rounded-[28px] border border-pink-100 bg-white p-8 text-right shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+              تفاصيل طلبك
 
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF0F4] text-[#E96B8A] font-black">
-              2
-            </div>
-            <h2 className="text-xl font-black text-gray-900">
-              نموذج التسجيل الرسمي
             </h2>
+
+            <div className="mt-10 space-y-5">
+
+              <Info
+                title="الباقة المختارة"
+                value={pkg.title}
+              />
+
+              <Info
+                title="قيمة الاستثمار"
+                value={pkg.price}
+              />
+
+              <Info
+                title="الحالة"
+                value="بانتظار تأكيد التواصل"
+              />
+
+            </div>
+
           </div>
 
-          <p className="mt-4 text-gray-600 leading-7">
-            أكمل النموذج لتثبيت طلبك بشكل رسمي داخل النظام.
-          </p>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
 
-          <a
-            href={GOOGLE_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#E96B8A] py-4 font-bold text-white shadow-lg transition hover:bg-[#d95d7d]"
-          >
-            <FileText size={20} />
-            افتح نموذج التسجيل
-          </a>
+            <Card
+              icon={<Clock3 size={28} />}
+              title="خلال 24 ساعة"
+              text="سيتم التواصل معك لمراجعة حالتك وتأكيد المسار المناسب."
+            />
+
+            <Card
+              icon={<ShieldCheck size={28} />}
+              title="مراجعة فردية"
+              text="لن يتم إدخالك للنظام قبل التأكد أنه مناسب لوضعك."
+            />
+
+            <Card
+              icon={<CheckCircle2 size={28} />}
+              title="خطة واضحة"
+              text="ستعرف بالضبط ما الذي يجب فعله بعد ذلك."
+            />
+
+          </div>
+
+          <div className="mt-16 rounded-[34px] bg-[#111827] p-12 text-center text-white">
+
+            <h3 className="text-3xl font-black">
+
+              الخطوة الأخيرة
+
+            </h3>
+
+            <p className="mt-6 text-xl leading-10 text-gray-300">
+
+              اضغط الزر أدناه الآن.
+
+              <br />
+
+              وأرسل رسالة التأكيد لفريق شغف.
+
+            </p>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-flex items-center gap-4 rounded-full bg-[#25D366] px-12 py-6 text-xl font-black text-white shadow-[0_25px_70px_rgba(37,211,102,.35)]"
+            >
+              <MessageCircle size={28} />
+
+              تأكيد الطلب عبر واتساب
+
+            </a>
+
+          </div>
+
+          <div className="mt-12 text-center text-gray-500">
+
+            إذا أغلقت الصفحة الآن...
+
+            سيبقى طلبك غير مكتمل.
+
+          </div>
+
         </div>
 
-        {/* BACK */}
-        <Link
-          href="/"
-          className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-[#E96B8A]"
-        >
-          <ArrowLeft size={16} />
-          العودة للرئيسية
-        </Link>
-      </div>
+      </section>
     </main>
+  );
+}
+
+function Info({
+  title,
+  value,
+}:{
+  title:string;
+  value:string;
+}) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl bg-[#FFF8FB] p-5">
+
+      <span className="font-bold text-gray-600">
+        {title}
+      </span>
+
+      <span className="font-black text-gray-900">
+        {value}
+      </span>
+
+    </div>
+  );
+}
+
+function Card({
+  icon,
+  title,
+  text,
+}:{
+  icon: React.ReactNode;
+  title:string;
+  text:string;
+}) {
+  return (
+    <div className="rounded-3xl bg-white border border-pink-100 p-8 text-center">
+
+      <div className="flex justify-center text-[#E96B8A]">
+        {icon}
+      </div>
+
+      <h3 className="mt-5 text-xl font-black">
+        {title}
+      </h3>
+
+      <p className="mt-4 leading-8 text-gray-600">
+        {text}
+      </p>
+
+    </div>
   );
 }
