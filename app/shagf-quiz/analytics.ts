@@ -70,11 +70,22 @@ export function trackDropOff(step: number, totalSteps: number) {
   });
 }
 
-export function trackAssessmentCompleted(selectedPackage: string) {
+/**
+ * `metadata` is new and optional — existing calls like
+ * `trackAssessmentCompleted(selectedPackage)` keep working exactly as
+ * before. When the quiz has richer scoring data (lead_score,
+ * urgency_score, main_obstacle, goal, ...) it can now be passed through
+ * without introducing a new event name or breaking the funnel taxonomy.
+ */
+export function trackAssessmentCompleted(
+  selectedPackage: string,
+  metadata?: Record<string, unknown>
+) {
   trackEvent({
     event: "assessment_completed",
     page: PAGE,
     package_id: selectedPackage,
+    metadata,
   });
 }
 

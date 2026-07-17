@@ -19,17 +19,17 @@ const packages: Record<
 > = {
   bousola: {
     title: "باقة البوصلة",
-    price: "9 دولار",
+    price: "15 دولار",
   },
 
   intilaqah: {
     title: "باقة الانطلاقة",
-    price: "39 دولار",
+    price: "59 دولار",
   },
 
   tamkeen: {
     title: "باقة التمكين",
-    price: "99 دولار",
+    price: "149 دولار",
   },
 };
 

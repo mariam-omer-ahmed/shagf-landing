@@ -138,38 +138,24 @@ export default function FinalCTA() {
 
             {/* CTA */}
 
-            <div className="mt-16 text-center">
+           <div className="mt-16 text-center">
+  <motion.a
+    href="/#testimonials"
+    whileHover={{
+      scale: 1.03,
+    }}
+    whileTap={{
+      scale: 0.98,
+    }}
+    className="inline-flex items-center gap-4 rounded-full bg-[#E96B8A] px-14 py-6 text-2xl font-black shadow-[0_25px_60px_rgba(233,107,138,.35)]"
+  >
+    <MessageCircle size={28} />
 
-              <motion.a
-                href={WHATSAPP}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{
-                  scale: 1.03,
-                }}
-                whileTap={{
-                  scale: .98,
-                }}
-                className="inline-flex items-center gap-4 rounded-full bg-[#E96B8A] px-14 py-6 text-2xl font-black shadow-[0_25px_60px_rgba(233,107,138,.35)]"
-              >
-                <MessageCircle size={28} />
+    تجارب مشتركي شغف
 
-                أريد أن أعرف إن كان نظام شغف مناسبًا لي
-
-                <ArrowRight size={26} />
-              </motion.a>
-
-              <p className="mt-6 text-gray-400 leading-8">
-
-                لن يطلب منك أحد الدفع قبل أن يفهم حالتك بالكامل.
-
-                <br />
-
-                وإذا رأينا أن النظام لن يفيدك فلن ننصحك بالاشتراك.
-
-              </p>
-
-            </div>
+    <ArrowRight size={26} />
+  </motion.a>
+</div>
 
           </div>
 

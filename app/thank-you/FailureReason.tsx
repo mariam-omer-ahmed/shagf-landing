@@ -142,8 +142,7 @@ export default function FailureReason() {
             المشكلة ليست أنك
             <span className="text-[#E96B8A]">
 
-              لا تتعلم.
-
+- لا تتعلم
             </span>
 
             <br />
@@ -152,13 +151,12 @@ export default function FailureReason() {
 
             <span className="text-[#E96B8A]">
 
-              لا تعرف ماذا تتعلم...
-
+- لا تعرف ماذا تتعلم؟
             </span>
 
-            ومتى...
+            ومتى؟
 
-            ولماذا.
+            ولماذا؟
 
           </h3>
 
