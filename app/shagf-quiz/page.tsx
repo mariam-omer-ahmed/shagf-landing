@@ -188,20 +188,20 @@ const INTERVIEWS_OPTIONS: Option[] = [
 
 const BUDGET_OPTIONS: Option[] = [
   {
-    value: "under_150",
-    label: "أقل من 150 دولاراً",
+    value: "under_50",
+    label: "أقل من 50 دولاراً",
   },
   {
-    value: "150_300",
-    label: "150 – 300 دولار",
+    value: "50_100",
+    label: "50 – 100 دولار",
   },
   {
-    value: "300_800",
-    label: "300 – 800 دولار",
+    value: "100_150",
+    label: "150 – 200دولار",
   },
   {
-    value: "800_plus",
-    label: "أكثر من 800 دولار",
+    value: "200_plus",
+    label: "أكثر من 200 دولار",
   },
 ];
 

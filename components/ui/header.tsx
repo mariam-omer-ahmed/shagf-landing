@@ -26,23 +26,21 @@ export default function Header() {
   useEffect(() => {
     checkUser();
 
-    const { data } =
-      supabase.auth.onAuthStateChange(
-        async (_event, session) => {
-          const currentUser =
-            session?.user || null;
+    const { data } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const currentUser = session?.user || null;
 
-          setUser(currentUser);
+        setUser(currentUser);
 
-          if (!currentUser) {
-            setEmail("");
-            setIsAdmin(false);
-            setHasAssessment(false);
-          } else {
-            await checkUser();
-          }
+        if (!currentUser) {
+          setEmail("");
+          setIsAdmin(false);
+          setHasAssessment(false);
+        } else {
+          await checkUser();
         }
-      );
+      }
+    );
 
     return () => {
       data.subscription.unsubscribe();
@@ -60,24 +58,22 @@ export default function Header() {
 
     setEmail(user.email || "");
 
-    const { data: profile } =
-      await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .maybeSingle();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
 
     if (profile?.role === "admin") {
       setIsAdmin(true);
       return;
     }
 
-    const { data: lead } =
-      await supabase
-        .from("shaghaf_leads")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle();
+    const { data: lead } = await supabase
+      .from("shaghaf_leads")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
     setHasAssessment(!!lead);
   }
@@ -107,10 +103,10 @@ export default function Header() {
   ];
 
   const memberNav = [
-  {
-     title: "الرئيسية",
+    {
+      title: "الرئيسية",
       href: "/",
-  },
+    },
     {
       title: "كيف يعمل النظام؟",
       href: "/result",
@@ -125,45 +121,20 @@ export default function Header() {
     },
   ];
 
-  const navItems =
-    user && !isAdmin
-      ? memberNav
-      : guestNav;
+  const navItems = user && !isAdmin ? memberNav : guestNav;
 
   return (
     <>
-      {user &&
-        hasAssessment &&
-        !isAdmin && (
-          <div
-            className="
-            fixed
-            top-0
-            inset-x-0
-            z-[60]
-            bg-[#E96B8A]
-            text-white
-            "
-          >
-            <div
-              className="
-              mx-auto
-              max-w-7xl
-              px-5
-              py-2
-              text-center
-              text-sm
-              font-bold
-              "
-            >
-              <span className="inline-flex items-center gap-2">
-                <Sparkles size={15} />
-                مرحباً بك في نظام شغف —
-                تم تحديد مسارك المهني بنجاح
-              </span>
-            </div>
+      {user && hasAssessment && !isAdmin && (
+        <div className="fixed top-0 inset-x-0 z-[60] bg-[#E96B8A] text-white">
+          <div className="mx-auto max-w-7xl px-5 py-2 text-center text-sm font-bold">
+            <span className="inline-flex items-center gap-2">
+              <Sparkles size={15} />
+              مرحباً بك في نظام شغف — تم تحديد مسارك المهني بنجاح
+            </span>
           </div>
-        )}
+        </div>
+      )}
 
       <header
         className={`
@@ -171,28 +142,14 @@ export default function Header() {
         inset-x-0
         z-50
         px-5
-        ${
-          user &&
-          hasAssessment &&
-          !isAdmin
-            ? "top-10"
-            : "top-5"
-        }
+        ${user && hasAssessment && !isAdmin ? "top-10" : "top-5"}
       `}
       >
         <div className="mx-auto max-w-7xl">
           <motion.div
-            initial={{
-              opacity: 0,
-              y: -20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.4,
-            }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
             className="
             flex
             h-[92px]
@@ -273,32 +230,15 @@ export default function Header() {
                       text-white
                       "
                     >
-                      {email
-                        ?.charAt(0)
-                        ?.toUpperCase()}
+                      {email?.charAt(0)?.toUpperCase()}
                     </div>
 
                     <div>
-                      <p
-                        className="
-                        text-sm
-                        font-black
-                        text-black
-                        "
-                      >
-                        {isAdmin
-                          ? "مدير النظام"
-                          : "عضو شغف"}
+                      <p className="text-sm font-black text-black">
+                        {isAdmin ? "مدير النظام" : "عضو شغف"}
                       </p>
 
-                      <p
-                        className="
-                        max-w-[180px]
-                        truncate
-                        text-xs
-                        text-gray-500
-                        "
-                      >
+                      <p className="max-w-[180px] truncate text-xs text-gray-500">
                         {email}
                       </p>
                     </div>
@@ -393,22 +333,14 @@ export default function Header() {
               )}
 
               <button
-                onClick={() =>
-                  setMobileOpen(
-                    !mobileOpen
-                  )
-                }
+                onClick={() => setMobileOpen(!mobileOpen)}
                 className="
                 lg:hidden
                 rounded-xl
                 p-2
                 "
               >
-                {mobileOpen ? (
-                  <X size={24} />
-                ) : (
-                  <Menu size={24} />
-                )}
+                {mobileOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </motion.div>
@@ -431,11 +363,7 @@ export default function Header() {
                   <Link
                     key={item.title}
                     href={item.href}
-                    onClick={() =>
-                      setMobileOpen(
-                        false
-                      )
-                    }
+                    onClick={() => setMobileOpen(false)}
                     className="
                     rounded-xl
                     px-4
@@ -448,6 +376,62 @@ export default function Header() {
                     {item.title}
                   </Link>
                 ))}
+              </div>
+
+              {/* أزرار الدخول / الحساب — كانت موجودة فقط بنسخة الديسكتوب (hidden md:block) */}
+              <div className="mt-4 border-t border-pink-100 pt-4">
+                {!user ? (
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="
+                      rounded-xl
+                      border
+                      border-pink-100
+                      px-4
+                      py-3
+                      text-center
+                      font-bold
+                      text-gray-700
+                      "
+                    >
+                      تسجيل الدخول
+                    </Link>
+                    <Link
+                      href="/result"
+                      onClick={() => setMobileOpen(false)}
+                      className="
+                      rounded-xl
+                      bg-[#E96B8A]
+                      px-4
+                      py-3
+                      text-center
+                      font-bold
+                      text-white
+                      "
+                    >
+                      ابدأ رحلتك المهنية
+                    </Link>
+                  </div>
+                ) : (
+                  <Link
+                    href={isAdmin ? "/admin" : "/client"}
+                    onClick={() => setMobileOpen(false)}
+                    className="
+                    block
+                    rounded-xl
+                    bg-[#E96B8A]
+                    px-4
+                    py-3
+                    text-center
+                    font-bold
+                    text-white
+                    "
+                  >
+                    {isAdmin ? "لوحة الإدارة" : "مساري المهني"}
+                  </Link>
+                )}
               </div>
             </div>
           )}
