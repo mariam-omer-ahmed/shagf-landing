@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useParams, useRouter } from "next/navigation";
+import { getLeadTemperature } from "@/lib/queries/leadScoring";
 import {
   User,
   Mail,
@@ -12,6 +13,7 @@ import {
   CheckCircle,
   ArrowRight,
   Calendar,
+  MessageCircle,
 } from "lucide-react";
 
 
@@ -19,17 +21,31 @@ type Lead = {
   id: string;
   full_name: string;
   email: string;
+  whatsapp?: string;
+  phone?: string;
   country: string;
+  city?: string;
+  age_range?: string;
   goal: string;
   selected_package: string;
   readiness: string;
   current_status: string;
+  skills?: string;
+  interviews_count?: number;
+  source?: string;
+  source_channel?: string;
+  start_timeframe?: string;
+  budget_range?: string;
+  main_obstacle?: string;
+  urgency_score?: number;
+  enrollment_status?: string;
+  converted_at?: string;
+  last_activity_at?: string;
   user_id: string;
   created_at: string;
 
   lead_stage?: string;
   lead_score?: number;
-  phone?: string;
 };
 
 
@@ -251,6 +267,9 @@ async function addNote(){
   }
 
 
+  const temperature = getLeadTemperature(lead.lead_score || 0);
+  const whatsappNumber = lead.whatsapp || lead.phone;
+
 
 
 
@@ -312,25 +331,62 @@ async function addNote(){
       ">
 
 
+        <div className="flex items-center justify-between flex-wrap gap-4">
 
-        <h1 className="
-          text-4xl
-          font-black
-        ">
+          <div>
 
-          {lead.full_name}
+            <span
+              className="rounded-full px-3 py-1 text-xs font-black"
+              style={{ color: temperature.color, backgroundColor: temperature.bg }}
+            >
+              {temperature.label} — Lead Score {lead.lead_score || 0}
+            </span>
 
-        </h1>
+            <h1 className="
+              mt-4
+              text-4xl
+              font-black
+            ">
+
+              {lead.full_name}
+
+            </h1>
 
 
-        <p className="
-          mt-3
-          text-lg
-        ">
+            <p className="
+              mt-3
+              text-lg
+            ">
 
-          ملف العميل في نظام شغف
+              ملف العميل في نظام شغف
 
-        </p>
+            </p>
+
+          </div>
+
+          {whatsappNumber && (
+            <a
+              href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+              flex
+              items-center
+              gap-2
+              rounded-2xl
+              bg-white
+              px-6
+              py-4
+              font-black
+              text-green-600
+              "
+            >
+              <MessageCircle size={20} />
+              تواصل واتساب
+            </a>
+          )}
+
+        </div>
 
 
       </section>
@@ -373,8 +429,8 @@ async function addNote(){
 
         <InfoCard
           icon={<MapPin/>}
-          title="الدولة"
-          value={lead.country}
+          title="الدولة / المدينة"
+          value={`${lead.country || "-"} ${lead.city ? "- " + lead.city : ""}`}
         />
 
 
@@ -403,6 +459,52 @@ async function addNote(){
 
 
 
+
+      </section>
+
+
+      {/* تفاصيل الكويز الإضافية */}
+
+      <section className="
+        mt-8
+        rounded-3xl
+        bg-white
+        p-8
+        shadow-sm
+      ">
+
+        <h2 className="text-2xl font-black">إجابات الكويز الكاملة</h2>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+
+          <DetailRow label="رقم الجوال" value={lead.phone} />
+          <DetailRow label="واتساب" value={lead.whatsapp} />
+          <DetailRow label="الفئة العمرية" value={lead.age_range} />
+          <DetailRow label="المهارات" value={lead.skills} />
+          <DetailRow
+            label="عدد المقابلات"
+            value={
+              lead.interviews_count !== undefined
+                ? String(lead.interviews_count)
+                : undefined
+            }
+          />
+          <DetailRow label="العائق الرئيسي" value={lead.main_obstacle} />
+          <DetailRow label="الميزانية المتاحة" value={lead.budget_range} />
+          <DetailRow label="متى يبدأ" value={lead.start_timeframe} />
+          <DetailRow label="مصدر الوصول" value={lead.source} />
+          <DetailRow label="قناة الوصول" value={lead.source_channel} />
+          <DetailRow
+            label="درجة الإلحاح"
+            value={
+              lead.urgency_score !== undefined
+                ? String(lead.urgency_score)
+                : undefined
+            }
+          />
+          <DetailRow label="حالة التحويل" value={lead.enrollment_status} />
+
+        </div>
 
       </section>
 
@@ -613,6 +715,16 @@ font-bold
 
           </span>
 
+          {lead.last_activity_at && (
+            <>
+              <span className="mx-2 text-gray-300">|</span>
+              آخر نشاط:
+              <span>
+                {new Date(lead.last_activity_at).toLocaleDateString("ar-SA")}
+              </span>
+            </>
+          )}
+
 
         </div>
 
@@ -813,4 +925,13 @@ text-black
 
 )
 
+}
+
+function DetailRow({ label, value }: { label: string; value?: string }) {
+  return (
+    <div className="rounded-2xl border border-pink-100 bg-[#FFFBFC] p-4">
+      <p className="text-sm text-gray-500">{label}</p>
+      <p className="mt-1 font-bold text-gray-900">{value || "-"}</p>
+    </div>
+  );
 }

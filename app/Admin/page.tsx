@@ -3,11 +3,15 @@
 import { useEffect, useState } from "react";
 import { getDashboardStats } from "@/lib/queries/dashboard";
 import { getHotLeads } from "@/lib/queries/hotLeads";
+import { getLeadTemperature } from "@/lib/queries/leadScoring";
 import Link from "next/link";
 import {
   Users,
   ClipboardList,
   BookOpen,
+  CreditCard,
+  TrendingUp,
+  MessageCircle,
   ArrowLeft,
 } from "lucide-react";
 
@@ -20,6 +24,9 @@ const [stats,setStats] = useState<any>({
     resources:0,
     users:0,
     todayLeads:0,
+    pendingEnrollments:0,
+    paidEnrollments:0,
+    conversionRate:0,
     stages:{},
     packages:{}
 });
@@ -102,15 +109,48 @@ async function loadStats(){
 
 
 
+      {/* KEY METRIC — معدل التحويل */}
+
+      <div
+        className="
+        mt-10
+        rounded-3xl
+        bg-gradient-to-l
+        from-[#E96B8A]
+        to-[#d95d7d]
+        p-8
+        text-white
+        "
+      >
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-4">
+            <TrendingUp size={32} />
+            <div>
+              <p className="text-sm font-bold text-white/80">
+                معدل التحويل (من كويز لاشتراك مدفوع)
+              </p>
+              <p className="mt-1 text-5xl font-black">
+                {stats.conversionRate}%
+              </p>
+            </div>
+          </div>
+
+          <div className="text-sm font-bold text-white/90">
+            {stats.paidEnrollments} مشترك مدفوع من أصل {stats.leads} كويز
+          </div>
+        </div>
+      </div>
+
+
       {/* STATS */}
 
 
       <div
         className="
-        mt-10
+        mt-6
         grid
         gap-6
-        md:grid-cols-4
+        md:grid-cols-5
         "
       >
 
@@ -141,6 +181,12 @@ async function loadStats(){
           value={stats.resources}
         />
 
+        <Card
+          icon={<CreditCard/>}
+          title="طلبات دفع بالانتظار"
+          value={stats.pendingEnrollments}
+        />
+
 
       </div>
 
@@ -157,7 +203,7 @@ async function loadStats(){
         mt-10
         grid
         gap-6
-        md:grid-cols-2
+        md:grid-cols-3
         "
       >
 
@@ -232,7 +278,72 @@ async function loadStats(){
 
 
 
+        <Link
 
+          href="/admin/enrollments"
+
+          className="
+          group
+          rounded-3xl
+          bg-white
+          p-8
+          shadow-sm
+          transition
+          hover:-translate-y-1
+          "
+
+        >
+
+
+          <div
+            className="
+            flex
+            items-center
+            justify-between
+            "
+          >
+
+
+            <div>
+
+              <h2
+                className="
+                text-2xl
+                font-black
+                text-black
+                "
+              >
+                طلبات الدفع
+              </h2>
+
+
+              <p
+                className="
+                mt-3
+                text-black
+                "
+              >
+                متابعة وتفعيل طلبات الانضمام للباقات
+              </p>
+
+
+            </div>
+
+
+
+            <ArrowLeft
+              className="
+              text-[#E96B8A]
+              transition
+              group-hover:-translate-x-2
+              "
+            />
+
+
+          </div>
+
+
+        </Link>
 
 
 
@@ -495,7 +606,12 @@ hotLeads.length === 0 ? (
 <div className="space-y-4">
 
 {
-hotLeads.map((lead)=>(
+hotLeads.map((lead)=>{
+
+const temperature = getLeadTemperature(lead.lead_score || 0);
+const whatsappNumber = lead.whatsapp || lead.phone;
+
+return (
 
 <div
 key={lead.id}
@@ -505,8 +621,19 @@ items-center
 justify-between
 border-b
 pb-4
+flex-wrap
+gap-3
 "
 >
+
+<div className="flex items-center gap-3">
+
+<span
+className="rounded-full px-3 py-1 text-xs font-black"
+style={{ color: temperature.color, backgroundColor: temperature.bg }}
+>
+{temperature.label}
+</span>
 
 <div>
 
@@ -517,6 +644,8 @@ pb-4
 <p className="text-sm text-gray-500">
 {lead.selected_package || "بدون باقة"}
 </p>
+
+</div>
 
 </div>
 
@@ -543,6 +672,28 @@ text-[#E96B8A]
 
 </span>
 
+{whatsappNumber && (
+  <a
+    href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+    flex
+    items-center
+    gap-2
+    rounded-xl
+    bg-green-500
+    px-4
+    py-2
+    font-bold
+    text-white
+    "
+  >
+    <MessageCircle size={16} />
+    واتساب
+  </a>
+)}
+
 <Link
 href={`/admin/leads/${lead.id}`}
 className="
@@ -563,7 +714,9 @@ text-white
 
 </div>
 
-))
+);
+
+})
 }
 
 </div>

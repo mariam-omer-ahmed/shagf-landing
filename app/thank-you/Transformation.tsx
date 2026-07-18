@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import {
-  CheckCircle2,
   Briefcase,
   Target,
   TrendingUp,
@@ -23,7 +22,7 @@ export default function Transformation() {
           className="mx-auto max-w-3xl text-center"
         >
 
-          <span className="inline-flex rounded-full bg-[#FFF0F5] px-5 py-2 text-sm font-bold text-[#E96B8A]">
+          <span className="inline-flex rounded-full bg-[#F7E9EE] px-5 py-2 text-sm font-bold text-[#6E1E3A]">
             تخيل نفسك بعد عدة أشهر...
           </span>
 
@@ -48,13 +47,13 @@ export default function Transformation() {
           {/* قبل */}
 
           <motion.div
-            initial={{ opacity:0,x:40 }}
-            whileInView={{ opacity:1,x:0 }}
-            viewport={{ once:true }}
-            className="rounded-3xl border border-red-100 bg-red-50 p-10"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="rounded-3xl border border-[#E7CFD6] bg-[#FBF3F1] p-10"
           >
 
-            <h3 className="text-2xl font-black text-red-700">
+            <h3 className="text-2xl font-black text-[#8A3B2A]">
               قبل نظام شغف
             </h3>
 
@@ -79,13 +78,13 @@ export default function Transformation() {
           {/* بعد */}
 
           <motion.div
-            initial={{ opacity:0,x:-40 }}
-            whileInView={{ opacity:1,x:0 }}
-            viewport={{ once:true }}
-            className="rounded-3xl border border-[#E96B8A]/20 bg-[#FFF8FB] p-10"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="rounded-3xl border border-[#6E1E3A]/15 bg-[#FDF6F8] p-10 shadow-[0_20px_60px_rgba(110,30,58,.08)]"
           >
 
-            <h3 className="text-2xl font-black text-[#E96B8A]">
+            <h3 className="text-2xl font-black text-[#6E1E3A]">
               بعد تطبيق النظام
             </h3>
 
@@ -124,10 +123,10 @@ export default function Transformation() {
         {/* BIG QUOTE */}
 
         <motion.div
-          initial={{ opacity:0,y:25 }}
-          whileInView={{ opacity:1,y:0 }}
-          viewport={{ once:true }}
-          className="mx-auto mt-24 max-w-4xl rounded-[34px] bg-gradient-to-l from-[#E96B8A] to-[#D85C7F] p-14 text-center text-white shadow-2xl"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mx-auto mt-24 max-w-4xl rounded-[34px] bg-gradient-to-l from-[#6E1E3A] to-[#3D1020] p-14 text-center text-white shadow-[0_30px_80px_rgba(74,20,40,.35)]"
         >
 
           <p className="text-4xl font-black leading-[1.7]">
@@ -158,7 +157,7 @@ function Item({ text }: { text: string }) {
   return (
     <div className="flex gap-4">
 
-      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-[#B5533A]" />
 
       <p className="text-lg leading-8">
         {text}
@@ -172,16 +171,16 @@ function Benefit({
   icon,
   title,
   desc,
-}:{
+}: {
   icon: React.ReactNode;
-  title:string;
-  desc:string;
+  title: string;
+  desc: string;
 }) {
   return (
 
     <div className="flex gap-5">
 
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E96B8A] text-white">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#6E1E3A] text-white">
 
         {icon}
 

@@ -38,6 +38,28 @@ export async function getDashboardStats(){
     });
 
 
+  const {
+    count: pendingEnrollmentsCount
+  } = await supabase
+    .from("enrollments")
+    .select("id",{
+      count:"exact",
+      head:true
+    })
+    .eq("status","pending");
+
+
+  const {
+    count: paidEnrollmentsCount
+  } = await supabase
+    .from("enrollments")
+    .select("id",{
+      count:"exact",
+      head:true
+    })
+    .eq("payment_status","paid");
+
+
 
   const totalLeads =
     leads?.length || 0;
@@ -99,6 +121,15 @@ export async function getDashboardStats(){
     ) || {};
 
 
+  // معدل التحويل الفعلي: كم % من كل الناس اللي عملوا الكويز صاروا مشتركين مدفوعين
+  const conversionRate =
+    totalLeads > 0
+      ? Math.round(
+          ((paidEnrollmentsCount || 0) / totalLeads) * 1000
+        ) / 10
+      : 0;
+
+
 
 
   return {
@@ -117,6 +148,17 @@ export async function getDashboardStats(){
 
     resources:
     resourcesCount || 0,
+
+
+    pendingEnrollments:
+    pendingEnrollmentsCount || 0,
+
+
+    paidEnrollments:
+    paidEnrollmentsCount || 0,
+
+
+    conversionRate,
 
 
     stages,

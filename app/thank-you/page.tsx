@@ -63,7 +63,7 @@ export default function ThankYouPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-[#FFF8FB]">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E96B8A] border-t-transparent" />
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#5f2533] border-t-transparent" />
         </div>
       }
     >

@@ -27,51 +27,110 @@ export default function FailureReason() {
             السبب الحقيقي
 
           </span>
+<h2 className="mt-8 text-5xl font-black leading-tight text-gray-900">
+  لماذا يبقى الكثيرون
+  <br />
+  في نفس المكان...
 
-          <h2 className="mt-8 text-5xl font-black leading-tight text-gray-900">
-
-            لماذا لا يحصل أغلب الناس
-            <br />
-
-            على وظيفة...
-
-            <span className="text-[#E96B8A]">
-
-              رغم أنهم يتعلمون باستمرار؟
-
-            </span>
-
-          </h2>
+  <span className="text-[#E96B8A]">
+    رغم أنهم يتعلمون باستمرار؟
+  </span>
+</h2>
 
         </motion.div>
 
         {/* Intro */}
 
-        <div className="mx-auto mt-16 max-w-3xl space-y-8 text-center text-xl leading-[2.1] text-gray-700">
+  
 
-          <p>
 
-            لأنهم يظنون أن المشكلة هي:
 
-            <strong className="text-gray-900">
-              نقص المهارات.
-            </strong>
+        <motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  className="mt-16 grid gap-6 md:grid-cols-3"
+>
 
-          </p>
+  <div className="group overflow-hidden rounded-[28px] bg-white shadow-sm">
 
-          <p>
+    <div className="relative h-80 overflow-hidden">
 
-            فيبدؤون بجمع الشهادات...
+      <img
+        src="/images/x1.png"
+        alt=""
+        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      />
 
-            ثم دورة جديدة...
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-            ثم تخصص جديد...
+      <div className="absolute bottom-6 right-6 left-6">
 
-            ثم منصة جديدة...
+        <h3 className="text-2xl font-black text-white leading-relaxed">
+          تتعلم باستمرار...
+          <br />
+          لكنك لا ترى النتيجة التي تنتظرها
+        </h3>
 
-          </p>
+      </div>
 
-        </div>
+    </div>
+
+  </div>
+
+  <div className="group overflow-hidden rounded-[28px] bg-white shadow-sm">
+
+    <div className="relative h-80 overflow-hidden">
+
+      <img
+        src="/images/x2.png"
+        alt=""
+        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+      <div className="absolute bottom-6 right-6 left-6">
+
+        <h3 className="text-2xl font-black text-white leading-relaxed">
+          تجمع الشهادات...
+          <br />
+          لكن الفرص لا تتغير
+        </h3>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div className="group overflow-hidden rounded-[28px] bg-white shadow-sm">
+
+    <div className="relative h-80 overflow-hidden">
+
+      <img
+        src="/images/x4.png"
+        alt=""
+        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+      <div className="absolute bottom-6 right-6 left-6">
+
+        <h3 className="text-2xl font-black text-white leading-relaxed">
+          المشكلة ليست في قدراتك...
+          <br />
+          بل في الطريق الذي تسير فيه
+        </h3>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</motion.div>
 
         {/* Wrong */}
 
@@ -89,11 +148,9 @@ export default function FailureReason() {
               size={28}
             />
 
-            <h3 className="text-3xl font-black">
-
-              وهذا هو الخطأ.
-
-            </h3>
+         <h3 className="text-3xl font-black text-[#111827]">
+  هذه هي الأخطاء التي تمنعك من الفرص
+</h3>
 
           </div>
 
@@ -140,7 +197,7 @@ export default function FailureReason() {
           <h3 className="text-4xl font-black leading-[1.8] text-gray-900">
 
             المشكلة ليست أنك
-            <span className="text-[#E96B8A]">
+            <span className="text-[#6a2e3d]">
 
 - لا تتعلم
             </span>
@@ -149,7 +206,7 @@ export default function FailureReason() {
 
             المشكلة أنك
 
-            <span className="text-[#E96B8A]">
+            <span className="text-[#51242f]">
 
 - لا تعرف ماذا تتعلم؟
             </span>
@@ -163,85 +220,103 @@ export default function FailureReason() {
         </motion.div>
 
         {/* Solution */}
+{/* Solution */}
+
+<motion.div
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+  className="mt-24 overflow-hidden rounded-[36px] bg-gradient-to-l from-[#5a2834] to-[#431e28] p-12 text-white shadow-2xl"
+>
+
+  <div className="mx-auto max-w-5xl">
+
+    <div className="text-center">
+
+      <div className="inline-flex items-center gap-3 rounded-full bg-white/15 px-5 py-3 backdrop-blur">
+        <CheckCircle2 size={22} />
+        <span className="font-bold">
+          نظام شغف
+        </span>
+      </div>
+
+      <h3 className="mt-8 text-5xl font-black">
+        لا نبدأ بالكورسات...
+      </h3>
+
+      <p className="mt-6 text-2xl text-white/90">
+        نبدأ بتحديد الطريق الصحيح أولاً
+      </p>
+
+    </div>
+
+    <div className="relative mx-auto mt-20 max-w-3xl">
+
+      <div className="absolute right-6 top-0 bottom-0 w-[3px] bg-white/20" />
+
+      {[
+        {
+          number: "01",
+          title: "فهم وضعك الحالي",
+          text: "نعرف أين تقف الآن وما الذي يمنعك من الوصول للفرصة المناسبة."
+        },
+        {
+          number: "02",
+          title: "تحديد المسار المناسب",
+          text: "نختار المجال الذي يناسب قدراتك وأهدافك وسوق العمل."
+        },
+        {
+          number: "03",
+          title: "اختيار المهارة الصحيحة",
+          text: "بدلاً من تعلم كل شيء، نحدد ما يستحق وقتك فعلاً."
+        },
+        {
+          number: "04",
+          title: "خطة تنفيذ واضحة",
+          text: "نعطيك خطوات مرتبة تعرف من خلالها ماذا تفعل بعد ذلك."
+        },
+        {
+          number: "05",
+          title: "الاستعداد للفرصة",
+          text: "حتى تصبح جاهزاً للتقديم والعمل بثقة."
+        },
+      ].map((step) => (
 
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          key={step.number}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-24 rounded-[36px] bg-gradient-to-l from-[#E96B8A] to-[#d95d7d] p-12 text-white shadow-2xl"
+          className="relative mb-8 mr-16 rounded-[28px] bg-white/10 p-6 backdrop-blur"
         >
 
-          <div className="mx-auto max-w-4xl">
-
-            <div className="flex items-center gap-3">
-
-              <CheckCircle2 size={28} />
-
-              <h3 className="text-3xl font-black">
-
-                لهذا السبب أنشأنا نظام شغف.
-
-              </h3>
-
-            </div>
-
-            <p className="mt-8 text-xl leading-[2]">
-
-              قبل أن تبدأ أي كورس...
-
-              قبل أن تدفع أي مبلغ...
-
-              وقبل أن تضيع أشهراً أخرى...
-
-              نحن نحدد لك:
-
-            </p>
-
-            <div className="mt-10 grid gap-5 md:grid-cols-2">
-
-              {[
-                "ما المجال الأنسب لك.",
-                "ما المهارة التي تستحق وقتك.",
-                "ما الذي يجب تجاهله.",
-                "ما الخطوة التالية بالترتيب الصحيح.",
-                "كيف تصل لأول فرصة بأقصر طريق.",
-                "ومتى تكون جاهزاً للانتقال للمرحلة التالية.",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start gap-3 rounded-2xl bg-white/10 p-5 backdrop-blur"
-                >
-                  <CheckCircle2
-                    size={20}
-                    className="mt-1 shrink-0"
-                  />
-
-                  <span className="text-lg">
-
-                    {item}
-
-                  </span>
-
-                </div>
-              ))}
-
-            </div>
-
-            <div className="mt-12 flex justify-center">
-
-              <div className="inline-flex items-center gap-3 rounded-full bg-white px-8 py-5 font-black text-[#E96B8A]">
-
-                لهذا يختلف نظام شغف عن أي كورس تقليدي
-
-                <ArrowRight size={20} />
-
-              </div>
-
-            </div>
-
+          <div className="absolute -right-[52px] top-7 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#E96B8A] font-black">
+            ✓
           </div>
 
+          <span className="text-sm font-bold text-white/60">
+            {step.number}
+          </span>
+
+          <h4 className="mt-2 text-2xl font-black">
+            {step.title}
+          </h4>
+
+          <p className="mt-3 leading-8 text-white/80">
+            {step.text}
+          </p>
+
         </motion.div>
+
+      ))}
+
+    </div>
+
+    
+
+  </div>
+
+</motion.div>
 
       </div>
 

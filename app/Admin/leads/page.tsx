@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { getLeads } from "@/lib/queries/leads";
+import { getLeadTemperature } from "@/lib/queries/leadScoring";
 import Link from "next/link";
 import {
   Search,
   User,
-  Mail,
   Package,
   Target,
+  MessageCircle,
 } from "lucide-react";
 
 
@@ -20,6 +21,10 @@ type Lead = {
 
   email:string;
 
+  whatsapp?:string;
+
+  phone?:string;
+
   country:string;
 
   goal:string;
@@ -30,10 +35,23 @@ type Lead = {
 
   current_status:string;
 
+  lead_stage?:string;
+
+  lead_score?:number;
+
   user_id:string;
 
   created_at:string;
 
+};
+
+const STAGE_LABELS: Record<string, string> = {
+  new: "جديد",
+  assessment_done: "تم التقييم",
+  contacted: "تم التواصل",
+  offer_sent: "تم إرسال العرض",
+  paid: "مدفوع",
+  inactive: "غير نشط",
 };
 
 
@@ -46,6 +64,8 @@ const [leads,setLeads]=useState<Lead[]>([]);
 const [loading,setLoading]=useState(true);
 
 const [search,setSearch]=useState("");
+
+const [stageFilter,setStageFilter]=useState("all");
 
 
 
@@ -101,8 +121,14 @@ setLoading(false);
 
 
 const filteredLeads =
-leads.filter((lead)=>{
+leads
+.filter((lead)=>{
 
+const stage = lead.lead_stage || "new";
+
+if(stageFilter !== "all" && stage !== stageFilter){
+  return false;
+}
 
 const text = `
 
@@ -126,7 +152,10 @@ search.toLowerCase()
 
 
 
-});
+})
+.sort(
+  (a,b) => (b.lead_score || 0) - (a.lead_score || 0)
+);
 
 
 
@@ -175,6 +204,8 @@ py-10
 flex
 justify-between
 items-center
+flex-wrap
+gap-4
 ">
 
 <div>
@@ -194,7 +225,7 @@ mt-2
 text-black
 ">
 
-الأشخاص المسجلين في نظام شغف
+الأشخاص المسجلين في نظام شغف — مرتبين حسب الأولوية (الأعلى Lead Score أولًا)
 
 </p>
 
@@ -202,6 +233,35 @@ text-black
 </div>
 
 
+<div className="flex items-center gap-3 flex-wrap">
+
+<select
+
+value={stageFilter}
+
+onChange={(e)=>setStageFilter(e.target.value)}
+
+className="
+rounded-xl
+border
+bg-white
+px-4
+py-3
+font-bold
+text-black
+"
+
+>
+
+<option value="all">كل المراحل</option>
+
+{
+Object.entries(STAGE_LABELS).map(([value,label])=>(
+  <option key={value} value={value}>{label}</option>
+))
+}
+
+</select>
 
 
 <div className="
@@ -234,6 +294,8 @@ text-black
 
 />
 
+
+</div>
 
 </div>
 
@@ -277,6 +339,11 @@ bg-[#FFF4F8]
 
 
 <th className="p-5">
+الأولوية
+</th>
+
+
+<th className="p-5">
 الهدف
 </th>
 
@@ -287,7 +354,7 @@ bg-[#FFF4F8]
 
 
 <th className="p-5">
-الحالة
+المرحلة
 </th>
 
 
@@ -297,7 +364,7 @@ bg-[#FFF4F8]
 
 
 <th className="p-5">
-التفاصيل
+تواصل
 </th>
 
 
@@ -314,7 +381,12 @@ bg-[#FFF4F8]
 
 
 {
-filteredLeads.map((lead)=>(
+filteredLeads.map((lead)=>{
+
+const temperature = getLeadTemperature(lead.lead_score || 0);
+const whatsappNumber = lead.whatsapp || lead.phone;
+
+return (
 
 
 <tr
@@ -369,6 +441,26 @@ text-sm
 
 </div>
 
+
+</td>
+
+
+<td className="p-5">
+
+<div className="flex items-center gap-2">
+
+<span
+className="rounded-full px-3 py-1 text-xs font-black"
+style={{ color: temperature.color, backgroundColor: temperature.bg }}
+>
+{temperature.label}
+</span>
+
+<span className="text-sm font-bold text-gray-500">
+{lead.lead_score || 0}
+</span>
+
+</div>
 
 </td>
 
@@ -431,28 +523,19 @@ items-center
 <td className="p-5">
 
 
-<div>
-
-
-<p className="
-font-bold
-">
-
-{lead.current_status || "-"}
-
-</p>
-
-
-<p className="
+<span className="
+rounded-xl
+bg-[#FFF4F8]
+px-3
+py-1.5
 text-sm
+font-bold
+text-[#E96B8A]
 ">
 
-جاهزية: {lead.readiness || "-"}
+{STAGE_LABELS[lead.lead_stage || "new"] || lead.lead_stage}
 
-</p>
-
-
-</div>
+</span>
 
 
 </td>
@@ -486,6 +569,28 @@ lead.created_at
 
 <td className="p-5">
 
+<div className="flex items-center gap-2">
+
+{whatsappNumber && (
+  <a
+    href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+    flex
+    items-center
+    gap-2
+    rounded-xl
+    bg-green-500
+    px-4
+    py-3
+    font-bold
+    text-white
+    "
+  >
+    <MessageCircle size={16} />
+  </a>
+)}
 
 <Link
 
@@ -507,6 +612,8 @@ text-white
 
 </Link>
 
+</div>
+
 
 </td>
 
@@ -516,7 +623,9 @@ text-white
 </tr>
 
 
-))
+);
+
+})
 
 }
 

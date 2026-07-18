@@ -181,7 +181,7 @@ export default function HeroResult({ packageName, submissionsCount }: Props) {
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               <div className="rounded-2xl bg-[#FFF5F8] p-5">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-500">درجة الجاهزية الحالية</p>
+                  <p className="text-sm text-gray-900">درجة الجاهزية الحالية</p>
                   {readiness && (
                     <span
                       className="rounded-full px-2.5 py-0.5 text-xs font-bold text-white"
@@ -208,7 +208,7 @@ export default function HeroResult({ packageName, submissionsCount }: Props) {
               </div>
 
               <div className="rounded-2xl bg-[#FFF5F8] p-5">
-                <p className="text-sm text-gray-500">مستوى الرغبة في البدء</p>
+                <p className="text-sm text-gray-900">مستوى الرغبة في البدء</p>
 
                 <p className="mt-2 text-4xl font-black text-[#E96B8A]">
                   {diagnosis.urgency_score}%

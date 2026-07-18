@@ -87,7 +87,7 @@ export default function RealitySection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mx-auto mt-20 max-w-4xl rounded-[32px] bg-gradient-to-l from-[#E96B8A] to-[#d95d7d] p-10 text-center text-white shadow-2xl"
+          className="mx-auto mt-20 max-w-4xl rounded-[32px] bg-gradient-to-l from-[#753847] to-[#461f29] p-10 text-center text-white shadow-2xl"
         >
           <CheckCircle2 className="mx-auto" size={42} />
 

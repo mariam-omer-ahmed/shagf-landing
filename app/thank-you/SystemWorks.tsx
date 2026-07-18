@@ -1,148 +1,174 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Compass,
-  SearchCheck,
-  Route,
-  Rocket,
-  CheckCircle2,
-} from "lucide-react";
 
-const STEPS = [
-  {
-    icon: SearchCheck,
-    number: "01",
-    title: "نفهم وضعك الحقيقي أولًا",
-    text: "لا نبدأ بإعطائك محتوى. نبدأ بفهم مستواك الحالي، أهدافك، نقاط قوتك، وما الذي يمنعك من الوصول لفرصة عمل.",
-  },
-  {
-    icon: Compass,
-    number: "02",
-    title: "نحدد الاتجاه الصحيح",
-    text: "نرسم لك المسار الذي يناسبك، ونستبعد عشرات الخيارات التي ستضيع وقتك دون فائدة.",
-  },
-  {
-    icon: Route,
-    number: "03",
-    title: "نبني خطة تنفيذ واضحة",
-    text: "تعرف ماذا تتعلم، وبأي ترتيب، ومتى تنتقل للخطوة التالية، دون عشوائية أو تخمين.",
-  },
-  {
-    icon: Rocket,
-    number: "04",
-    title: "نتابعك حتى تظهر النتائج",
-    text: "لا نتركك بعد أول درس. نتابع تنفيذك، ونصحح المسار إذا احتجت، حتى تقترب من أول فرصة عمل حقيقية.",
-  },
-];
-
-export default function SystemWorks() {
+export default function FutureResults() {
   return (
     <section className="bg-white py-24">
 
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
 
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mx-auto max-w-3xl text-center"
+          className="mx-auto max-w-4xl text-center"
         >
 
           <span className="rounded-full bg-pink-100 px-5 py-2 text-sm font-bold text-[#E96B8A]">
-
-            كيف يعمل نظام شغف؟
-
+            الهدف الحقيقي
           </span>
 
           <h2 className="mt-8 text-5xl font-black leading-tight text-gray-900">
 
-            لا نضيف معلومات جديدة...
+            بعد عدة أشهر من الآن...
 
             <br />
 
             <span className="text-[#E96B8A]">
-
-              بل نزيل الفوضى أولًا.
-
+              نريد أن تكون هذه اللحظات جزءاً من قصتك أنت
             </span>
 
           </h2>
 
           <p className="mt-8 text-xl leading-[2] text-gray-600">
 
-            أغلب الناس يعرفون ماذا يتعلمون...
+            هدفنا ليس أن تنهي كورساً جديداً أو تجمع شهادة إضافية.
 
-            لكنهم لا يعرفون:
+            <br />
 
-            <strong className="text-gray-900">
-
-              ماذا يتجاهلون.
-
-            </strong>
-
-            وهذا هو سبب ضياع السنوات.
+            هدفنا أن تصل إلى نتائج حقيقية تستطيع رؤيتها في حياتك.
 
           </p>
 
         </motion.div>
 
-        <div className="mt-20 space-y-8">
+        <div className="mt-20 grid gap-8 lg:grid-cols-3">
 
-          {STEPS.map((step, index) => {
-            const Icon = step.icon;
+          {/* CARD 1 */}
 
-            return (
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="overflow-hidden rounded-[32px] bg-white shadow-xl"
+          >
 
-              <motion.div
-                key={step.number}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * .12 }}
-                viewport={{ once: true }}
-                className="rounded-[30px] border border-pink-100 bg-[#FFF9FB] p-8 shadow-sm"
-              >
+            <div className="relative">
 
-                <div className="grid gap-8 md:grid-cols-[90px_1fr]">
+              <img
+                src="/images/z2.png"
+                alt="قبول وظيفة"
+                className="h-[380px] w-full object-cover"
+              />
 
-                  <div className="flex flex-col items-center">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#E96B8A] text-white">
+              <h3 className="absolute bottom-6 right-6 left-6 text-3xl font-black text-white">
+                تم قبولك
+              </h3>
 
-                      <Icon size={34} />
+            </div>
 
-                    </div>
+            <div className="p-8">
 
-                    <span className="mt-4 text-sm font-black text-[#E96B8A]">
+              <p className="text-lg leading-9 text-gray-700">
 
-                      {step.number}
+                الهدف ليس تعلم المزيد...
 
-                    </span>
+                <br />
 
-                  </div>
+                بل الوصول إلى هذه الرسالة.
 
-                  <div>
+              </p>
 
-                    <h3 className="text-3xl font-black text-gray-900">
+            </div>
 
-                      {step.title}
+          </motion.div>
 
-                    </h3>
+          {/* CARD 2 */}
 
-                    <p className="mt-5 text-lg leading-[2] text-gray-700">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: .1 }}
+            viewport={{ once: true }}
+            className="overflow-hidden rounded-[32px] bg-white shadow-xl"
+          >
 
-                      {step.text}
+            <div className="relative">
 
-                    </p>
+              <img
+                src="/images/z3.png"
+                alt="مشروع حقيقي"
+                className="h-[380px] w-full object-cover"
+              />
 
-                  </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                </div>
+              <h3 className="absolute bottom-6 right-6 left-6 text-3xl font-black text-white">
+                مشروع حقيقي
+              </h3>
 
-              </motion.div>
+            </div>
 
-            );
-          })}
+            <div className="p-8">
+
+              <p className="text-lg leading-9 text-gray-700">
+
+                لأن أصحاب العمل لا يشترون الشهادات...
+
+                <br />
+
+                بل يشترون النتائج وما تستطيع تنفيذه.
+
+              </p>
+
+            </div>
+
+          </motion.div>
+
+          {/* CARD 3 */}
+
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: .2 }}
+            viewport={{ once: true }}
+            className="overflow-hidden rounded-[32px] bg-white shadow-xl"
+          >
+
+            <div className="relative">
+
+              <img
+                src="/images/a8.png"
+                alt="أول دخل"
+                className="h-[380px] w-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+              <h3 className="absolute bottom-6 right-6 left-6 text-3xl font-black text-white">
+                أول دخل
+              </h3>
+
+            </div>
+
+            <div className="p-8">
+
+              <p className="text-lg leading-9 text-gray-700">
+
+                كل فرصة كبيرة بدأت يوماً ما بخطوة صغيرة صحيحة.
+
+                <br />
+
+                ونحن نساعدك على اتخاذ تلك الخطوة.
+
+              </p>
+
+            </div>
+
+          </motion.div>
 
         </div>
 
@@ -150,42 +176,14 @@ export default function SystemWorks() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mx-auto mt-20 max-w-4xl rounded-[32px] bg-gradient-to-l from-[#E96B8A] to-[#d95d7d] p-10 text-white"
+          className="mt-16 text-center"
         >
 
-          <h3 className="text-center text-3xl font-black">
+          <div className="inline-flex rounded-full bg-[#FFF3F7] px-8 py-5 text-lg font-black text-[#E96B8A]">
 
-            لهذا السبب تختلف النتائج.
+            لا نعدك بالطريق الأسهل...
 
-          </h3>
-
-          <div className="mt-10 grid gap-5 md:grid-cols-2">
-
-            {[
-              "لا تبدأ بالتعلم قبل معرفة الاتجاه.",
-              "لا تشتري كورسات لن تحتاجها.",
-              "لا تتوقف بسبب الحيرة.",
-              "تتحرك بخطة واضحة.",
-              "تعرف ما الذي يجب فعله هذا الأسبوع.",
-              "كل خطوة لها هدف واضح.",
-            ].map((item) => (
-
-              <div
-                key={item}
-                className="flex items-start gap-3 rounded-2xl bg-white/10 p-5 backdrop-blur"
-              >
-
-                <CheckCircle2 className="mt-1 shrink-0" size={20} />
-
-                <span className="text-lg">
-
-                  {item}
-
-                </span>
-
-              </div>
-
-            ))}
+            بل بالطريق الأوضح.
 
           </div>
 

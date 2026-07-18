@@ -5,7 +5,7 @@ import { ShieldCheck, CheckCircle2 } from "lucide-react";
 
 export default function Guarantee() {
   return (
-    <section className="bg-[#FFF8FB] py-24" dir="rtl">
+    <section className="bg-[#FDF6F8] py-24" dir="rtl">
       <div className="mx-auto max-w-5xl px-6">
 
         <motion.div
@@ -13,11 +13,11 @@ export default function Guarantee() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: .6 }}
-          className="overflow-hidden rounded-[34px] border border-[#E96B8A]/20 bg-white shadow-[0_25px_80px_rgba(233,107,138,.12)]"
+          className="overflow-hidden rounded-[34px] border border-[#6E1E3A]/15 bg-white shadow-[0_25px_80px_rgba(110,30,58,.14)]"
         >
 
           {/* Header */}
-          <div className="bg-gradient-to-l from-[#E96B8A] to-[#d95d7d] px-10 py-10 text-center text-white">
+          <div className="bg-gradient-to-l from-[#6E1E3A] to-[#3D1020] px-10 py-10 text-center text-white">
 
             <ShieldCheck
               className="mx-auto mb-5"
@@ -39,7 +39,7 @@ export default function Guarantee() {
           {/* Body */}
           <div className="space-y-8 px-10 py-12">
 
-            <div className="rounded-3xl bg-[#FFF6F9] p-8">
+            <div className="rounded-3xl bg-[#FBF1F4] p-8">
 
               <h3 className="text-2xl font-black text-gray-900">
                 إذا التزمت...
@@ -58,7 +58,7 @@ export default function Guarantee() {
                     className="flex items-start gap-3"
                   >
                     <CheckCircle2
-                      className="mt-1 text-[#E96B8A]"
+                      className="mt-1 text-[#6E1E3A]"
                       size={22}
                     />
 
@@ -73,7 +73,7 @@ export default function Guarantee() {
 
             </div>
 
-            <div className="rounded-3xl border-2 border-dashed border-[#E96B8A] p-8">
+            <div className="rounded-3xl border-2 border-dashed border-[#6E1E3A] p-8">
 
               <h3 className="text-2xl font-black text-gray-900">
                 ثم لم تحقق نتيجة...
@@ -88,13 +88,13 @@ export default function Guarantee() {
 
                 <br /><br />
 
-"إذا التزمت بجميع المهام ولم تحقق النتيجة التي نسعى إليها معك،
- فسنعمل معك لفترة إضافية دون أي رسوم حتى نتأكد أنك أصبحت مستعدًا للمنافسة."
+                "إذا التزمت بجميع المهام ولم تحقق النتيجة التي نسعى إليها معك،
+                فسنعمل معك لفترة إضافية دون أي رسوم حتى نتأكد أنك أصبحت مستعدًا للمنافسة."
               </p>
 
             </div>
 
-            <div className="rounded-3xl bg-gradient-to-l from-[#FFF0F4] to-white p-8">
+            <div className="rounded-3xl bg-gradient-to-l from-[#FBEFF2] to-white p-8">
 
               <h3 className="text-2xl font-black text-gray-900">
                 لكن يوجد شرط واحد فقط...
@@ -111,7 +111,7 @@ export default function Guarantee() {
                 أو يختفي لأسابيع،
                 أو ينتظر النتائج دون عمل...
 
-                <span className="font-black text-[#E96B8A]">
+                <span className="font-black text-[#6E1E3A]">
                   فلن يكون مؤهلًا لهذه المتابعة.
                 </span>
 
@@ -119,7 +119,7 @@ export default function Guarantee() {
 
             </div>
 
-            <div className="rounded-3xl bg-[#111827] p-8 text-center">
+            <div className="rounded-3xl bg-[#2B0E1B] p-8 text-center">
 
               <p className="text-2xl font-black leading-10 text-white">
 

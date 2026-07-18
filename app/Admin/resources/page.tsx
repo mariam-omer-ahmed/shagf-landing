@@ -85,6 +85,21 @@ export default function ResourcesPage() {
 
 }
 
+function cancelEdit() {
+
+  setEditingResource(null);
+
+  setPdfFile(null);
+
+  setThumbnailFile(null);
+
+  setForm({
+    title: "",
+    description: "",
+  });
+
+}
+
 async function updateResource() {
 
   if (!editingResource)
@@ -212,20 +227,7 @@ async function updateResource() {
       setSuccessMessage("");
     }, 3000);
 
-    setEditingResource(
-      null
-    );
-
-    setPdfFile(null);
-
-    setThumbnailFile(
-      null
-    );
-
-    setForm({
-      title: "",
-      description: "",
-    });
+    cancelEdit();
 
     loadResources();
 
@@ -772,6 +774,26 @@ async function updateResource() {
 
                   <button
                     onClick={() =>
+                      startEdit(resource)
+                    }
+                    className="
+                      flex
+                      items-center
+                      gap-2
+                      rounded-xl
+                      bg-[#FFF4F8]
+                      px-4
+                      py-2
+                      font-bold
+                      text-gray-700
+                    "
+                  >
+                    <Pencil size={18} />
+                    تعديل
+                  </button>
+
+                  <button
+                    onClick={() =>
                       deleteResource(
                         resource.id
                       )
@@ -793,6 +815,96 @@ async function updateResource() {
           )
         )}
       </section>
+
+      {/* EDIT MODAL — كانت الدوال موجودة بدون أي واجهة توصلها */}
+
+      {editingResource && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-lg rounded-3xl bg-white p-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-black">تعديل المصدر</h2>
+
+              <button
+                onClick={cancelEdit}
+                className="rounded-xl p-2 text-gray-500 hover:bg-gray-100"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <input
+                placeholder="عنوان المصدر"
+                value={form.title}
+                onChange={(e) =>
+                  setForm({ ...form, title: e.target.value })
+                }
+                className="w-full rounded-xl border p-4 text-black"
+              />
+
+              <textarea
+                placeholder="وصف المصدر"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+                className="h-32 w-full rounded-xl border p-4 text-black"
+              />
+
+              <div className="rounded-xl border p-4">
+                <label className="mb-3 flex items-center gap-2 font-bold">
+                  <FileText size={18} />
+                  استبدال ملف PDF (اختياري)
+                </label>
+
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      setPdfFile(e.target.files[0]);
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="rounded-xl border p-4">
+                <label className="mb-3 flex items-center gap-2 font-bold">
+                  <ImageIcon size={18} />
+                  استبدال الصورة (اختياري)
+                </label>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      setThumbnailFile(e.target.files[0]);
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={updateResource}
+                disabled={saving}
+                className="flex-1 rounded-xl bg-[#E96B8A] px-6 py-3 font-bold text-white"
+              >
+                {saving ? "جاري الحفظ..." : "حفظ التعديلات"}
+              </button>
+
+              <button
+                onClick={cancelEdit}
+                className="rounded-xl border px-6 py-3 font-bold text-gray-700"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
