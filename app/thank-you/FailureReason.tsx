@@ -57,7 +57,7 @@ export default function FailureReason() {
     <div className="relative h-80 overflow-hidden">
 
       <img
-        src="/images/x1.png"
+        src="/images/x1.jpg"
         alt=""
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
@@ -83,7 +83,7 @@ export default function FailureReason() {
     <div className="relative h-80 overflow-hidden">
 
       <img
-        src="/images/x2.png"
+        src="/images/x2.jpg"
         alt=""
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
@@ -109,7 +109,7 @@ export default function FailureReason() {
     <div className="relative h-80 overflow-hidden">
 
       <img
-        src="/images/x4.png"
+        src="/images/x4.jpg"
         alt=""
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
@@ -197,7 +197,7 @@ export default function FailureReason() {
           <h3 className="text-4xl font-black leading-[1.8] text-gray-900">
 
             المشكلة ليست أنك
-            <span className="text-[#6a2e3d]">
+            <span className="text-[#E96B8A]">
 
 - لا تتعلم
             </span>
@@ -206,7 +206,7 @@ export default function FailureReason() {
 
             المشكلة أنك
 
-            <span className="text-[#51242f]">
+            <span className="text-[#E96B8A]">
 
 - لا تعرف ماذا تتعلم؟
             </span>
@@ -312,7 +312,16 @@ export default function FailureReason() {
 
     </div>
 
-    
+    <div className="mt-12 flex justify-center">
+
+      <div className="rounded-full bg-white px-8 py-5 text-center font-black text-[#E96B8A]">
+
+        <br />
+        نظام شغف يعطيك الخطوة التالية التي تحتاجها الآن.
+
+      </div>
+
+    </div>
 
   </div>
 
