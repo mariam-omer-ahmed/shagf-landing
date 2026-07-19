@@ -2,12 +2,19 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { User, UserRound, Sparkles, ArrowRight, Star, TrendingUp } from "lucide-react";
+import { User, UserRound, Sparkles, ArrowRight, TrendingUp } from "lucide-react";
 
-import t1 from "@/public/images/testimonial-01.jpg";
-import t2 from "@/public/images/P8.jpg";
-import t3 from "@/public/images/P7.jpg";
-import t4 from "@/public/images/P9.jpg";
+import t1 from "@/public/images/m1.jpg";
+import t2 from "@/public/images/m2.jpg";
+import t3 from "@/public/images/m3.jpg";
+import t4 from "@/public/images/m4.jpg";
+import m1 from "@/public/images/m5.jpg";
+import m2 from "@/public/images/m6.jpg";
+import m3 from "@/public/images/m7.jpg";
+import m4 from "@/public/images/m8.jpg";
+import m5 from "@/public/images/m9.jpg";
+import m6 from "@/public/images/m10.jpg";
+
 
 type T = {
   name: string;
@@ -22,21 +29,21 @@ type T = {
 
 const data: T[] = [
   {
-    name: "شهاب",
+    name: "سامي",
     gender: "male",
     before: "يتعلم كورسات بدون هدف",
-    after: "وظيفة بعقد كامل",
-    resultDetail: "من متعلم مشتت إلى موظف براتب ثابت",
+    after: "أول عميل بعقد شهري  ",
+    resultDetail: "من متعلم مشتت إلى صاحب دخل من مهارة  ",
     timeframe: "خلال 30 يوم",
     story:
-      "كان يمر على كورسات كثيرة بدون خطة واضحة، كل مرة يبدأ شيء جديد بدون ما يكمله. بعد النظام حدد مسار واحد فقط وبدأ يطبق يوميًا بدل ما يتعلم فقط. خلال فترة قصيرة قدر يدخل مقابلة، وبعدها حصل على وظيفة بعقد كامل.",
+      "كان يمر على كورسات كثيرة بدون خطة واضحة، كل مرة يبدأ شيء جديد بدون ما يكمله. بعد النظام حدد مسار واحد فقط وبدأ يطبق يوميًا بدل ما يتعلم كل اساسيات المجال بشكل عام. ركزنا إنو يطبق عملي و يعمل نماذج لأعماله ..بعد البرنامج مباشرة قدر يلقى أول عميل  وبعدها حصل على وظيفة بعقد كامل.",
     img: t1,
   },
   {
-    name: "فاطمة",
+    name: "ملاك",
     gender: "female",
     before: "تتعلم تسويق بدون دخل",
-    after: "أول عميلة بعقد شهري",
+    after: "أول  عميلة بعقد شهري",
     resultDetail: "من متعلمة إلى صاحبة دخل مستمر",
     timeframe: "خلال 40 يوم",
     story:
@@ -48,7 +55,7 @@ const data: T[] = [
     gender: "female",
     before: "تشتت بين مهارات كثيرة",
     after: "4 عملاء فريلانس",
-    resultDetail: "من تشتت كامل إلى دخل من 4 مصادر",
+    resultDetail: "من تشتت كامل إلى دخل من 3 مصادر",
     timeframe: "خلال 30 يوم",
     story:
       "كانت تتعلم كل شيء: تصميم، تسويق، محتوى… لكن بدون تركيز. بعد النظام اختارت مسار واحد فقط وبدأت تبني عليه. خلال فترة قصيرة قدرت تجيب أول عميل، وبعدها توسعت إلى 4 عملاء مستقلين.",
@@ -58,13 +65,83 @@ const data: T[] = [
     name: "حنان",
     gender: "female",
     before: "لا تعرف من أين تبدأ",
-    after: "عقد مع شركة",
-    resultDetail: "من ضياع تام إلى قبول وظيفي رسمي",
+    after: "عقد مع 2 عملاء أونلاين",
+    resultDetail: "من ضياع تام إلى قبول عمل حر ",
     timeframe: "خلال 55 يوم",
     story:
-      "كانت تشعر أنها ضائعة تمامًا ولا تعرف ماذا تفعل أولاً. بعد النظام صار عندها خطة واضحة: ماذا تتعلم، ماذا تتجاهل، وكيف تقدم نفسها. جهزت ملفها المهني وتم قبولها في شركة بعقد رسمي.",
+      "كانت تتعلم كل شيء: تصميم، تسويق، محتوى… لكن بدون تركيز. بعد النظام اختارت مسار واحد فقط وبدأت تبني عليه. خلال فترة قصيرة قدرت تجيب أول عميل، وبعدها توسعت إلى 2 عملاء مستقلين.",
     img: t4,
   },
+  {
+    name: "شهاب",
+    gender: "male",
+    before: "يتفرج فيديوهات تحفيزية بدون تطبيق",
+    after: "أول  عقد عمل وظيفي ",
+    resultDetail: "من مشتت فقط  أول عقد عمل فعلي",
+    timeframe: "خلال 35 يوم",
+    story:
+      "كان يقضي وقته في مشاهدة محتوى تحفيزي عن العمل الحر بدون أي خطوة عملية. بعد النظام حدد خدمة واحدة يقدر يبيعها فورًا، وبنى عرضًا بسيطًا وواضحًا.  تواصل مع أول شركة بعد 3 أسابيع من التطبيق الفعلي.",
+    img: m1,
+  },
+  {
+    name: "رتاج",
+    gender: "female",
+    before: "     تجربة مختلفة تماما عن اي منصة تعليمية",
+    after: "قبول في برنامج تدريب مدفوع",
+    resultDetail: "من تجارب سابقة في منصات تعليمية لم تحقق لها فائدة حقيقية    ",
+    timeframe: "خلال 45 يوم",
+    story:
+      ". بعد النظام ركّزت على مجال واحد وجهّزت ملفها المهني ليتماشى معه تحديدًا.  .",
+    img: m2,
+  },
+  {
+    name: "ريان",
+    gender: "male",
+    before: "معرفة متفرقة في عدة مجالات تقنية",
+    after: "عقد مع 2 عملاء أونلاين",
+    resultDetail: "من معرفة عامة إلى تخصص واضح يُطلب في السوق",
+    timeframe: "خلال 45 يوم",
+    story:
+      "كانت تعرف قليلا من كل شيء بدون أي تخصص فعلي تقدر تعرضه. بعد النظام اختارت تخصصًا واحدًا وبنت  مشروعًا عمليًا تثبت فيه مهارتها. عرض عليها أحد المتابعين لمشروعه فرصة عمل داخل شركة عن بعد أقل من شهرين.",
+    img: m3,
+  },
+  {
+    name: "لمى",
+    gender: "female",
+   before: "لا تعرف من أين تبدأ",
+    after: "عقد مع 2 عملاء أونلاين",
+    resultDetail: "من ضياع تام إلى قبول عمل حر ",
+    timeframe: "خلال 45 يوم",
+    story:
+      "كانت تتعلم كل شيء: تصميم، تسويق، محتوى… لكن بدون تركيز. بعد النظام اختارت مسار واحد فقط وبدأت تبني عليه. خلال فترة قصيرة قدرت تجيب أول عميل، وبعدها توسعت إلى 2 عملاء مستقلين.",
+    img: t4,
+  },
+  {
+    name: "خالد",
+    gender: "male",
+    before: "يقدم على وظائف بلا استهداف",
+    after: "قبول في وظيفة تقنية",
+    resultDetail: "من رفض متكرر إلى قبول رسمي خلال أسابيع",
+    timeframe: "خلال 42 يوم",
+    story:
+      "كان يواجه رفضًا متكررًا لأن سيرته الذاتية كانت عامة جدًا ولا تخاطب أي وظيفة بعينها. بعد النظام أعاد بناء ملفه المهني حول مسار واحد محدد، وبدأ يستهدف شركات معينة بدل التقديم العشوائي. حصل على قبول رسمي بعد عدة مقابلات مركّزة.",
+    img: m5,
+  },
+  {
+    name: "رؤى تاج السر",
+    gender: "female",
+    before: "    ",
+    after: "شغف أعطتني المهارات والأدوات التي احتاجها لأبدا مشروعي الخاص   ",
+    resultDetail: "من لا خبرة سابقة إلى إطلاق مشروعي الخاص    ",
+    timeframe: "خلال 35 يوم",
+    story:
+      "كانت تملك مهارة تصميم جيدة لكن بدون معرض أعمال منظم يعرضها بشكل احترافي. بعد النظام بنت مشروع بودكاست خاص بها خلال شهر واحد.",
+    img: m6,
+  },
+ 
+  
+  
+  
 ];
 
 const STATS = [
@@ -87,7 +164,7 @@ export default function Testimonials() {
         >
           <div className="inline-flex items-center gap-2 bg-white px-5 py-2 border border-pink-200 rounded-full text-sm font-bold text-[#E96B8A]">
             <Sparkles size={14} />
-       نتائج حقيقية موثقة
+       نتائج فعلية من داخل نظام شغف
           </div>
 
           <h2 className="text-4xl md:text-5xl font-black mt-6 text-gray-900 leading-[1.3]">
@@ -127,26 +204,27 @@ export default function Testimonials() {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               className="bg-white border border-pink-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
             >
-              {/* IMAGE + RESULT BADGE */}
-              <div className="relative w-full h-[240px] bg-gray-100">
-                <Image src={t.img} alt={t.name} fill className="object-cover" />
+              {/* IMAGE + RESULT BADGE
+                  FIX: object-cover كانت بتقصّ الصور، وبما إن الصور مش
+                  بنفس المقاس/النسبة، كل صورة كانت بتتقصّ بشكل مختلف
+                  وغير متوقع. object-contain بيعرض الصورة كاملة زي ما
+                  هي بدون أي قص، والخلفية الوردية الفاتحة بتملأ أي
+                  فراغ حوالين الصورة بشكل موحّد ومقصود بصريًا. */}
+              <div className="relative w-full h-[240px] bg-pink-50">
+                <Image
+                  src={t.img}
+                  alt={t.name}
+                  fill
+                  className="object-contain p-3"
+                />
 
                 <div className="absolute top-3 right-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-[#E96B8A] shadow-md">
                   <TrendingUp size={12} />
                   {t.timeframe}
                 </div>
-
-                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
 
               <div className="p-6">
-                {/* STARS */}
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: 5 }).map((_, si) => (
-                    <Star key={si} size={14} className="fill-[#E96B8A] text-[#E96B8A]" />
-                  ))}
-                </div>
-
                 {/* BEFORE / AFTER — bigger contrast */}
                 <div className="flex items-center gap-3 flex-wrap mb-1">
                   <span className="text-xs text-gray-400 line-through">{t.before}</span>
@@ -174,7 +252,7 @@ export default function Testimonials() {
                   </div>
                   <div>
                     <div className="text-sm font-black text-gray-900">{t.name}</div>
-                    <div className="text-xs text-gray-400">نتيجة موثّقة داخل نظام شغف</div>
+                    <div className="text-xs text-gray-400">من المشتركين في نظام شغف</div>
                   </div>
                 </div>
               </div>
@@ -194,8 +272,10 @@ export default function Testimonials() {
             نفس النظام، نفس الخطوات، دورك الآن
           </h3>
           <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            كل شخص في هذه القصص بدأ بنفس الاختبار اللي راح تبدأ فيه الآن.
-            الفرق الوحيد بينك وبينهم هو الخطوة الأولى.
+            كل شخص في هذه القصص بدأ من نفس نقطة البداية، وبنفس الاختبار
+            اللي راح تبدأ فيه الآن. النتيجة هتختلف حسب التزامك بتنفيذ
+            الخطة، لكن نقطة الانطلاق واحدة للجميع — والخطوة الأولى هي
+            اللي بتحدد هل هتوصل ولا لأ.
           </p>
 
           <motion.a
