@@ -13,6 +13,7 @@ import m2 from "@/public/images/m6.jpg";
 import m3 from "@/public/images/m7.jpg";
 import m4 from "@/public/images/m8.jpg";
 import m5 from "@/public/images/m9.jpg";
+
 import m6 from "@/public/images/m10.jpg";
 
 
@@ -204,17 +205,12 @@ export default function Testimonials() {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               className="bg-white border border-pink-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
             >
-              {/* IMAGE + RESULT BADGE
-                  FIX: object-cover كانت بتقصّ الصور، وبما إن الصور مش
-                  بنفس المقاس/النسبة، كل صورة كانت بتتقصّ بشكل مختلف
-                  وغير متوقع. object-contain بيعرض الصورة كاملة زي ما
-                  هي بدون أي قص، والخلفية الوردية الفاتحة بتملأ أي
-                  فراغ حوالين الصورة بشكل موحّد ومقصود بصريًا. */}
               <div className="relative w-full h-[240px] bg-pink-50">
                 <Image
                   src={t.img}
                   alt={t.name}
                   fill
+                  unoptimized
                   className="object-contain p-3"
                 />
 
