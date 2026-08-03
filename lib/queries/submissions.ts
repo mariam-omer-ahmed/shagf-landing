@@ -234,10 +234,21 @@ export async function listSubmissionsForReview() {
     return [];
   }
 
-  const assignmentIds = [
-    ...new Set(submissions.map((s) => s.assignment_id).filter(Boolean)),
-  ];
-  const userIds = [...new Set(submissions.map((s) => s.user_id).filter(Boolean))];
+  const assignmentIds = Array.from(
+  new Set(
+    submissions
+      .map((s) => s.assignment_id)
+      .filter((id): id is string => !!id)
+  )
+);
+
+const userIds = Array.from(
+  new Set(
+    submissions
+      .map((s) => s.user_id)
+      .filter((id): id is string => !!id)
+  )
+);
 
   const [{ data: assignments, error: assignmentsError }, { data: profiles, error: profilesError }] =
     await Promise.all([
