@@ -1,7 +1,12 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import { getEnrollments } from "@/lib/queries/enrollments";
+import {
+  getEnrollments,
+  getPackagesList,
+  setEnrollmentPackage,
+  setRoadmapStage,
+} from "@/lib/queries/enrollments";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import {
@@ -12,6 +17,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  AlertTriangle,
 } from "lucide-react";
 
 type Lead = {
@@ -47,18 +53,24 @@ type Enrollment = {
   id: string;
   user_id: string;
   lead_id: string | null;
-  package_name: string;
+  package_id: string | null;
+  packages: { id: string; title: string } | null;
   status: string;
   payment_status: string;
   created_at: string;
+  roadmap_stage: number;
   lead: Lead | null;
 };
 
-const PACKAGE_LABELS: Record<string, string> = {
-  bousola: "باقة البوصلة",
-  intilaqah: "باقة الانطلاقة",
-  tamkeen: "باقة التمكين",
-};
+const ROADMAP_STEPS = [
+  "تحديد المسار",
+  "بناء المهارة",
+  "المشروع العملي",
+  "بناء الملف المهني",
+  "الحصول على الفرصة",
+];
+
+type PackageOption = { id: string; title: string };
 
 function formatDate(value?: string) {
   if (!value) return "-";
@@ -67,9 +79,12 @@ function formatDate(value?: string) {
 
 export default function EnrollmentsPage() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [packages, setPackages] = useState<PackageOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [savingPackageId, setSavingPackageId] = useState<string | null>(null);
+  const [savingStageId, setSavingStageId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -80,11 +95,15 @@ export default function EnrollmentsPage() {
     console.log("START LOADING ENROLLMENTS");
 
     try {
-      const data = await getEnrollments();
+      const [data, packagesData] = await Promise.all([
+        getEnrollments(),
+        getPackagesList(),
+      ]);
 
       console.log("ENROLLMENTS DATA:", data);
 
       setEnrollments(data as Enrollment[]);
+      setPackages(packagesData);
     } catch (error) {
       console.log("LOAD ENROLLMENTS ERROR:", error);
     } finally {
@@ -121,6 +140,47 @@ export default function EnrollmentsPage() {
     setUpdatingId(null);
   }
 
+  async function handlePackageChange(enrollmentId: string, packageId: string) {
+    if (!packageId) return;
+
+    setSavingPackageId(enrollmentId);
+    try {
+      await setEnrollmentPackage(enrollmentId, packageId);
+
+      const selectedPackage = packages.find((p) => p.id === packageId) || null;
+
+      setEnrollments((prev) =>
+        prev.map((e) =>
+          e.id === enrollmentId
+            ? { ...e, package_id: packageId, packages: selectedPackage }
+            : e
+        )
+      );
+    } catch (error) {
+      console.log("SET ENROLLMENT PACKAGE ERROR:", error);
+      alert("تعذّر حفظ الباقة، افتحي Console وشوفي التفاصيل.");
+    } finally {
+      setSavingPackageId(null);
+    }
+  }
+
+  async function handleStageChange(userId: string, enrollmentId: string, stage: number) {
+    setSavingStageId(enrollmentId);
+    try {
+      await setRoadmapStage(userId, stage);
+      setEnrollments((prev) =>
+        prev.map((e) =>
+          e.id === enrollmentId ? { ...e, roadmap_stage: stage } : e
+        )
+      );
+    } catch (error) {
+      console.log("SET ROADMAP STAGE ERROR:", error);
+      alert("تعذّر تحديث المرحلة، افتحي Console وشوفي التفاصيل.");
+    } finally {
+      setSavingStageId(null);
+    }
+  }
+
   const filteredEnrollments = enrollments.filter((enrollment) => {
     const text = `
       ${enrollment.lead?.full_name || ""}
@@ -128,7 +188,7 @@ export default function EnrollmentsPage() {
       ${enrollment.lead?.phone || ""}
       ${enrollment.lead?.whatsapp || ""}
       ${enrollment.lead?.goal || ""}
-      ${enrollment.package_name || ""}
+      ${enrollment.packages?.title || ""}
     `.toLowerCase();
 
     return text.includes(search.toLowerCase());
@@ -175,6 +235,7 @@ export default function EnrollmentsPage() {
               <th className="p-5">الباقة</th>
               <th className="p-5">حالة الطلب</th>
               <th className="p-5">حالة الدفع</th>
+              <th className="p-5">المرحلة الحالية</th>
               <th className="p-5">التاريخ</th>
               <th className="p-5">إجراء</th>
             </tr>
@@ -183,7 +244,7 @@ export default function EnrollmentsPage() {
           <tbody>
             {filteredEnrollments.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-8 text-center text-gray-500">
+                <td colSpan={8} className="p-8 text-center text-gray-500">
                   لا توجد طلبات دفع حالياً
                 </td>
               </tr>
@@ -222,12 +283,36 @@ export default function EnrollmentsPage() {
                         </div>
                       </td>
 
-                      <td className="p-5">
-                        <div className="flex items-center gap-2">
-                          <Package size={18} />
-                          {PACKAGE_LABELS[enrollment.package_name] ||
-                            enrollment.package_name}
-                        </div>
+                      <td className="p-5" onClick={(e) => e.stopPropagation()}>
+                        {enrollment.packages?.title ? (
+                          <div className="flex items-center gap-2">
+                            <Package size={18} className="text-[#E96B8A]" />
+                            {enrollment.packages.title}
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle size={16} className="shrink-0 text-red-500" />
+                            <select
+                              defaultValue=""
+                              disabled={savingPackageId === enrollment.id}
+                              onChange={(e) =>
+                                handlePackageChange(enrollment.id, e.target.value)
+                              }
+                              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-600 outline-none disabled:opacity-60"
+                            >
+                              <option value="" disabled>
+                                {savingPackageId === enrollment.id
+                                  ? "جارٍ الحفظ..."
+                                  : "بدون باقة — اختاري واحدة"}
+                              </option>
+                              {packages.map((pkg) => (
+                                <option key={pkg.id} value={pkg.id}>
+                                  {pkg.title}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
                       </td>
 
                       <td className="p-5">
@@ -256,6 +341,45 @@ export default function EnrollmentsPage() {
                             ? "مدفوع"
                             : "غير مدفوع"}
                         </span>
+                      </td>
+
+                      <td className="p-5" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-xs font-bold text-gray-500">
+                            {ROADMAP_STEPS[enrollment.roadmap_stage - 1] ||
+                              "غير محدد"}
+                          </span>
+                          <div className="flex gap-1">
+                            {ROADMAP_STEPS.map((step, idx) => {
+                              const stageNumber = idx + 1;
+                              const isActive =
+                                stageNumber === enrollment.roadmap_stage;
+                              const isSaving = savingStageId === enrollment.id;
+
+                              return (
+                                <button
+                                  key={stageNumber}
+                                  disabled={isSaving}
+                                  title={step}
+                                  onClick={() =>
+                                    handleStageChange(
+                                      enrollment.user_id,
+                                      enrollment.id,
+                                      stageNumber
+                                    )
+                                  }
+                                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-black transition disabled:opacity-50 ${
+                                    isActive
+                                      ? "bg-[#E96B8A] text-white"
+                                      : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                                  }`}
+                                >
+                                  {stageNumber}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </td>
 
                       <td className="p-5">
@@ -299,7 +423,7 @@ export default function EnrollmentsPage() {
 
                     {isOpen && (
                       <tr className="border-t bg-[#FFFBFC]">
-                        <td colSpan={7} className="p-6">
+                        <td colSpan={8} className="p-6">
                           <div className="grid gap-6 lg:grid-cols-3">
                             <DetailGroup title="بيانات التواصل">
                               <DetailRow label="الاسم الكامل" value={lead?.full_name} />

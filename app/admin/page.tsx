@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getDashboardStats } from "@/lib/queries/dashboard";
 import { getHotLeads } from "@/lib/queries/hotLeads";
 import { getLeadTemperature } from "@/lib/queries/leadScoring";
+import { listSubmissionsForReview } from "@/lib/queries/submissions";
 import Link from "next/link";
 import {
   Users,
@@ -13,6 +14,8 @@ import {
   TrendingUp,
   MessageCircle,
   ArrowLeft,
+  Layers,
+  FileCheck2,
 } from "lucide-react";
 
 
@@ -32,6 +35,7 @@ const [stats,setStats] = useState<any>({
 });
 
 const [hotLeads,setHotLeads] = useState<any[]>([]);
+const [pendingSubmissions, setPendingSubmissions] = useState<number>(0);
 
   useEffect(()=>{
 
@@ -50,9 +54,13 @@ async function loadStats(){
 
     const hot = await getHotLeads();
 
+    const submissions = await listSubmissionsForReview();
+
     setStats(data);
 
     setHotLeads(hot);
+
+    setPendingSubmissions(submissions.length);
 
   }
   catch(error){
@@ -150,7 +158,7 @@ async function loadStats(){
         mt-6
         grid
         gap-6
-        md:grid-cols-5
+        md:grid-cols-6
         "
       >
 
@@ -187,6 +195,12 @@ async function loadStats(){
           value={stats.pendingEnrollments}
         />
 
+        <Card
+          icon={<FileCheck2/>}
+          title="واجبات بانتظار المراجعة"
+          value={pendingSubmissions}
+        />
+
 
       </div>
 
@@ -204,6 +218,7 @@ async function loadStats(){
         grid
         gap-6
         md:grid-cols-3
+        lg:grid-cols-5
         "
       >
 
@@ -402,6 +417,168 @@ async function loadStats(){
 
 
             <ArrowLeft
+              className="
+              text-[#E96B8A]
+              transition
+              group-hover:-translate-x-2
+              "
+            />
+
+
+          </div>
+
+
+        </Link>
+
+
+
+        <Link
+
+          href="/admin/modules"
+
+          className="
+          group
+          rounded-3xl
+          bg-white
+          p-8
+          shadow-sm
+          transition
+          hover:-translate-y-1
+          "
+
+        >
+
+
+          <div
+            className="
+            flex
+            items-center
+            justify-between
+            "
+          >
+
+
+            <div>
+
+
+              <h2
+                className="
+                text-2xl
+                font-black
+                text-black
+                "
+              >
+                إدارة الوحدات التدريبية
+              </h2>
+
+
+              <p
+                className="
+                mt-3
+                text-black
+                "
+              >
+                إضافة وتعديل وحدات المسار التدريبي داخل كل باقة
+              </p>
+
+
+            </div>
+
+
+
+            <Layers
+              className="
+              text-[#E96B8A]
+              transition
+              group-hover:-translate-x-2
+              "
+            />
+
+
+          </div>
+
+
+        </Link>
+
+
+        <Link
+
+          href="/admin/submissions"
+
+          className="
+          group
+          relative
+          rounded-3xl
+          bg-white
+          p-8
+          shadow-sm
+          transition
+          hover:-translate-y-1
+          "
+
+        >
+
+          {pendingSubmissions > 0 && (
+            <span
+              className="
+              absolute
+              -top-2
+              -left-2
+              flex
+              h-7
+              min-w-[28px]
+              items-center
+              justify-center
+              rounded-full
+              bg-red-500
+              px-2
+              text-xs
+              font-black
+              text-white
+              "
+            >
+              {pendingSubmissions}
+            </span>
+          )}
+
+          <div
+            className="
+            flex
+            items-center
+            justify-between
+            "
+          >
+
+
+            <div>
+
+
+              <h2
+                className="
+                text-2xl
+                font-black
+                text-black
+                "
+              >
+                مراجعة الواجبات
+              </h2>
+
+
+              <p
+                className="
+                mt-3
+                text-black
+                "
+              >
+                تصحيح واجبات الطالبات والرد على ملاحظاتهن
+              </p>
+
+
+            </div>
+
+
+
+            <FileCheck2
               className="
               text-[#E96B8A]
               transition
