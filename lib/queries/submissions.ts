@@ -80,10 +80,15 @@ export async function getOrCreateSubmission(
     .select("id")
     .single();
 
-  if (createError || !created) {
-    throw createError ?? new Error("تعذّر إنشاء التسليم");
-  }
+  if (createError) {
+  console.log(createError);
+  logSupabaseError("CREATE SUBMISSION", createError);
+  throw createError;
+}
 
+if (!created) {
+  throw new Error("No submission created");
+}
   return created.id;
 }
 
