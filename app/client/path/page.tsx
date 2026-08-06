@@ -17,6 +17,9 @@ import {
   Layers,
   Lock,
   PlayCircle,
+  Sparkles,
+  Target,
+  Zap,
 } from "lucide-react";
 
 type PackageDetails = {
@@ -42,7 +45,6 @@ type Enrollment = {
   packages?: PackageDetails | null;
 };
 
-// حالة الباقة جوه الرحلة التسلسلية
 type GroupStatus = "completed" | "current" | "locked";
 
 type JourneyGroup = {
@@ -51,7 +53,11 @@ type JourneyGroup = {
 };
 
 const FALLBACK_COLOR = "#7A1F3D";
-const FONT_FAMILY = "'Cairo', sans-serif";
+const DARK = "#1A0A10";
+// أسود صريح للنصوص، مش رمادي باهت — القراءة أوضح والانطباع أقوى
+const INK = "#0B0608";
+const INK_SOFT = "#3A2A2E";
+const FONT_FAMILY = "'Almarai','Tajawal',sans-serif";
 
 export default function ClientPathPage() {
   const router = useRouter();
@@ -122,9 +128,6 @@ export default function ClientPathPage() {
 
       setCompletedModuleIds(completedIds);
 
-      // نحدد حالة كل باقة بالترتيب: أول باقة فيها وحدة ناقصة تبقى "الحالية"،
-      // اللي قبلها كلها "مكتملة"، واللي بعدها (حتى لو مدفوعة) تبقى "مقفولة"
-      // لحد ما تخلّص الطالبة الباقة الحالية
       let foundCurrent = false;
       const withStatus: JourneyGroup[] = groups.map((g) => {
         if (foundCurrent) {
@@ -166,11 +169,11 @@ export default function ClientPathPage() {
         style={{ fontFamily: FONT_FAMILY }}
       >
         <div className="max-w-md rounded-3xl border border-[#F3D6E2] bg-white p-10 shadow-[0_20px_60px_rgba(122,31,61,.08)]">
-          <p className="text-lg font-bold text-[#3D1220]">
-            اشتراكك مفعّل، إلا أنه لم يُربط بعد بباقة محددة
+          <p className="text-lg font-bold" style={{ color: INK }}>
+            الاشتراك مفعّل، إلا أنه لم يُربط بعد بباقة محددة.
           </p>
-          <p className="mt-2 text-[#8C6F78]">
-            يُرجى التواصل مع فريق الدعم لإتمام إعداد اشتراكك
+          <p className="mt-2 font-medium" style={{ color: INK_SOFT }}>
+            يُرجى التواصل مع فريق الدعم لإتمام إعداد الاشتراك.
           </p>
         </div>
       </div>
@@ -181,12 +184,12 @@ export default function ClientPathPage() {
     return (
       <div
         dir="rtl"
-        className="flex min-h-screen items-center justify-center bg-[#FDF2F6] text-[#8C6F78]"
-        style={{ fontFamily: FONT_FAMILY }}
+        className="flex min-h-screen items-center justify-center bg-[#FDF2F6]"
+        style={{ fontFamily: FONT_FAMILY, color: INK_SOFT }}
       >
         <div className="flex flex-col items-center gap-4">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#F3D6E2] border-t-[#7A1F3D]" />
-          <p className="text-lg font-bold">جارٍ تحميل مسارك التدريبي...</p>
+          <p className="text-lg font-bold" style={{ color: INK }}>جارٍ تحميل المسار التدريبي...</p>
         </div>
       </div>
     );
@@ -207,34 +210,69 @@ export default function ClientPathPage() {
 
   const investedAmount = enrollment?.amount ?? pkg?.price ?? null;
 
+  const reachableModules = journeyGroups.filter((g) => g.status !== "locked");
+  const totalReachableModules = reachableModules.reduce((s, g) => s + g.group.modules.length, 0);
+  const doneReachableModules = reachableModules.reduce(
+    (s, g) => s + g.group.modules.filter((m) => completedModuleIds.has(m.id)).length,
+    0
+  );
+  const overallProgress =
+    totalReachableModules > 0 ? Math.round((doneReachableModules / totalReachableModules) * 100) : 0;
+
+  // أول وحدة لسه ما بدأش فيها الطالب على الإطلاق (مفيش ولا وحدة واحدة مكتملة
+  // في الباقة الحالية) — دي اللي بناخد عليها إشارة "ابدأ من هنا"
+  const isFirstEverModule = doneReachableModules === 0;
+  const nextModuleId =
+    currentGroup?.group.modules.find((m) => !completedModuleIds.has(m.id))?.id ?? null;
+
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#FDF2F6] px-6 pb-14 pt-28 text-[#3D1220] sm:pt-32"
-      style={{ fontFamily: FONT_FAMILY }}
+      className="min-h-screen bg-[#FDF2F6] px-6 pb-16 pt-28 sm:pt-32"
+      style={{ fontFamily: FONT_FAMILY, color: INK }}
     >
       <div className="mx-auto max-w-5xl">
         {/* ============== HERO ============== */}
         <section className="grid gap-5 lg:grid-cols-2 lg:items-stretch">
           <div
             className="relative overflow-hidden rounded-[36px] p-10 text-white sm:p-14"
-            style={{ backgroundImage: `linear-gradient(135deg, #3D1220 0%, ${accent} 130%)` }}
+            style={{ backgroundImage: `linear-gradient(135deg, ${DARK} 0%, ${accent} 130%)` }}
           >
             <div className="relative">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-black tracking-wide backdrop-blur">
-                برنامجكِ التدريبي: {pkg?.title || "مسارك التدريبي"}
+                <Target size={13} />
+                برنامجك: {pkg?.title || "المسار التدريبي"}
               </span>
 
-              {pkg?.tagline && <p className="mt-5 text-sm font-black text-white/70">{pkg.tagline}</p>}
-
-              <h1 className="mt-3 max-w-2xl text-3xl font-black leading-[1.5] sm:text-4xl">
-                {pkg?.result || "جميع ما تحتاجينه للوصول إلى هدفك مجمّع في مكان واحد"}
+              <h1 className="mt-5 max-w-2xl text-3xl font-black leading-[1.5] sm:text-4xl">
+                {pkg?.result || "خطوة عملية واحدة كل مرة، حتى تصل إلى النتيجة التي دفعت من أجلها."}
               </h1>
 
-              <p className="mt-4 max-w-xl leading-8 text-white/85">
+              <p className="mt-4 max-w-xl text-lg font-medium leading-8 text-white">
                 {pkg?.description ||
-                  "أكملي الوحدات بالترتيب الظاهر أمامك للوصول إلى النتيجة التي بدأتِ من أجلها هذه الرحلة."}
+                  "لا نظريات، لا حشو. كل وحدة هنا تنقلك خطوة أقرب لهدفك. أنجز الوحدات بالترتيب الظاهر أمامك، وستصل — الالتزام وحده هو الفارق الآن."}
               </p>
+
+              <div className="mt-8">
+                <div className="mb-2 flex items-center justify-between text-xs font-black text-white">
+                  <span>تقدّمك الفعلي حتى الآن</span>
+                  <span>{overallProgress}%</span>
+                </div>
+                <div className="h-3 w-full overflow-hidden rounded-full bg-white/20">
+                  <div
+                    className="h-full rounded-full bg-white transition-all duration-500"
+                    style={{ width: `${overallProgress}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* رسالة ترحيبية تظهر بس أول مرة، قبل ما الطالب يبدأ أي وحدة */}
+              {isFirstEverModule && (
+                <div className="mt-6 flex items-center gap-2 rounded-2xl bg-white/15 px-4 py-3 text-sm font-bold backdrop-blur">
+                  <Sparkles size={16} />
+                  أهلًا بك في رحلتك — ابدأ بالوحدة الأولى بالأسفل، ولا تقفز بينها.
+                </div>
+              )}
             </div>
           </div>
 
@@ -257,32 +295,32 @@ export default function ClientPathPage() {
                   >
                     <Layers size={28} />
                   </div>
-                  <p className="font-black text-[#3D1220]">{pkg?.title || "مسارك التدريبي"}</p>
+                  <p className="font-black" style={{ color: INK }}>{pkg?.title || "المسار التدريبي"}</p>
                 </div>
               )}
             </div>
 
             <div
               className="flex-1 p-6 text-white"
-              style={{ backgroundImage: `linear-gradient(135deg, #3D1220 0%, ${accent} 130%)` }}
+              style={{ backgroundImage: `linear-gradient(135deg, ${DARK} 0%, ${accent} 130%)` }}
             >
               {investedAmount != null && (
                 <div className="inline-flex w-full items-center gap-3 rounded-2xl bg-white/10 px-6 py-4 backdrop-blur">
                   <div>
-                    <p className="text-xs font-bold text-white/70">قيمة الاشتراك</p>
+                    <p className="text-xs font-black text-white">قيمة الاشتراك</p>
                     <p className="text-2xl font-black">
                       {investedAmount} {pkg?.currency === "USD" ? "$" : pkg?.currency || ""}
                     </p>
                   </div>
-                  <div className="h-10 w-px bg-white/20" />
-                  <p className="max-w-[220px] text-sm leading-6 text-white/80">
-                    يشمل هذا المبلغ جميع محتويات البرنامج دون أي رسوم إضافية
+                  <div className="h-10 w-px bg-white/30" />
+                  <p className="max-w-[220px] text-sm font-medium leading-6 text-white">
+                    يشمل هذا المبلغ كل محتويات البرنامج، من غير أي رسوم إضافية.
                   </p>
                 </div>
               )}
 
               {enrollment?.created_at && (
-                <p className="mt-4 text-xs font-bold text-white/60">
+                <p className="mt-4 text-xs font-bold text-white">
                   تاريخ التفعيل: {new Date(enrollment.created_at).toLocaleDateString("ar-SA")}
                 </p>
               )}
@@ -293,7 +331,10 @@ export default function ClientPathPage() {
         {/* ============== النتائج المستهدفة ============== */}
         {pkg?.outcomes && pkg.outcomes.length > 0 && (
           <section className="mt-6 rounded-[28px] border border-[#F3D6E2] bg-white p-8">
-            <p className="mb-5 text-sm font-black text-[#8C6F78]">النتائج المستهدفة من هذا البرنامج</p>
+            <p className="mb-5 flex items-center gap-2 text-sm font-black" style={{ color: INK }}>
+              <Zap size={16} style={{ color: accent }} />
+              هذا ما ستحصل عليه بنهاية هذا البرنامج — بلا مبالغة
+            </p>
             <div className="grid gap-3 sm:grid-cols-2">
               {pkg.outcomes.map((outcome) => (
                 <div key={outcome} className="flex items-start gap-2.5">
@@ -305,183 +346,234 @@ export default function ClientPathPage() {
                       <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
-                  <span className="leading-7 text-[#3D1220]">{outcome}</span>
+                  <span className="font-medium leading-7" style={{ color: INK }}>{outcome}</span>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* ============== محتوى الباقة الحالية اللي شغالة عليها الطالبة ============== */}
+        {/* ============== محتوى الباقة الحالية ============== */}
         {currentGroup && currentGroup.group.modules.length > 0 && (
           <section className="mt-6">
-            <p className="mb-3 text-sm font-black text-[#8C6F78]">
-              محتوى {currentGroup.group.package.title} (باقتك الحالية)
+            <p className="mb-3 text-sm font-black" style={{ color: INK }}>
+              ما ينتظرك في {currentGroup.group.package.title} — باقتك الحالية
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
               <ValueStat icon={<Layers size={20} />} label="وحدة تدريبية" value={currentGroup.group.modules.length} accent={accent} />
               <ValueStat icon={<BookOpen size={20} />} label="محاضرة" value={totalLessons} accent={accent} />
-              <ValueStat icon={<ClipboardList size={20} />} label="تكليف" value={totalAssignments} accent={accent} />
+              <ValueStat icon={<ClipboardList size={20} />} label="تكليف عملي" value={totalAssignments} accent={accent} />
             </div>
           </section>
         )}
 
         {/* ============== رحلتك التدريبية: قفل تسلسلي حقيقي ============== */}
         <section className="mt-10">
-          <p className="mb-5 text-sm font-black text-[#8C6F78]">رحلتك التدريبية</p>
+          <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+            <p className="text-sm font-black" style={{ color: INK }}>رحلتك خطوة بخطوة</p>
+            <p className="text-xs font-bold" style={{ color: INK_SOFT }}>
+              أنجز كل باقة بالكامل لتُفتح التي تليها تلقائيًا
+            </p>
+          </div>
 
-          <div className="space-y-6">
+          <div className="space-y-5">
             {journeyGroups.map(({ group, status }) => {
               const groupAccent = group.package.color || FALLBACK_COLOR;
 
-              // باقة مكتملة بالكامل — عرض مختصر بس
               if (status === "completed") {
                 return (
-                  <div key={group.package.id} className="flex items-center gap-4 rounded-3xl border border-green-100 bg-green-50/50 p-6">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: groupAccent }}>
-                      <CheckCircle2 size={22} />
+                  <div
+                    key={group.package.id}
+                    className="flex items-center gap-4 rounded-[28px] border-2 p-6"
+                    style={{ borderColor: "#BFE3CC", backgroundColor: "#F3FBF6" }}
+                  >
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-white shadow-[0_8px_20px_rgba(30,122,59,.25)]" style={{ backgroundColor: "#1E7A3B" }}>
+                      <CheckCircle2 size={26} />
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-lg font-black text-[#3D1220]">{group.package.title}</h2>
-                      <p className="text-sm text-green-700">اكتملت كل وحداتها ({group.modules.length} وحدة)</p>
-                    </div>
-                    <CheckCircle2 size={24} className="text-green-500" />
-                  </div>
-                );
-              }
-
-              // باقة مقفولة — لسه محتاجة تخلّصي اللي قبلها
-              if (status === "locked") {
-                return (
-                  <div key={group.package.id}>
-                    <div className="mb-3 flex items-center gap-3">
-                      <span className="inline-flex h-3 w-3 rounded-full bg-gray-300" />
-                      <h2 className="text-lg font-black text-gray-400">{group.package.title}</h2>
-                      <span className="flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-black text-gray-500">
-                        <Lock size={12} />
-                        مقفولة
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4 rounded-3xl border border-dashed border-gray-200 bg-white/60 p-6">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
-                        <Lock size={18} />
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-black" style={{ color: INK }}>{group.package.title}</h2>
+                        <span className="rounded-full bg-[#1E7A3B] px-3 py-0.5 text-xs font-black text-white">
+                          مكتملة
+                        </span>
                       </div>
-                      <p className="text-sm text-gray-400">
-                        أنهي كل وحدات الباقة اللي قبلها الأول عشان تتفتح
+                      <p className="mt-1 text-sm font-bold text-[#1E7A3B]">
+                        أنجزت {group.modules.length} من {group.modules.length} وحدة — إنجاز حقيقي، استمر بنفس الوتيرة.
                       </p>
                     </div>
                   </div>
                 );
               }
 
-              // الباقة الحالية — الوحدات ظاهرة بالتفصيل مع علامة إنجاز على كل وحدة
+              if (status === "locked") {
+                return (
+                  <div key={group.package.id} className="overflow-hidden rounded-[28px] border-2 border-dashed border-gray-300 bg-white/70">
+                    <div className="flex items-center gap-4 p-6">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gray-100" style={{ color: INK_SOFT }}>
+                        <Lock size={22} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-lg font-black" style={{ color: INK_SOFT }}>{group.package.title}</h2>
+                          <span className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-0.5 text-xs font-black" style={{ color: INK_SOFT }}>
+                            <Lock size={11} />
+                            مقفولة مؤقتًا
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm font-medium" style={{ color: INK_SOFT }}>
+                          تُفتح تلقائيًا فور إنجاز كل وحدات الباقة الحالية — لا حاجة لأي إجراء إضافي منك.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              const currentDone = group.modules.filter((m) => completedModuleIds.has(m.id)).length;
+
               return (
-                <div key={group.package.id}>
-                  <div className="mb-4 flex items-center gap-3">
-                    <span className="inline-flex h-3 w-3 rounded-full" style={{ backgroundColor: groupAccent }} />
-                    <h2 className="text-xl font-black text-[#3D1220]">{group.package.title}</h2>
-                    <span className="rounded-full px-3 py-1 text-xs font-black text-white" style={{ backgroundColor: groupAccent }}>
-                      باقتك الحالية
+                <div key={group.package.id} className="overflow-hidden rounded-[28px] border-2" style={{ borderColor: groupAccent }}>
+                  <div
+                    className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 text-white sm:px-7"
+                    style={{ backgroundColor: groupAccent }}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Target size={18} />
+                      <h2 className="text-lg font-black">{group.package.title}</h2>
+                    </div>
+                    <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-black backdrop-blur">
+                      {currentDone} من {group.modules.length} وحدة مُنجزة
                     </span>
                   </div>
 
-                  {group.modules.length === 0 ? (
-                    <div className="rounded-3xl border border-[#F3D6E2] bg-white p-8 text-center text-sm text-[#8C6F78]">
-                      لا تتوفر وحدات ضمن هذه الباقة في الوقت الحالي
-                    </div>
-                  ) : (
-                    <ol className="relative">
-                      <div className="absolute right-[27px] top-3 bottom-3 w-[2px] opacity-30" style={{ backgroundColor: groupAccent }} />
+                  <div className="bg-white p-5 sm:p-6">
+                    {group.modules.length === 0 ? (
+                      <div className="rounded-3xl border border-[#F3D6E2] bg-[#FDF2F6] p-8 text-center text-sm font-medium" style={{ color: INK_SOFT }}>
+                        لا تتوفر وحدات ضمن هذه الباقة حاليًا — سيُضاف المحتوى قريبًا.
+                      </div>
+                    ) : (
+                      <ol className="relative">
+                        <div className="absolute right-[27px] top-3 bottom-3 w-[2px] opacity-30" style={{ backgroundColor: groupAccent }} />
 
-                      {group.modules.map((module, index) => {
-                        const isDone = completedModuleIds.has(module.id);
+                        {group.modules.map((module, index) => {
+                          const isDone = completedModuleIds.has(module.id);
+                          const isNextUp = module.id === nextModuleId;
 
-                        return (
-                          <li key={module.id} className="relative mb-5 pr-[76px] last:mb-0">
-                            <div
-                              className="absolute right-0 top-0 flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#FDF2F6] font-black text-white shadow-[0_8px_20px_rgba(61,18,32,.25)]"
-                              style={{ backgroundColor: isDone ? "#1E7A3B" : "#3D1220" }}
-                            >
-                              {isDone ? <CheckCircle2 size={22} /> : String(index + 1).padStart(2, "0")}
-                            </div>
-
-                            <div
-                              className="group rounded-[28px] border-2 border-transparent bg-white p-6 shadow-[0_15px_45px_rgba(122,31,61,.06)] transition-all hover:-translate-y-0.5 sm:p-7"
-                              onMouseEnter={(e) => (e.currentTarget.style.borderColor = groupAccent)}
-                              onMouseLeave={(e) => (e.currentTarget.style.borderColor = "transparent")}
-                            >
-                              <div className="flex items-start justify-between gap-4">
-                                <h3 className="text-xl font-black text-[#3D1220]">{module.title}</h3>
-                                {isDone ? (
-                                  <span className="flex shrink-0 items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-xs font-black text-green-700">
-                                    <CheckCircle2 size={13} />
-                                    مكتملة
-                                  </span>
-                                ) : (
-                                  <span className="shrink-0 rounded-full px-3 py-1 text-xs font-black" style={{ backgroundColor: "#FDF2F6", color: groupAccent }}>
-                                    وحدة {String(index + 1).padStart(2, "0")}
-                                  </span>
-                                )}
+                          return (
+                            <li key={module.id} className="relative mb-4 pr-[76px] last:mb-0">
+                              <div
+                                className="absolute right-0 top-0 flex h-14 w-14 items-center justify-center rounded-full border-4 border-white font-black text-white shadow-[0_8px_20px_rgba(61,18,32,.2)]"
+                                style={{ backgroundColor: isDone ? "#1E7A3B" : DARK }}
+                              >
+                                {isDone ? <CheckCircle2 size={22} /> : String(index + 1).padStart(2, "0")}
                               </div>
 
-                              {module.description && <p className="mt-2 leading-7 text-[#6B5560]">{module.description}</p>}
+                              {/* نبضة خفيفة حوالين رقم الوحدة التالية — توجيه العين
+                                  من غير ما تحتاج قراءة كل حاجة */}
+                              {isNextUp && (
+                                <span
+                                  className="absolute right-0 top-0 h-14 w-14 animate-ping rounded-full opacity-30"
+                                  style={{ backgroundColor: groupAccent }}
+                                />
+                              )}
 
-                              <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-                                <div className="flex gap-6 text-sm">
-                                  <span className="flex items-center gap-1.5 text-[#8C6F78]">
-                                    <BookOpen size={16} style={{ color: groupAccent }} />
-                                    {module.course_lessons?.length ?? 0} محاضرة
-                                  </span>
-                                  <span className="flex items-center gap-1.5 text-[#8C6F78]">
-                                    <ClipboardList size={16} style={{ color: groupAccent }} />
-                                    {module.course_lessons?.reduce((s, l) => s + (l.course_assignments?.length ?? 0), 0) ?? 0} تكليف
-                                  </span>
+                              <div
+                                className="group rounded-2xl border-2 p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(122,31,61,.08)] sm:p-6"
+                                style={{
+                                  backgroundColor: "#FDF2F6",
+                                  borderColor: isNextUp ? groupAccent : "transparent",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.borderColor = groupAccent)}
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.borderColor = isNextUp ? groupAccent : "transparent")
+                                }
+                              >
+                                <div className="flex items-start justify-between gap-4">
+                                  <h3 className="text-lg font-black" style={{ color: INK }}>{module.title}</h3>
+                                  {isDone ? (
+                                    <span className="flex shrink-0 items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-black text-green-700">
+                                      <CheckCircle2 size={13} />
+                                      مكتملة
+                                    </span>
+                                  ) : isNextUp ? (
+                                    <span
+                                      className="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-black text-white"
+                                      style={{ backgroundColor: groupAccent }}
+                                    >
+                                      <Sparkles size={12} />
+                                      ابدأ من هنا
+                                    </span>
+                                  ) : (
+                                    <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-black" style={{ color: groupAccent }}>
+                                      وحدة {String(index + 1).padStart(2, "0")}
+                                    </span>
+                                  )}
                                 </div>
 
-                                <Link
-                                  href={`/client/path/module/${module.id}`}
-                                  className="inline-flex items-center gap-2 rounded-2xl px-6 py-3 font-bold text-white transition hover:-translate-y-0.5"
-                                  style={{ backgroundColor: groupAccent }}
-                                >
-                                  {isDone ? (
-                                    <>
-                                      مراجعة الوحدة
-                                      <ArrowLeft size={16} />
-                                    </>
-                                  ) : (
-                                    <>
-                                      <PlayCircle size={16} />
-                                      الدخول للوحدة
-                                    </>
-                                  )}
-                                </Link>
+                                {module.description && <p className="mt-2 font-medium leading-7" style={{ color: INK_SOFT }}>{module.description}</p>}
+
+                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                                  <div className="flex gap-5 text-sm font-bold">
+                                    <span className="flex items-center gap-1.5" style={{ color: INK_SOFT }}>
+                                      <BookOpen size={15} style={{ color: groupAccent }} />
+                                      {module.course_lessons?.length ?? 0} محاضرة
+                                    </span>
+                                    <span className="flex items-center gap-1.5" style={{ color: INK_SOFT }}>
+                                      <ClipboardList size={15} style={{ color: groupAccent }} />
+                                      {module.course_lessons?.reduce((s, l) => s + (l.course_assignments?.length ?? 0), 0) ?? 0} تكليف
+                                    </span>
+                                  </div>
+
+                                  <Link
+                                    href={`/client/path/module/${module.id}`}
+                                    className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5"
+                                    style={{
+                                      backgroundColor: groupAccent,
+                                      boxShadow: isNextUp ? `0 10px 25px -5px ${groupAccent}80` : undefined,
+                                    }}
+                                  >
+                                    {isDone ? (
+                                      <>
+                                        مراجعة الوحدة
+                                        <ArrowLeft size={15} />
+                                      </>
+                                    ) : (
+                                      <>
+                                        <PlayCircle size={15} />
+                                        ابدأ الآن
+                                      </>
+                                    )}
+                                  </Link>
+                                </div>
                               </div>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ol>
-                  )}
+                            </li>
+                          );
+                        })}
+                      </ol>
+                    )}
+                  </div>
                 </div>
               );
             })}
 
-            {/* باقات لسه مش مدفوعة أصلًا (tier أعلى من اشتراك الطالبة) */}
             {lockedPackages.map((locked) => (
-              <div key={locked.id}>
-                <div className="mb-3 flex items-center gap-3">
-                  <span className="inline-flex h-3 w-3 rounded-full bg-gray-300" />
-                  <h2 className="text-lg font-black text-gray-400">{locked.title}</h2>
-                  <span className="flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-black text-gray-500">
-                    <Lock size={12} />
-                    تُفتح مع الترقية
-                  </span>
-                </div>
-                <div className="flex items-center gap-4 rounded-3xl border border-dashed border-gray-200 bg-white/60 p-6">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
-                    <Lock size={18} />
+              <div key={locked.id} className="overflow-hidden rounded-[28px] border-2 border-dashed border-gray-300 bg-white/70">
+                <div className="flex items-center gap-4 p-6">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gray-100" style={{ color: INK_SOFT }}>
+                    <Lock size={22} />
                   </div>
-                  <p className="text-sm text-gray-400">يُرجى الترقية إلى "{locked.title}" لفتح وحداتها</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-lg font-black" style={{ color: INK_SOFT }}>{locked.title}</h2>
+                      <span className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-0.5 text-xs font-black" style={{ color: INK_SOFT }}>
+                        <Lock size={11} />
+                        تُفتح مع الترقية
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm font-medium" style={{ color: INK_SOFT }}>
+                      رقِّ اشتراكك إلى "{locked.title}" لتفتح محتواها فورًا.
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -509,8 +601,8 @@ function ValueStat({
         {icon}
       </div>
       <div>
-        <h3 className="text-2xl font-black text-[#3D1220]">{value}</h3>
-        <p className="text-sm font-bold text-[#8C6F78]">{label}</p>
+        <h3 className="text-2xl font-black" style={{ color: "#0B0608" }}>{value}</h3>
+        <p className="text-sm font-bold" style={{ color: "#3A2A2E" }}>{label}</p>
       </div>
     </div>
   );

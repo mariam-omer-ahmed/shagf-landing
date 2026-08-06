@@ -9,15 +9,15 @@ export default function RegisterPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF4F8] px-6 pb-16 pt-32 md:pt-40"
+      className="min-h-screen bg-[#FDF2F6] px-6 pb-16 pt-32 md:pt-40"
     >
       <div className="mx-auto max-w-5xl">
         <div className="mb-12 text-center">
-          <h1 className="text-5xl font-black text-gray-900">
+          <h1 className="text-4xl font-black md:text-5xl" style={{ color: "#0B0608" }}>
             مرحبًا بك في شغف
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-9 text-gray-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-9" style={{ color: "#3A2A2E" }}>
             أنشئ حسابك مجانًا للوصول إلى الكتب المجانية، والمنتجات الرقمية،
             ولوحة التحكم الخاصة بك.
           </p>

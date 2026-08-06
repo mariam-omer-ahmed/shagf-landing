@@ -15,19 +15,24 @@ export interface PackageContent {
   icon: string | null;
   thumbnail: string | null;
   is_active: boolean;
+  // ترتيب الباقة الحقيقي جوه السلسلة (بوصلة=1، انطلاقة=2، تمكين=3) —
+  // ده مصدر الترتيب الصحيح، مش السعر
+  tier: number;
 }
 
 /**
- * كل الباقات النشطة بكل محتواها التسويقي، مرتبة بالسعر تصاعديًا.
- * ده المصدر الوحيد للحقيقة لأي مكان بيعرض تفاصيل باقة في الموقع —
- * صفحة المقارنة، صفحة المسار التدريبي، أي مكان تاني.
+ * كل الباقات النشطة بكل محتواها التسويقي، مرتبة حسب tier تصاعديًا
+ * (يعني حسب تسلسلها الحقيقي: بوصلة ثم انطلاقة ثم تمكين)، مش حسب السعر —
+ * لأن الترتيب بالسعر ممكن ميطابقش الترتيب المنطقي للباقات لو الأسعار
+ * اتغيرت أو فيه عروض. ده المصدر الوحيد للحقيقة لأي مكان بيعرض تفاصيل
+ * باقة في الموقع — صفحة المقارنة، صفحة المسار التدريبي، أي مكان تاني.
  */
 export async function getPackagesContent(): Promise<PackageContent[]> {
   const { data, error } = await supabase
     .from("packages")
     .select("*")
     .eq("is_active", true)
-    .order("price", { ascending: true });
+    .order("tier", { ascending: true });
 
   if (error) {
     console.error("getPackagesContent error:", error.message);

@@ -20,15 +20,13 @@ import { supabase } from "@/lib/supabase";
 import AssignmentSubmissionPanel from "./AssignmentSubmissionPanel";
 
 const FONT_FAMILY = "'Almarai','Tajawal',sans-serif";
+// أسود صريح للنصوص الأساسية — مش رمادي باهت
+const INK = "#0B0608";
+const INK_SOFT = "#3A2A2E";
+const DEFAULT_ACCENT = "#7A1F3D";
 
-// نفس البادئة المستخدمة في لوحة الأدمن للتفريق بين فيديو مرفوع من الجهاز
-// (محتاج رابط موقّت من التخزين) ورابط خارجي عادي زي يوتيوب (يتعرض بإطار Iframe)
 const UPLOADED_VIDEO_PREFIX = "storage:";
 
-/**
- * تحويل أي شكل من روابط يوتيوب (watch?v=, youtu.be/, shorts/, embed/)
- * إلى رابط embed صالح للعرض جوه iframe. لو الرابط مش يوتيوب، بترجع null.
- */
 function getYoutubeEmbedUrl(url: string): string | null {
   try {
     const parsed = new URL(url);
@@ -56,7 +54,6 @@ function getYoutubeEmbedUrl(url: string): string | null {
   }
 }
 
-// حالة مشغّل الفيديو المفتوح حاليًا (نوع + مصدر)
 type ActivePlayer =
   | { key: string; kind: "youtube"; embedUrl: string }
   | { key: string; kind: "file"; signedUrl: string };
@@ -84,7 +81,7 @@ export default function ModulePage() {
     setError("");
 
     if (!moduleId) {
-setError("تعذّر فتح هذه الوحدة. يُرجى العودة إلى مسارك التدريبي ثم إعادة المحاولة.");
+      setError("تعذّر فتح هذه الوحدة. عد إلى مسارك التدريبي ثم أعد المحاولة.");
       setLoading(false);
       return;
     }
@@ -104,7 +101,7 @@ setError("تعذّر فتح هذه الوحدة. يُرجى العودة إلى 
       }
     } catch (err) {
       console.error("MODULE ERROR", err, "moduleId:", moduleId);
-setError("تعذّر تحميل محتوى الوحدة في الوقت الحالي. يُرجى إعادة المحاولة بعد قليل.");
+      setError("تعذّر تحميل محتوى الوحدة حاليًا. أعد المحاولة بعد قليل.");
     } finally {
       setLoading(false);
     }
@@ -124,23 +121,19 @@ setError("تعذّر تحميل محتوى الوحدة في الوقت الحا
       }
     } catch (err) {
       console.error("Toggle completion error:", err);
-alert("تعذّر حفظ تقدمك في هذه الوحدة. يُرجى إعادة المحاولة.");
+      alert("تعذّر حفظ تقدمك في هذه الوحدة. أعد المحاولة.");
     } finally {
       setTogglingComplete(false);
     }
   }
 
-  // تشغيل فيديو (رئيسي أو من المصادر الإضافية) داخل الصفحة نفسها —
-  // من غير ما نفتح أي تاب جديد أو ننتقل لموقع تاني
   async function playVideoInline(videoUrl: string, key: string) {
-    // لو نفس الفيديو مفتوح بالفعل، نقفله (toggle)
     if (activePlayer?.key === key) {
       setActivePlayer(null);
       return;
     }
 
     if (videoUrl.startsWith(UPLOADED_VIDEO_PREFIX)) {
-      // فيديو مرفوع من الجهاز: نجيب رابط موقّت من التخزين ونشغّله بعنصر <video> عادي
       setOpeningId(key);
       try {
         const path = videoUrl.replace(UPLOADED_VIDEO_PREFIX, "");
@@ -148,7 +141,7 @@ alert("تعذّر حفظ تقدمك في هذه الوحدة. يُرجى إعا�
         if (url) {
           setActivePlayer({ key, kind: "file", signedUrl: url });
         } else {
-alert("تعذّر تشغيل المحتوى المرئي. يُرجى إعادة المحاولة.");
+          alert("تعذّر تشغيل هذا الفيديو. أعد المحاولة.");
         }
       } finally {
         setOpeningId(null);
@@ -156,8 +149,6 @@ alert("تعذّر تشغيل المحتوى المرئي. يُرجى إعادة 
       return;
     }
 
-    // رابط خارجي — لو يوتيوب نعرضه بإطار مضمّن، غير كده نفتحه في تاب جديد
-    // (لأن مواقع تانية غالبًا بترفض تتعرض جوه iframe لموقع تاني)
     const embedUrl = getYoutubeEmbedUrl(videoUrl);
     if (embedUrl) {
       setActivePlayer({ key, kind: "youtube", embedUrl });
@@ -166,7 +157,6 @@ alert("تعذّر تشغيل المحتوى المرئي. يُرجى إعادة 
     }
   }
 
-  // فتح ملف من ضمن "مصادر إضافية" للمحاضرة (ملف مش فيديو، زي PDF أو صورة)
   async function openResourceFile(storagePath: string, key: string) {
     setOpeningId(key);
     try {
@@ -174,41 +164,52 @@ alert("تعذّر تشغيل المحتوى المرئي. يُرجى إعادة 
       if (url) {
         window.open(url, "_blank", "noopener,noreferrer");
       } else {
-alert("تعذّر فتح الملف المطلوب.");
+        alert("تعذّر فتح هذا الملف.");
       }
     } finally {
       setOpeningId(null);
     }
   }
 
+  const pkg = module?.packages;
+  const accent = pkg?.color || DEFAULT_ACCENT;
+
+  const totalLessons = module?.course_lessons?.length ?? 0;
+  const totalAssignments =
+    module?.course_lessons?.reduce((s, l) => s + (l.course_assignments?.length ?? 0), 0) ?? 0;
+
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#FDF2F6] px-6 py-14 text-[#3D1220]"
-      style={{ fontFamily: FONT_FAMILY }}
+      className="min-h-screen bg-[#FDF2F6] px-6 py-14"
+      style={{ fontFamily: FONT_FAMILY, color: INK }}
     >
       <div className="mx-auto max-w-4xl">
         <Link
           href="/client/path"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-black text-[#7A1F3D] transition hover:gap-3"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-black transition hover:gap-3"
+          style={{ color: accent }}
         >
           <ArrowRight size={18} />
-العودة إلى المسار التدريبي        </Link>
+          العودة إلى المسار التدريبي
+        </Link>
 
         {loading && (
-          <div className="flex flex-col items-center gap-4 py-24 text-[#8C6F78]">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#F3D6E2] border-t-[#7A1F3D]" />
-جارٍ تحميل محتوى الوحدة...          </div>
+          <div className="flex flex-col items-center gap-4 py-24" style={{ color: INK_SOFT }}>
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#F3D6E2]" style={{ borderTopColor: accent }} />
+            <p className="font-bold" style={{ color: INK }}>جارٍ تحميل محتوى الوحدة...</p>
+          </div>
         )}
 
         {!loading && (error || !module) && (
           <div className="rounded-3xl border border-[#F3D6E2] bg-white p-14 text-center shadow-[0_20px_60px_rgba(122,31,61,.08)]">
-            <p className="text-lg font-bold text-[#3D1220]">
-              {error || "هذه الوحدة غير متاحة حالياً."}
+            <p className="text-lg font-bold" style={{ color: INK }}>
+              {error || "هذه الوحدة غير متاحة حاليًا."}
             </p>
             <Link
               href="/client/path"
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-[#7A1F3D] px-8 py-3 font-black text-white transition hover:bg-[#611731]"
+              className="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 font-black text-white transition"
+              style={{ backgroundColor: accent }}
             >
               العودة إلى المسار التدريبي
             </Link>
@@ -217,25 +218,42 @@ alert("تعذّر فتح الملف المطلوب.");
 
         {!loading && !error && module && (
           <>
-            <div className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#3D1220] via-[#5E1F3A] to-[#7A1F3D] p-10 text-white sm:p-12">
+            {/* HERO — يبيع قيمة الوحدة قبل ما الطالب يبدأ فيها */}
+            <div
+              className="overflow-hidden rounded-[32px] p-10 text-white sm:p-12"
+              style={{ backgroundImage: `linear-gradient(135deg, #1A0A10 0%, ${accent} 130%)` }}
+            >
               <span className="inline-flex rounded-full bg-white/15 px-4 py-1.5 text-xs font-black backdrop-blur">
-وحدة تعليمية              </span>
+                {pkg ? `وحدة تدريبية ضمن ${pkg.title}` : "وحدة تدريبية"}
+              </span>
 
-              <h1 className="mt-6 text-4xl font-black leading-[1.4]">
+              <h1 className="mt-6 text-3xl font-black leading-[1.4] sm:text-4xl">
                 {module.title}
               </h1>
 
               {module.description && (
-                <p className="mt-4 max-w-2xl text-lg leading-8 text-white/85">
+                <p className="mt-4 max-w-2xl text-lg font-medium leading-8 text-white">
                   {module.description}
                 </p>
               )}
+
+              <div className="mt-6 flex flex-wrap gap-4 text-sm font-bold">
+                <span className="flex items-center gap-1.5 rounded-full bg-white/15 px-4 py-2 backdrop-blur">
+                  <FileText size={14} />
+                  {totalLessons} محاضرة
+                </span>
+                <span className="flex items-center gap-1.5 rounded-full bg-white/15 px-4 py-2 backdrop-blur">
+                  <ClipboardList size={14} />
+                  {totalAssignments} تكليف عملي
+                </span>
+              </div>
             </div>
 
             <div className="mt-8 space-y-6">
               {(!module.course_lessons || module.course_lessons.length === 0) && (
-                <div className="rounded-3xl border border-[#F3D6E2] bg-white p-10 text-center text-[#8C6F78]">
-لم يُضف أي محتوى تعليمي إلى هذه الوحدة حتى الآن.                </div>
+                <div className="rounded-3xl border border-[#F3D6E2] bg-white p-10 text-center font-medium" style={{ color: INK_SOFT }}>
+                  لم يُضف أي محتوى تعليمي إلى هذه الوحدة حتى الآن.
+                </div>
               )}
 
               {module.course_lessons?.map((lesson, index) => {
@@ -248,38 +266,42 @@ alert("تعذّر فتح الملف المطلوب.");
                     className="rounded-[28px] border border-[#F3D6E2] bg-white p-7 shadow-[0_10px_30px_rgba(122,31,61,.05)]"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FDF2F6] font-black text-[#7A1F3D]">
+                      <div
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl font-black"
+                        style={{ backgroundColor: "#FDF2F6", color: accent }}
+                      >
                         {index + 1}
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-black text-[#3D1220]">{lesson.title}</h3>
+                        <h3 className="font-black" style={{ color: INK }}>{lesson.title}</h3>
                         {lesson.description && (
-                          <p className="mt-1.5 text-sm leading-7 text-[#6B5560]">
+                          <p className="mt-1.5 text-sm font-medium leading-7" style={{ color: INK_SOFT }}>
                             {lesson.description}
                           </p>
                         )}
                       </div>
                     </div>
 
-                    {/* فيديو المحاضرة الرئيسي — بيتعرض جوه الصفحة نفسها */}
+                    {/* فيديو المحاضرة الرئيسي — يتعرض داخل الصفحة نفسها */}
                     {lesson.video_url && (
                       <div className="mt-5 border-t border-[#F8E7EE] pt-5">
                         <button
                           onClick={() => playVideoInline(lesson.video_url as string, mainVideoKey)}
                           disabled={openingId === mainVideoKey}
-                          className="flex w-full items-center gap-3 rounded-2xl bg-[#FDF2F6] px-4 py-3 text-right font-bold text-[#3D1220] transition hover:bg-[#F8E7EE] disabled:opacity-60"
+                          className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-right font-bold transition disabled:opacity-60"
+                          style={{ backgroundColor: "#FDF2F6", color: INK }}
                         >
                           {isMainVideoOpen ? (
-                            <X size={20} className="shrink-0 text-[#7A1F3D]" />
+                            <X size={20} className="shrink-0" style={{ color: accent }} />
                           ) : (
-                            <PlayCircle size={20} className="shrink-0 text-[#7A1F3D]" />
+                            <PlayCircle size={20} className="shrink-0" style={{ color: accent }} />
                           )}
                           <span className="flex-1 truncate">
                             {isMainVideoOpen ? "إغلاق الفيديو" : "فيديو المحاضرة"}
                           </span>
                           {openingId === mainVideoKey && (
-                            <span className="text-xs text-[#8C6F78]">جارٍ التحميل...</span>
+                            <span className="text-xs font-medium" style={{ color: INK_SOFT }}>جارٍ التحميل...</span>
                           )}
                         </button>
 
@@ -308,10 +330,10 @@ alert("تعذّر فتح الملف المطلوب.");
                       </div>
                     )}
 
-                    {/* مصادر إضافية: ملفات أو روابط فيديو تانية */}
+                    {/* مصادر إضافية */}
                     {lesson.lesson_resources && lesson.lesson_resources.length > 0 && (
                       <div className="mt-3 space-y-2 border-t border-[#F8E7EE] pt-5">
-                        <p className="text-xs font-black text-[#8C6F78]">مصادر إضافية</p>
+                        <p className="text-xs font-black" style={{ color: INK_SOFT }}>مصادر إضافية</p>
                         {lesson.lesson_resources.map((resource) => {
                           const key = `res-${resource.id}`;
                           const isOpen = activePlayer?.key === key;
@@ -328,20 +350,21 @@ alert("تعذّر فتح الملف المطلوب.");
                                   }
                                 }}
                                 disabled={openingId === key}
-                                className="flex w-full items-center gap-3 rounded-2xl bg-[#FDF2F6] px-4 py-3 text-right font-bold text-[#3D1220] transition hover:bg-[#F8E7EE] disabled:opacity-60"
+                                className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-right font-bold transition disabled:opacity-60"
+                                style={{ backgroundColor: "#FDF2F6", color: INK }}
                               >
                                 {isVideoResource ? (
                                   isOpen ? (
-                                    <X size={18} className="shrink-0 text-[#7A1F3D]" />
+                                    <X size={18} className="shrink-0" style={{ color: accent }} />
                                   ) : (
-                                    <Video size={18} className="shrink-0 text-[#7A1F3D]" />
+                                    <Video size={18} className="shrink-0" style={{ color: accent }} />
                                   )
                                 ) : (
-                                  <FileIcon size={18} className="shrink-0 text-[#7A1F3D]" />
+                                  <FileIcon size={18} className="shrink-0" style={{ color: accent }} />
                                 )}
                                 <span className="flex-1 truncate">{resource.title}</span>
                                 {openingId === key && (
-                                  <span className="text-xs text-[#8C6F78]">جارٍ الفتح...</span>
+                                  <span className="text-xs font-medium" style={{ color: INK_SOFT }}>جارٍ الفتح...</span>
                                 )}
                               </button>
 
@@ -373,11 +396,11 @@ alert("تعذّر فتح الملف المطلوب.");
                       </div>
                     )}
 
-                    {/* التكليفات — كل واحد فيه لوحة تسليم الواجب تحته مباشرة */}
+                    {/* التكليفات — الواجب وتسليمه تحته مباشرة */}
                     {lesson.course_assignments && lesson.course_assignments.length > 0 && (
                       <div className="mt-5 space-y-4 border-t border-[#F8E7EE] pt-5">
-                        <p className="text-xs font-black text-[#8C6F78]">
-                          التكليفات المطلوبة
+                        <p className="text-xs font-black" style={{ color: INK_SOFT }}>
+                          التكليف المطلوب — طبّق قبل الانتقال للمحاضرة التالية
                         </p>
                         {lesson.course_assignments.map((assignment) => (
                           <div
@@ -385,11 +408,11 @@ alert("تعذّر فتح الملف المطلوب.");
                             className="rounded-2xl border border-[#F3D6E2] px-4 py-4"
                           >
                             <div className="flex items-start gap-3">
-                              <ClipboardList size={18} className="mt-0.5 shrink-0 text-[#7A1F3D]" />
+                              <ClipboardList size={18} className="mt-0.5 shrink-0" style={{ color: accent }} />
                               <div className="min-w-0 flex-1">
-                                <h4 className="font-bold text-[#3D1220]">{assignment.title}</h4>
+                                <h4 className="font-bold" style={{ color: INK }}>{assignment.title}</h4>
                                 {assignment.description && (
-                                  <p className="mt-1 text-sm leading-6 text-[#6B5560]">
+                                  <p className="mt-1 text-sm font-medium leading-6" style={{ color: INK_SOFT }}>
                                     {assignment.description}
                                   </p>
                                 )}
@@ -405,7 +428,7 @@ alert("تعذّر فتح الملف المطلوب.");
                     {!lesson.video_url &&
                       (!lesson.lesson_resources || lesson.lesson_resources.length === 0) &&
                       (!lesson.course_assignments || lesson.course_assignments.length === 0) && (
-                        <div className="mt-5 flex items-center gap-2 border-t border-[#F8E7EE] pt-5 text-xs font-bold text-[#8C6F78]">
+                        <div className="mt-5 flex items-center gap-2 border-t border-[#F8E7EE] pt-5 text-xs font-bold" style={{ color: INK_SOFT }}>
                           <FileText size={14} />
                           لا يتوفر محتوى إضافي لهذه المحاضرة بعد
                         </div>
@@ -415,25 +438,31 @@ alert("تعذّر فتح الملف المطلوب.");
               })}
             </div>
 
-            {/* زرار إنهاء الوحدة — ده اللي بيفتح الباقة اللي بعدها في المسار */}
+            {/* زر إنهاء الوحدة — يفتح الباقة التالية في المسار */}
             {userId && (
-              <div className="mt-8 flex justify-center">
+              <div className="mt-8 flex flex-col items-center gap-3">
                 <button
                   onClick={toggleCompletion}
                   disabled={togglingComplete}
                   className={`flex items-center gap-2 rounded-2xl px-8 py-4 font-black transition disabled:opacity-60 ${
                     isCompleted
-                      ? "border-2 border-green-200 bg-green-50 text-green-700"
-                      : "bg-[#7A1F3D] text-white hover:bg-[#611731]"
+                      ? "border-2 border-green-300 bg-green-50 text-green-800"
+                      : "text-white hover:-translate-y-0.5"
                   }`}
+                  style={isCompleted ? {} : { backgroundColor: accent }}
                 >
                   <CheckCircle2 size={20} />
                   {togglingComplete
                     ? "جارٍ التحديث..."
                     : isCompleted
-                    ? "تم إنهاء هذه الوحدة — إلغاء الإنهاء"
-                    : "إنهاء هذه الوحدة"}
+                    ? "تم إنجاز هذه الوحدة — إلغاء الإنجاز"
+                    : "أنجزت هذه الوحدة — انتقل للتالي"}
                 </button>
+                {!isCompleted && (
+                  <p className="text-xs font-bold" style={{ color: INK_SOFT }}>
+                    لا تنتقل قبل تنفيذ التكليف — التطبيق هو ما يصنع الفارق، لا المشاهدة وحدها.
+                  </p>
+                )}
               </div>
             )}
           </>

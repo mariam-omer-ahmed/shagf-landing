@@ -3,30 +3,27 @@ export const metadata = {
   description: "تسجيل الدخول إلى مساحة شغف",
 };
 
-import PageIllustration from "@/components/page-illustration";
 import LoginForm from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
   return (
-    <>
-      {/* PageIllustration renders a decorative background layer.
-          If it uses dark colors, the white layer below (rendered
-          by LoginForm itself) will sit on top and cover it — but
-          if you don't need the illustration on this page at all,
-          it's safer to just remove the line above and below. */}
-      <PageIllustration />
+    <main
+      dir="rtl"
+      className="min-h-screen bg-[#FDF2F6] px-6 pb-16 pt-32 md:pt-40"
+    >
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-black md:text-5xl" style={{ color: "#0B0608" }}>
+            أهلًا بعودتك إلى شغف
+          </h1>
 
-      <section className="relative bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-
-          <div className="py-16 md:py-20">
-
-            <LoginForm />
-
-          </div>
-
+          <p className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-9" style={{ color: "#3A2A2E" }}>
+            سجّل دخولك للمتابعة من حيث توقفت في مسارك التدريبي.
+          </p>
         </div>
-      </section>
-    </>
+
+        <LoginForm />
+      </div>
+    </main>
   );
 }
