@@ -64,32 +64,30 @@ function ApplyContent() {
     loadData();
   }, []);
 
- async function loadData() {
-  try {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  async function loadData() {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    if (!session) {
-      router.push("/login");
-      return;
-    }
+      if (!session) {
+        router.push("/login");
+        return;
+      }
 
-    const userId = session.user.id;
+      const userId = session.user.id;
 
-    const { data: profileData, error: profileError } =
-      await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .maybeSingle();
 
-    if (profileError) {
-      console.error("PROFILE ERROR:", profileError);
-    }
+      if (profileError) {
+        console.error("PROFILE ERROR:", profileError);
+      }
 
-    const { data: leadData, error: leadError } =
-      await supabase
+      const { data: leadData, error: leadError } = await supabase
         .from("shaghaf_leads")
         .select("*")
         .eq("user_id", userId)
@@ -99,89 +97,94 @@ function ApplyContent() {
         .limit(1)
         .maybeSingle();
 
-    if (leadError) {
-      console.error("LEAD ERROR:", leadError);
+      if (leadError) {
+        console.error("LEAD ERROR:", leadError);
+      }
+
+      const { data: existingEnrollment, error: enrollmentCheckError } = await supabase
+        .from("enrollments")
+        .select("id,status")
+        .eq("user_id", userId)
+        .in("status", ["pending", "active"])
+        .limit(1)
+        .maybeSingle();
+
+      if (enrollmentCheckError) {
+        console.error("ENROLLMENT CHECK ERROR:", enrollmentCheckError);
+      }
+
+      if (existingEnrollment) {
+        router.push("/application-pending");
+        return;
+      }
+
+      setProfile(profileData);
+      setLead(leadData);
+    } catch (error) {
+      console.error("LOAD DATA ERROR:", error);
+    } finally {
+      setLoading(false);
     }
-
-    const {
-      data: existingEnrollment,
-      error: enrollmentCheckError,
-    } = await supabase
-      .from("enrollments")
-      .select("id,status")
-      .eq("user_id", userId)
-      .in("status", ["pending", "active"])
-      .limit(1)
-      .maybeSingle();
-
-    if (enrollmentCheckError) {
-      console.error(
-        "ENROLLMENT CHECK ERROR:",
-        enrollmentCheckError
-      );
-    }
-
-    if (existingEnrollment) {
-      router.push("/application-pending");
-      return;
-    }
-
-    setProfile(profileData);
-    setLead(leadData);
-  } catch (error) {
-    console.error("LOAD DATA ERROR:", error);
-  } finally {
-    setLoading(false);
   }
-}
+
   async function handleSubmit() {
-  try {
-    setSubmitting(true);
+    try {
+      setSubmitting(true);
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    if (!session) {
-      router.push("/login");
-      return;
-    }
+      if (!session) {
+        router.push("/login");
+        return;
+      }
 
-    const userId = session.user.id;
+      const userId = session.user.id;
 
-    const packageName =
-      lead?.selected_package ||
-      packageParam ||
-      "intilaqah";
+      // ده الـ slug النصي بس (زي "bousola")، مش الـ UUID الحقيقي بتاع الباقة
+      const packageSlug = lead?.selected_package || packageParam || "intilaqah";
 
-    console.log("=== APPLY DEBUG ===");
-    console.log("USER:", userId);
-    console.log("LEAD:", lead);
-    console.log("PACKAGE:", packageName);
+      // enrollments.package_id بيحتاج UUID حقيقي من جدول packages، مش الـ slug —
+      // فلازم نجيبه الأول قبل ما نحاول نحفظ طلب الاشتراك
+      const { data: packageRow, error: packageLookupError } = await supabase
+        .from("packages")
+        .select("id")
+        .eq("slug", packageSlug)
+        .single();
 
-    const insertPayload = {
-      user_id: userId,
-      lead_id: lead?.id || null,
-      package_name: packageName,
-      status: "pending",
-      payment_status: "unpaid",
-    };
+      if (packageLookupError || !packageRow) {
+        console.error("PACKAGE LOOKUP ERROR:", packageLookupError);
+        alert("تعذّر تحديد الباقة المطلوبة. يُرجى إعادة المحاولة أو التواصل مع الدعم.");
+        setSubmitting(false);
+        return;
+      }
 
-    console.log("INSERT:", insertPayload);
+      console.log("=== APPLY DEBUG ===");
+      console.log("USER:", userId);
+      console.log("LEAD:", lead);
+      console.log("PACKAGE SLUG:", packageSlug);
+      console.log("PACKAGE ID:", packageRow.id);
 
-    const { data, error: enrollmentError } =
-      await supabase
+      const insertPayload = {
+        user_id: userId,
+        lead_id: lead?.id || null,
+        package_id: packageRow.id,
+        status: "pending",
+        payment_status: "unpaid",
+      };
+
+      console.log("INSERT:", insertPayload);
+
+      const { data, error: enrollmentError } = await supabase
         .from("enrollments")
         .insert(insertPayload)
         .select();
 
-    if (enrollmentError) {
-      console.error(
-        "ENROLLMENT ERROR:",
-        enrollmentError
-      );
+      if (enrollmentError) {
+        console.error("ENROLLMENT ERROR:", enrollmentError);
 
-      alert(`
+        alert(`
 Message: ${enrollmentError.message}
 
 Code: ${enrollmentError.code}
@@ -191,132 +194,83 @@ Details: ${enrollmentError.details}
 Hint: ${enrollmentError.hint}
       `);
 
-      throw enrollmentError;
-    }
+        throw enrollmentError;
+      }
 
-    console.log("ENROLLMENT CREATED:", data);
+      console.log("ENROLLMENT CREATED:", data);
 
-    if (lead?.id) {
-      const { error: leadUpdateError } =
-        await supabase
+      if (lead?.id) {
+        const { error: leadUpdateError } = await supabase
           .from("shaghaf_leads")
           .update({
             enrollment_status: "pending",
-            converted_at:
-              new Date().toISOString(),
+            converted_at: new Date().toISOString(),
           })
           .eq("id", lead.id);
 
-      if (leadUpdateError) {
-        console.error(
-          "LEAD UPDATE ERROR:",
-          leadUpdateError
-        );
+        if (leadUpdateError) {
+          console.error("LEAD UPDATE ERROR:", leadUpdateError);
+        }
       }
+
+      router.push("/application-pending");
+    } catch (error) {
+      console.error("SUBMIT ERROR:", error);
+
+      alert("حدث خطأ أثناء إرسال الطلب. افتحي Console وشوفي الخطأ الكامل.");
+    } finally {
+      setSubmitting(false);
     }
-
-    router.push("/application-pending");
-  } catch (error) {
-    console.error("SUBMIT ERROR:", error);
-
-    alert(
-      "حدث خطأ أثناء إرسال الطلب. افتحي Console وشوفي الخطأ الكامل."
-    );
-  } finally {
-    setSubmitting(false);
   }
-}
-  const packageId =
-    lead?.selected_package ||
-    packageParam ||
-    "intilaqah";
 
-  const pkg =
-    PACKAGES[packageId] ??
-    PACKAGES["intilaqah"];
+  const packageId = lead?.selected_package || packageParam || "intilaqah";
+
+  const pkg = PACKAGES[packageId] ?? PACKAGES["intilaqah"];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FFF8FB] via-white to-[#FFF8FB] px-4 py-16">
-
       <div className="mx-auto max-w-3xl">
-
         <div className="mb-6 flex items-center gap-2 text-[#E96B8A]">
-
           <CheckCircle2 size={18} />
 
-          <span className="text-sm font-bold">
-            تم تحديد الباقة الأنسب لك
-          </span>
-
+          <span className="text-sm font-bold">تم تحديد الباقة الأنسب لك</span>
         </div>
 
         <div className="rounded-[36px] border border-pink-100 bg-white p-10 shadow-xl">
-
-          <h1 className="text-4xl font-black text-gray-900">
-            أنت على بعد خطوة واحدة من البدء
-          </h1>
+          <h1 className="text-4xl font-black text-gray-900">أنت على بعد خطوة واحدة من البدء</h1>
 
           <p className="mt-4 leading-8 text-gray-600">
-            قمنا بتحليل إجاباتك وتحديد الباقة الأنسب
-            لتحقيق هدفك بأسرع طريق ممكن.
+            قمنا بتحليل إجاباتك وتحديد الباقة الأنسب لتحقيق هدفك بأسرع طريق ممكن.
           </p>
 
           <div className="mt-8 rounded-3xl border border-pink-100 bg-pink-50 p-8">
+            <h2 className="text-3xl font-black text-gray-900">{pkg.title}</h2>
 
-            <h2 className="text-3xl font-black text-gray-900">
-              {pkg.title}
-            </h2>
+            <div className="mt-3 text-xl font-bold text-[#E96B8A]">{pkg.price}</div>
 
-            <div className="mt-3 text-xl font-bold text-[#E96B8A]">
-              {pkg.price}
-            </div>
-
-            <p className="mt-4 leading-8 text-gray-700">
-              {pkg.desc}
-            </p>
-
+            <p className="mt-4 leading-8 text-gray-700">{pkg.desc}</p>
           </div>
 
           <div className="mt-10">
-
-            <h3 className="mb-5 text-xl font-black text-gray-900">
-              بيانات الحساب
-            </h3>
+            <h3 className="mb-5 text-xl font-black text-gray-900">بيانات الحساب</h3>
 
             <div className="space-y-4">
+              <InfoRow icon={<User size={18} />} label="الاسم" value={profile?.full_name || "-"} />
 
-              <InfoRow
-                icon={<User size={18} />}
-                label="الاسم"
-                value={profile?.full_name || "-"}
-              />
-
-              <InfoRow
-                icon={<Phone size={18} />}
-                label="رقم الواتساب"
-                value={profile?.whatsapp || "-"}
-              />
+              <InfoRow icon={<Phone size={18} />} label="رقم الواتساب" value={profile?.whatsapp || "-"} />
 
               <InfoRow
                 icon={<MapPin size={18} />}
                 label="الموقع"
-                value={`${profile?.country || "-"} - ${
-                  profile?.city || "-"
-                }`}
+                value={`${profile?.country || "-"} - ${profile?.city || "-"}`}
               />
-
             </div>
-
           </div>
 
           <div className="mt-10 rounded-3xl bg-gray-50 p-6">
-
-            <h3 className="font-black text-gray-900">
-              ماذا يحدث بعد الضغط على تأكيد الانضمام؟
-            </h3>
+            <h3 className="font-black text-gray-900">ماذا يحدث بعد الضغط على تأكيد الانضمام؟</h3>
 
             <div className="mt-5 space-y-3 text-gray-700">
-
               <p>✓ تسجيل طلب الانضمام.</p>
 
               <p>✓ مراجعة الطلب بواسطة فريق شغف.</p>
@@ -324,9 +278,7 @@ Hint: ${enrollmentError.hint}
               <p>✓ تفعيل اشتراكك.</p>
 
               <p>✓ فتح المحتوى التدريبي الخاص بالباقة.</p>
-
             </div>
-
           </div>
 
           <button
@@ -334,13 +286,9 @@ Hint: ${enrollmentError.hint}
             disabled={submitting}
             className="mt-10 flex w-full items-center justify-center gap-3 rounded-full bg-[#E96B8A] py-5 font-bold text-white transition"
           >
-
             {submitting ? (
               <>
-                <Loader2
-                  size={18}
-                  className="animate-spin"
-                />
+                <Loader2 size={18} className="animate-spin" />
                 جاري إرسال الطلب...
               </>
             ) : (
@@ -349,43 +297,23 @@ Hint: ${enrollmentError.hint}
                 <ArrowLeft size={18} />
               </>
             )}
-
           </button>
-
         </div>
-
       </div>
-
     </main>
   );
 }
 
-function InfoRow({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5">
-
-      <div className="text-[#E96B8A]">
-        {icon}
-      </div>
+      <div className="text-[#E96B8A]">{icon}</div>
 
       <div>
-        <div className="text-sm text-gray-500">
-          {label}
-        </div>
+        <div className="text-sm text-gray-500">{label}</div>
 
-        <div className="font-bold text-gray-900">
-          {value}
-        </div>
+        <div className="font-bold text-gray-900">{value}</div>
       </div>
-
     </div>
   );
 }
